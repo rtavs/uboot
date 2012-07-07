@@ -61,6 +61,10 @@
 #define CONFIG_CMD_EXT2
 #define CONFIG_DOS_PARTITION
 
+/* bootz zImage and raw initrd support */
+#define CONFIG_CMD_BOOTZ
+#define CONFIG_SUPPORT_RAW_INITRD
+
 /* Eth Configs */
 #define CONFIG_HAS_ETH1
 #define CONFIG_MII
