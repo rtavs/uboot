@@ -27,22 +27,20 @@
 
 #define CONFIG_SYS_MX5_HCLK	24000000
 #define CONFIG_SYS_MX5_CLK32		32768
-#define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
 
 #define CONFIG_MACH_TYPE	7203
 
 #include <asm/arch/imx-regs.h>
 
-#define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
+#define CONFIG_CMDLINE_TAG
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_INITRD_TAG
 
 /* Size of malloc() pool */
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + 2 * 1024 * 1024)
+#define CONFIG_SYS_MALLOC_LEN		(10 * 1024 * 1024)
 
 #define CONFIG_BOARD_EARLY_INIT_F
-#define CONFIG_BOARD_LATE_INIT
 #define CONFIG_MXC_GPIO
 #define CONFIG_REVISION_TAG
 
@@ -96,9 +94,8 @@
 #define CONFIG_CMD_I2C
 #define CONFIG_HARD_I2C
 #define CONFIG_I2C_MXC
-#define CONFIG_SYS_I2C_MX53_PORT2
-#define CONFIG_SYS_I2C_SPEED            100000
-#define CONFIG_SYS_I2C_SLAVE            0xfe
+#define CONFIG_SYS_I2C_BASE		I2C2_BASE_ADDR
+#define CONFIG_SYS_I2C_SPEED		100000
 
 /* PMIC Controller */
 #define CONFIG_PMIC
@@ -189,9 +186,6 @@
 #define CONFIG_SYS_HZ		1000
 #define CONFIG_CMDLINE_EDITING
 
-/* Stack sizes */
-#define CONFIG_STACKSIZE	(128 * 1024)	/* regular stack */
-
 /* Physical Memory Map */
 #define CONFIG_NR_DRAM_BANKS	2
 #define PHYS_SDRAM_1		CSD0_BASE_ADDR
@@ -233,13 +227,16 @@
 /* Framebuffer and LCD */
 #define CONFIG_PREBOOT
 #define CONFIG_VIDEO
-#define CONFIG_VIDEO_MX5
+#define CONFIG_VIDEO_IPUV3
 #define CONFIG_CFB_CONSOLE
 #define CONFIG_VGA_AS_SINGLE_DEVICE
+#define CONFIG_SYS_CONSOLE_IS_IN_ENV
+#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_VIDEO_BMP_RLE8
 #define CONFIG_SPLASH_SCREEN
 #define CONFIG_BMP_16BPP
 #define CONFIG_VIDEO_LOGO
+#define CONFIG_IPUV3_CLK	133000000
 #endif
 
 #endif				/* __CONFIG_H */

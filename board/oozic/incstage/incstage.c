@@ -28,6 +28,7 @@
 #include <asm/arch/crm_regs.h>
 #include <asm/arch/clock.h>
 #include <asm/arch/iomux.h>
+#include <asm/arch/clock.h>
 #include <asm/errno.h>
 #include <netdev.h>
 #include <i2c.h>
@@ -35,9 +36,12 @@
 #include <fsl_esdhc.h>
 #include <asm/gpio.h>
 #include <pmic.h>
+#include <dialog_pmic.h>
 #include <fsl_pmic.h>
 #include <linux/fb.h>
 #include <ipu_pixfmt.h>
+
+#define MX53LOCO_LCD_POWER		IMX_GPIO_NR(3, 24)
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -69,6 +73,11 @@ u32 get_board_rev(void)
 		(struct fuse_bank0_regs *)bank->fuse_regs;
 
 	int rev = readl(&fuse->gp[6]);
+
+#if 0
+	if (!i2c_probe(CONFIG_SYS_DIALOG_PMIC_I2C_ADDR))
+		rev = 0;
+#endif
 
 	return (get_cpu_rev() & ~(0xF << 8)) | (rev & 0xF) << 8;
 }
@@ -157,14 +166,17 @@ static void setup_iomux_fec(void)
 
 #ifdef CONFIG_FSL_ESDHC
 struct fsl_esdhc_cfg esdhc_cfg[1] = {
-	{MMC_SDHC1_BASE_ADDR, 1},
+	{MMC_SDHC1_BASE_ADDR},
 };
 
 int board_mmc_getcd(struct mmc *mmc)
 {
+	int ret=0;
 	mxc_request_iomux(MX53_PIN_EIM_DA13, IOMUX_CONFIG_ALT1);
-	gpio_direction_input(77);
-	return !gpio_get_value(77); /* GPIO3_13 */
+	gpio_direction_input(IMX_GPIO_NR(3, 13));
+	ret = !gpio_get_value(IMX_GPIO_NR(3, 13));
+	printf("%s ret=%d gpio=%d\n",__func__, ret, IMX_GPIO_NR(3,13));
+	return ret;
 }
 
 int board_mmc_init(bd_t *bis)
@@ -213,38 +225,37 @@ int board_mmc_init(bd_t *bis)
 				PAD_CTL_PUE_PULL | PAD_CTL_PKE_ENABLE |
 				PAD_CTL_HYS_ENABLE | PAD_CTL_47K_PU);
 			break;
-
 		default:
 			printf("Warning: you configured more ESDHC controller"
-				"(%d) as supported by the board(1)\n",
+				"(%d) as supported by the board(2)\n",
 				CONFIG_SYS_FSL_ESDHC_NUM);
 			return status;
 		}
 		status |= fsl_esdhc_initialize(bis, &esdhc_cfg[index]);
 	}
-
+	printf("\n%s: status=0x%x\n",__func__, status);
 	return status;
 }
 #endif
 
 static void setup_iomux_i2c(void)
 {
-	/* I2C1 SDA */
-	mxc_request_iomux(MX53_PIN_CSI0_D8,
-		IOMUX_CONFIG_ALT5 | IOMUX_CONFIG_SION);
-	mxc_iomux_set_input(MX53_I2C1_IPP_SDA_IN_SELECT_INPUT,
-		INPUT_CTL_PATH0);
-	mxc_iomux_set_pad(MX53_PIN_CSI0_D8,
+	/* I2C2 SDA */
+	mxc_request_iomux(MX53_PIN_KEY_ROW3,
+			IOMUX_CONFIG_ALT4 | IOMUX_CONFIG_SION);
+	mxc_iomux_set_input(MX53_I2C2_IPP_SDA_IN_SELECT_INPUT,
+			INPUT_CTL_PATH0);
+	mxc_iomux_set_pad(MX53_PIN_KEY_ROW3,
 		PAD_CTL_SRE_FAST | PAD_CTL_DRV_HIGH |
 		PAD_CTL_100K_PU | PAD_CTL_PKE_ENABLE |
 		PAD_CTL_PUE_PULL |
 		PAD_CTL_ODE_OPENDRAIN_ENABLE);
-	/* I2C1 SCL */
-	mxc_request_iomux(MX53_PIN_CSI0_D9,
-		IOMUX_CONFIG_ALT5 | IOMUX_CONFIG_SION);
-	mxc_iomux_set_input(MX53_I2C1_IPP_SCL_IN_SELECT_INPUT,
-		INPUT_CTL_PATH0);
-	mxc_iomux_set_pad(MX53_PIN_CSI0_D9,
+	/* I2C2 SCL */
+	mxc_request_iomux(MX53_PIN_KEY_COL3,
+			IOMUX_CONFIG_ALT4 | IOMUX_CONFIG_SION);
+	mxc_iomux_set_input(MX53_I2C2_IPP_SCL_IN_SELECT_INPUT,
+			INPUT_CTL_PATH0);
+	mxc_iomux_set_pad(MX53_PIN_KEY_COL3,
 		PAD_CTL_SRE_FAST | PAD_CTL_DRV_HIGH |
 		PAD_CTL_100K_PU | PAD_CTL_PKE_ENABLE |
 		PAD_CTL_PUE_PULL |
@@ -256,6 +267,25 @@ static int power_init(void)
 	unsigned int val;
 	int ret = -1;
 	struct pmic *p;
+
+#if 0
+	if (!i2c_probe(CONFIG_SYS_DIALOG_PMIC_I2C_ADDR)) {
+		pmic_dialog_init();
+		p = get_pmic();
+
+		/* Set VDDA to 1.25V */
+		val = DA9052_BUCKCORE_BCOREEN | DA_BUCKCORE_VBCORE_1_250V;
+		ret = pmic_reg_write(p, DA9053_BUCKCORE_REG, val);
+
+		ret |= pmic_reg_read(p, DA9053_SUPPLY_REG, &val);
+		val |= DA9052_SUPPLY_VBCOREGO;
+		ret |= pmic_reg_write(p, DA9053_SUPPLY_REG, val);
+
+		/* Set Vcc peripheral to 1.30V */
+		ret |= pmic_reg_write(p, DA9053_BUCKPRO_REG, 0x62);
+		ret |= pmic_reg_write(p, DA9053_SUPPLY_REG, 0x62);
+	}
+#endif
 
 	if (!i2c_probe(CONFIG_SYS_FSL_PMIC_I2C_ADDR)) {
 		pmic_init();
@@ -381,26 +411,38 @@ int board_early_init_f(void)
 	return 0;
 }
 
-#ifdef CONFIG_BOARD_LATE_INIT
-int board_late_init(void)
+int print_cpuinfo(void)
 {
+	u32 cpurev;
+
+	cpurev = get_cpu_rev();
+	printf("CPU:   Freescale i.MX%x family rev%d.%d at %d MHz\n",
+		(cpurev & 0xFF000) >> 12,
+		(cpurev & 0x000F0) >> 4,
+		(cpurev & 0x0000F) >> 0,
+		mxc_get_clock(MXC_ARM_CLK) / 1000000);
+	printf("Reset cause: %s\n", get_reset_cause());
+	return 0;
+}
+
+/*
+ * Do not overwrite the console
+ * Use always serial for U-Boot console
+ */
+int overwrite_console(void)
+{
+	return 1;
+}
+
+int board_init(void)
+{
+	gd->bd->bi_boot_params = PHYS_SDRAM_1 + 0x100;
+
+	mxc_set_sata_internal_clock();
 	setup_iomux_i2c();
 	if (!power_init())
 		clock_1GHz();
 	print_cpuinfo();
-
-	setenv("stdout", "serial");
-
-	return 0;
-}
-#endif
-
-int board_init(void)
-{
-	/* address of boot parameters */
-	gd->bd->bi_boot_params = PHYS_SDRAM_1 + 0x100;
-
-	mxc_set_sata_internal_clock();
 
 //	lcd_enable();
 
