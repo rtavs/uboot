@@ -124,19 +124,20 @@
 #define CONFIG_SYS_TEXT_BASE    0x77800000
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"script=boot.scr\0" \
 	"uimage=uImage\0" \
+	"dtb_file=incstage.dtb\0" \
 	"mmcdev=0\0" \
-	"mmcpart=2\0" \
+	"mmcpart=1\0" \
 	"mmcroot=/dev/mmcblk0p3 rw\0" \
 	"mmcrootfstype=ext3 rootwait\0" \
 	"mmcargs=setenv bootargs console=ttymxc0,${baudrate} " \
 		"root=${mmcroot} " \
 		"rootfstype=${mmcrootfstype}\0" \
-	"loadbootscript=" \
-		"fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
-	"bootscript=echo Running bootscript from mmc ...; " \
-		"source\0" \
+	"bootenv=uEnv.txt\0" \
+	"loadext2bootenv=ext2load mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
+	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
+	"importbootenv=echo Importing environment from mmc ...; " \
+			"env import -t $loadaddr $filesize\0" \
 	"loaduimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${uimage}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
@@ -150,15 +151,22 @@
 
 #define CONFIG_BOOTCOMMAND \
 	"if mmc rescan ${mmcdev}; then " \
-		"if run loadbootscript; then " \
-			"run bootscript; " \
-		"else " \
-			"if run loaduimage; then " \
-				"run mmcboot; " \
-			"else run netboot; " \
-			"fi; " \
-		"fi; " \
-	"else run netboot; fi"
+		"echo SD/MMC found on device ${mmcdev};" \
+		"if run loadext2bootenv; then " \
+			"echo Loaded environment from ${bootenv};" \
+			"run importbootenv;" \
+        "else " \
+		    "if run loadbootenv; then " \
+		        "echo Loaded environment from ${bootenv};" \
+			        "run importbootenv;" \
+		    "fi; " \
+	    "fi; " \
+        "if run loaduimage; then " \
+            "run mmcboot; " \
+        "fi; " \
+    "fi; " \
+    "run netboot;" \
+
 #define CONFIG_ARP_TIMEOUT	200UL
 
 /* Miscellaneous configurable options */
