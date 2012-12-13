@@ -171,12 +171,9 @@ struct fsl_esdhc_cfg esdhc_cfg[1] = {
 
 int board_mmc_getcd(struct mmc *mmc)
 {
-	int ret=0;
-	mxc_request_iomux(MX53_PIN_EIM_DA13, IOMUX_CONFIG_ALT1);
-	gpio_direction_input(IMX_GPIO_NR(3, 13));
-	ret = !gpio_get_value(IMX_GPIO_NR(3, 13));
-	printf("%s ret=%d gpio=%d\n",__func__, ret, IMX_GPIO_NR(3,13));
-	return ret;
+	mxc_request_iomux(MX53_PIN_GPIO_4, IOMUX_CONFIG_ALT1);
+	gpio_direction_input(IMX_GPIO_NR(1, 4));
+	return !gpio_get_value(IMX_GPIO_NR(1, 4));
 }
 
 int board_mmc_init(bd_t *bis)
@@ -197,7 +194,7 @@ int board_mmc_init(bd_t *bis)
 						IOMUX_CONFIG_ALT0);
 			mxc_request_iomux(MX53_PIN_SD1_DATA3,
 						IOMUX_CONFIG_ALT0);
-			mxc_request_iomux(MX53_PIN_EIM_DA13,
+			mxc_request_iomux(MX53_PIN_GPIO_4,
 						IOMUX_CONFIG_ALT1);
 
 			mxc_iomux_set_pad(MX53_PIN_SD1_CMD,
@@ -227,13 +224,12 @@ int board_mmc_init(bd_t *bis)
 			break;
 		default:
 			printf("Warning: you configured more ESDHC controller"
-				"(%d) as supported by the board(2)\n",
+				"(%d) as supported by the board(1)\n",
 				CONFIG_SYS_FSL_ESDHC_NUM);
 			return status;
 		}
 		status |= fsl_esdhc_initialize(bis, &esdhc_cfg[index]);
 	}
-	printf("\n%s: status=0x%x\n",__func__, status);
 	return status;
 }
 #endif
@@ -451,7 +447,7 @@ int board_init(void)
 
 int checkboard(void)
 {
-	puts("Board: IncStage\n");
+	puts("Board: Incstage\n");
 
 	return 0;
 }
