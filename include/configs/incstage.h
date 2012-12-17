@@ -83,12 +83,19 @@
 #define CONFIG_USB_EHCI
 #define CONFIG_USB_EHCI_MX5
 #define CONFIG_USB_STORAGE
+#define CONFIG_USB_KEYBOARD
+#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_USB_HOST_ETHER
 #define CONFIG_USB_ETHER_ASIX
 #define CONFIG_USB_ETHER_SMSC95XX
-#define CONFIG_MXC_USB_PORT	1
-#define CONFIG_MXC_USB_PORTSC	(PORT_PTS_UTMI | PORT_PTS_PTW)
-#define CONFIG_MXC_USB_FLAGS	0
+#define CONFIG_MXC_USB_PORT	0
+#if	(CONFIG_MXC_USB_PORT == 0)
+#define	CONFIG_MXC_USB_PORTSC	(1 << 28)
+#define	CONFIG_MXC_USB_FLAGS	MXC_EHCI_INTERNAL_PHY
+#else
+#define	CONFIG_MXC_USB_PORTSC	(2 << 30)
+#define	CONFIG_MXC_USB_FLAGS	0
+#endif
 
 /* I2C Configs */
 #define CONFIG_CMD_I2C
@@ -131,7 +138,7 @@
 		"root=${mmcroot} " \
 		"rootfstype=${mmcrootfstype}\0" \
 	"bootenv=uEnv.txt\0" \
-	"loadext2bootenv=ext2load mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
+	"loadext2bootenv=ext2load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${bootenv}\0" \
 	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
 	"importbootenv=echo Importing environment from mmc ...; " \
 			"env import -t $loadaddr $filesize\0" \
@@ -152,17 +159,17 @@
 		"if run loadext2bootenv; then " \
 			"echo Loaded environment from ${bootenv};" \
 			"run importbootenv;" \
-        "else " \
-		    "if run loadbootenv; then " \
-		        "echo Loaded environment from ${bootenv};" \
-			        "run importbootenv;" \
-		    "fi; " \
-	    "fi; " \
-        "if run loaduimage; then " \
-            "run mmcboot; " \
-        "fi; " \
-    "fi; " \
-    "run netboot;" \
+		"else " \
+			"if run loadbootenv; then " \
+				"echo Loaded environment from ${bootenv};" \
+				"run importbootenv;" \
+			"fi; " \
+		"fi; " \
+		"if run loaduimage; then " \
+			"run mmcboot; " \
+		"fi; " \
+	"fi; " \
+	"run netboot;" \
 
 #define CONFIG_ARP_TIMEOUT	200UL
 
@@ -231,7 +238,6 @@
 #define CONFIG_CFB_CONSOLE
 #define CONFIG_VGA_AS_SINGLE_DEVICE
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
-#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
 #define CONFIG_VIDEO_BMP_RLE8
 #define CONFIG_SPLASH_SCREEN
 #define CONFIG_BMP_16BPP

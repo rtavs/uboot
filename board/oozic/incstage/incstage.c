@@ -105,9 +105,14 @@ static void setup_iomux_uart(void)
 #ifdef CONFIG_USB_EHCI_MX5
 int board_ehci_hcd_init(int port)
 {
-	/* request VBUS power enable pin, GPIO7_8 */
-	mxc_request_iomux(MX53_PIN_ATA_DA_2, IOMUX_CONFIG_ALT1);
-	gpio_direction_output(IOMUX_TO_GPIO(MX53_PIN_ATA_DA_2), 1);
+	/* request OTG power enable pin, GPIO1_2 */
+	mxc_request_iomux(MX53_PIN_GPIO_2, IOMUX_CONFIG_ALT1);
+	gpio_direction_output(IOMUX_TO_GPIO(MX53_PIN_GPIO_2), 1);
+
+	/* request OTG oc enable pin, GPIO1_11 */
+	mxc_request_iomux(MX53_PIN_GPIO_11, IOMUX_CONFIG_ALT1);
+	gpio_direction_input(IMX_GPIO_NR(1, 11));
+
 	return 0;
 }
 #endif
@@ -172,7 +177,7 @@ struct fsl_esdhc_cfg esdhc_cfg[1] = {
 int board_mmc_getcd(struct mmc *mmc)
 {
 	mxc_request_iomux(MX53_PIN_GPIO_4, IOMUX_CONFIG_ALT1);
-	gpio_direction_input(IMX_GPIO_NR(1, 4));
+	gpio_direction_input(IMX_GPIO_NR(1, 4));	//GPIO1_4
 	return !gpio_get_value(IMX_GPIO_NR(1, 4));
 }
 
