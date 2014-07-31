@@ -388,10 +388,14 @@ else
 ALL += $(obj)u-boot-orig.bin
 ALL += $(obj)firmware.bin
 endif
+
+
 ALL += $(obj)u-boot.bin $(obj)System.map $(U_BOOT_NAND) $(U_BOOT_ONENAND)
+
 ifeq  ($(CONFIG_SELF_COMPRESS),y)
 ALL += $(obj)u-boot-comp.bin
 endif
+
 ifeq ($(CONFIG_VLSI_EMULATOR),y)
 ALL += $(obj)u-boot.hex
 endif

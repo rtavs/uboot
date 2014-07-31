@@ -203,8 +203,8 @@
 #endif //#if defined(CONFIG_CMD_USB)
 
 
-#define CONFIG_UCL 1
-#define CONFIG_SELF_COMPRESS
+//#define CONFIG_UCL 1
+//#define CONFIG_SELF_COMPRESS
 //#define CONFIG_PREBOOT "mw da004004 80000510;mw c81000014 4000;mw c1109900 0"
 
 #define CONFIG_CMD_AUTOSCRIPT
