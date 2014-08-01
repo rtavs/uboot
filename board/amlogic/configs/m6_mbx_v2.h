@@ -457,7 +457,7 @@
  */
 //#define CONFIG_CMD_RUNARC 1 /* runarc */
 //#define CONFIG_CMD_SUSPEND 1
-#define CONFIG_AML_SUSPEND 1
+//#define CONFIG_AML_SUSPEND 1
 #define CONFIG_CEC_WAKE_UP 1
 
 /*
