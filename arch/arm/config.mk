@@ -21,7 +21,7 @@
 # MA 02111-1307 USA
 #
 
-CROSS_COMPILE ?= arm-none-eabi-
+CROSS_COMPILE ?= arm-linux-gnueabi-
 #arm-linux-
 
 ifeq ($(BOARD),omap2420h4)
