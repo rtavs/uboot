@@ -129,7 +129,7 @@
 #define CONFIG_UCL 1
 #define CONFIG_SELF_COMPRESS
 
-#define CONFIG_IMPROVE_UCL_DEC   1
+//#define CONFIG_IMPROVE_UCL_DEC   1
 
 #ifdef CONFIG_IMPROVE_UCL_DEC
 #define UCL_DEC_EN_IDCACHE        1
@@ -510,11 +510,11 @@
  */
 //#define CONFIG_CMD_RUNARC 1 /* runarc */
 //#define CONFIG_CMD_SUSPEND 1
-#define CONFIG_AML_SUSPEND 1
+//#define CONFIG_AML_SUSPEND 1
 #define CONFIG_CEC_WAKE_UP 1
 
 
-#define CONFIG_DSP_VSYNC_INTERRUPT 		1
+//#define CONFIG_DSP_VSYNC_INTERRUPT 		1
 
 
 /*
