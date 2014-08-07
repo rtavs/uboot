@@ -299,7 +299,7 @@
         "setenv bootargs ${initargs} vdaccfg=${vdac_config} logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} androidboot.firstboot=${firstboot} hdmitx=${hdmimode}\0"\
     \
     "bootsdargs="\
-        "root=/dev/mmcblk0p1 rw rootfstype=ext2 rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode}\0"\
+        "root=/dev/mmcblk0p1 rw rootfstype=vfat rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode}\0"\
     \
     "bootupdateargs="\
         "root=/dev/mmcblk0p1 rw rootfstype=vfat rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode} firmware=rootfs.tar.gz\0"\
@@ -334,7 +334,7 @@
         "echo Booting ...;"\
          "setenv bootargs ${bootsdargs}; "\
          "mmcinfo;"\
-         "ext2load mmc 0 ${loadaddr} boot.img;"\
+         "fatload mmc 0 ${loadaddr} boot.img;"\
          "bootm\0" \
      "bootupdate="\
         "echo Updating...;"\
@@ -358,7 +358,7 @@
     "sdc_burning=sdc_burn ${sdcburncfg}\0"
 
 
-#define CONFIG_BOOTCOMMAND   "run storeboot"
+#define CONFIG_BOOTCOMMAND   "run bootsdcard"
 
 #define CONFIG_AUTO_COMPLETE	1
 #define CONFIG_ENV_SIZE         (64*1024)
