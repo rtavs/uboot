@@ -126,8 +126,8 @@
 
 
 
-#define CONFIG_UCL 1
-#define CONFIG_SELF_COMPRESS
+//#define CONFIG_UCL 1
+//#define CONFIG_SELF_COMPRESS
 
 //#define CONFIG_IMPROVE_UCL_DEC   1
 
