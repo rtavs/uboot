@@ -6,7 +6,7 @@
 #define CONFIG_AML_MESON_8      1
 #define CONFIG_MACH_MESON8_K200_V1  // generate M8 K200 machid number
 
-#define CONFIG_SECURITYKEY
+//#define CONFIG_SECURITYKEY
 
 #ifndef CONFIG_M8
 #define CONFIG_M8
@@ -262,7 +262,9 @@
 	"upgrade_step=2\0" \
 	"firstboot=1\0" \
 	"store=0\0"\
-	"preboot="\
+    \
+    "preboot="\
+        "echo preboot ...; "\
         "if itest ${upgrade_step} == 3; then run prepare; run storeargs; run update; fi; "\
         "if itest ${upgrade_step} == 1; then  "\
             "defenv; setenv upgrade_step 2; saveenv;"\
@@ -303,7 +305,8 @@
     "bootupdateargs="\
         "root=/dev/mmcblk0p1 rw rootfstype=vfat rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode} firmware=rootfs.tar.gz\0"\
      \
-	"switch_bootmode="\
+    "switch_bootmode="\
+        "echo switch bootmode ...; "\
         "if test ${reboot_mode} = factory_reset; then "\
 			"run recovery;"\
         "else if test ${reboot_mode} = update; then "\
@@ -315,6 +318,7 @@
         "fi;fi;fi\0" \
     \
     "prepare="\
+        "echo prepare ing...; "\
         "logo size ${outputmode}; video open; video clear; video dev open ${outputmode};"\
         "imgread res logo ${loadaddr_logo}; "\
         "unpackimg ${loadaddr_logo}; "\
