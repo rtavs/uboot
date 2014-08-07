@@ -110,7 +110,6 @@
 	//#define CONFIG_NET_RMII_CLK_EXTERNAL //use external 50MHz clock source
 	#define CONFIG_AML_ETHERNET    1                   /*to link /driver/net/aml_ethernet.c*/
 	#define IP101PHY    1                   /*to link /driver/net/aml_ethernet.c*/
-	//#define KSZ8091    1                   /*to link /driver/net/aml_ethernet.c*/
 	#define CONFIG_HOSTNAME        arm_m8
 	#define CONFIG_ETHADDR         00:15:18:01:81:31   /* Ethernet address */
 	#define CONFIG_IPADDR          10.18.9.97          /* Our ip address */

@@ -68,14 +68,10 @@ static void setup_net_chip(void)
 	WRITE_CBUS_REG(HHI_ETH_CLK_CNTL, 0x4f00); // clock Input 50 inverted : bit14 =1 Div : 6:0 = 0 En : bit8 = 1  Sel : bit 11:9 = 7
 #endif
 	/* setup ethernet pinmux use gpioz(5-14) */
-#ifdef KSZ8091
-	WRITE_CBUS_REG(HHI_ETH_CLK_CNTL, 0xf00); // clock Input 50 inverted : bit14 =1 Div : 6:0 = 0 En : bit8 = 1  Sel : bit 11:9 = 7
-	SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, (1<<15)|(1 << 14) | (1 << 13) | (1 << 12) |
-	(1 << 11) | (1 << 8 ) | (1 << 7 ) | (1 << 10 ) | (1 << 6 ) | (1 << 5 ));
-#else
+
 	SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, (1 << 14) | (1 << 13) | (1 << 12) |
 	(1 << 11) | (1 << 8 ) | (1 << 7 ) | (1 << 10 ) | (1 << 6 ) | (1 << 5 ));
-#endif
+
 	/* setup ethernet mode */
 	WRITE_CBUS_REG(PREG_ETHERNET_ADDR0, 0x241);//bit6-4 :001 rmii mode
 	CLEAR_CBUS_REG_MASK(HHI_MEM_PD_REG0, (1 << 3) | (1<<2));
@@ -477,12 +473,10 @@ void wifi_power_init()
 
 int board_init(void)
 {
-#if KSZ8091
-	CLEAR_CBUS_REG_MASK(PREG_PAD_GPIO1_EN_N, 1 << 31);
-	CLEAR_CBUS_REG_MASK(PREG_PAD_GPIO1_O, 1 << 31);
-#endif
-	gd->bd->bi_arch_number=MACH_TYPE_MESON6_SKT;
-	gd->bd->bi_boot_params=BOOT_PARAMS_OFFSET;
+    gd->bd->bi_arch_number=MACH_TYPE_MESON6_SKT;
+    gd->bd->bi_boot_params=BOOT_PARAMS_OFFSET;
+
+
 #if CONFIG_JERRY_NAND_TEST //temp test
     nand_init();
 
