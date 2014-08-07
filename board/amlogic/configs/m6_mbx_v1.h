@@ -212,7 +212,6 @@
 		"bmp display ${loadaddr}\0"\
 	"preboot="\
 		"run upgrade_check;" \
-		"run prepare;"\
 		"run detect_storage;get_rebootmode; clear_rebootmode;"\
 		"echo reboot_mode=${reboot_mode}; run factoryreset_wipe_data;"\
 		"if test ${reboot_mode} = usb_burning;"\
