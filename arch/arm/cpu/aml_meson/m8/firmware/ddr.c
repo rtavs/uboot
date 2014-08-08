@@ -19,10 +19,6 @@ void set_ddr_clock(struct ddr_set * timing_reg)
 {
     int n_pll_try_times = 0;
 
-    #if defined(CONFIG_VLSI_EMULATOR)
-    Wr_cbus(AM_ANALOG_TOP_REG1, Rd_cbus(AM_ANALOG_TOP_REG1)|1);
-    #endif //
-
     do {
         //BANDGAP reset for SYS_PLL,MPLL lock fail
         writel(readl(0xc8000410)& (~(1<<12)),0xc8000410);
@@ -30,7 +26,6 @@ void set_ddr_clock(struct ddr_set * timing_reg)
         writel(readl(0xc8000410)|(1<<12),0xc8000410);
         //__udelay(1000);//1ms for bandgap bootup
 
-        #if !defined(CONFIG_VLSI_EMULATOR)
         writel((1<<29),AM_DDR_PLL_CNTL);
         writel(M8_CFG_DDR_PLL_CNTL_2,AM_DDR_PLL_CNTL1);
         writel(M8_CFG_DDR_PLL_CNTL_3,AM_DDR_PLL_CNTL2);
@@ -54,16 +49,8 @@ void set_ddr_clock(struct ddr_set * timing_reg)
         #endif
         writel(timing_reg->t_ddr_pll_cntl|(1<<29),AM_DDR_PLL_CNTL);
         writel(readl(AM_DDR_PLL_CNTL) & (~(1<<29)),AM_DDR_PLL_CNTL);
-        #else
-        //from ucode-261
-        writel(1,AM_DDR_PLL_CNTL1);
-        writel(3<<29,AM_DDR_PLL_CNTL);
-        writel(timing_reg->t_ddr_pll_cntl,AM_DDR_PLL_CNTL);
-        #endif
 
-        #if !defined(CONFIG_VLSI_EMULATOR)
         M8_PLL_LOCK_CHECK(n_pll_try_times,3);
-        #endif // #if !defined(CONFIG_VLSI_EMULATOR)
 
     } while((readl(AM_DDR_PLL_CNTL)&(1<<31))==0);
     //serial_puts("DDR Clock initial...\n");

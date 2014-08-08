@@ -201,9 +201,7 @@ static void serial_putc_port (unsigned port_base,const char c)
  // while(!(readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_TFIFO_EMPTY));
     writel(c, P_UART_WFIFO(port_base));
     /* Wait till dataTx register is empty */
-#if !defined (CONFIG_VLSI_EMULATOR)
     while(!(readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_TFIFO_EMPTY));
-#endif //CONFIG_VLSI_EMULATOR
 
 }
 

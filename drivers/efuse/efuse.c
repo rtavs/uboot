@@ -256,10 +256,6 @@ static int efuse_readversion(void)
 	efuseinfo_item_t info;
 	int ret;
 
-	#if defined(CONFIG_VLSI_EMULATOR)
-        efuse_active_version = 2;
-	#endif //#if defined(CONFIG_VLSI_EMULATOR)
-
 	if(efuse_active_version != -1)
 		return efuse_active_version;
 

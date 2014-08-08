@@ -204,17 +204,6 @@ static efuseinfo_item_t efuseinfo_v2[] =
 		.bch_en = 0,
 		.bch_reverse = 0,
 	},
-#if defined(CONFIG_VLSI_EMULATOR)
-	{
-		.title = "m8_check",
-		.offset = 500,
-		.enc_len = 4,
-		.data_len = 4,
-		.we = 1,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-#endif //#if defined(CONFIG_VLSI_EMULATOR)
 	{
 		.title = "version",   // include machid
 		.offset = V2_EFUSE_VERSION_OFFSET, //3,

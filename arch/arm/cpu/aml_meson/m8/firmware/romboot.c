@@ -123,11 +123,7 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
 #endif
 
 #if CONFIG_UCL
-#if defined (CONFIG_VLSI_EMULATOR)
-    temp_addr=target;
-#else
     temp_addr=target+0x800000;
-#endif
 #else
     temp_addr=target;
 #endif
@@ -197,10 +193,6 @@ m8_tpl_dec:
 
 m8_tpl_ucl_dec:
 
-#if defined (CONFIG_VLSI_EMULATOR)
-    serial_puts("Load uncompressed image for PxP!\n");
-#else
-
 #ifdef CONFIG_MESON_TRUSTZONE
 	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_OFFSET_POSITION_IN_SRAM);
 	secure_addr = (*sram) + temp_addr - READ_SIZE;
@@ -219,7 +211,6 @@ m8_tpl_ucl_dec:
     }
 #endif
 #endif
-#endif //#if defined (CONFIG_VLSI_EMULATOR)
 
 #ifndef CONFIG_IMPROVE_UCL_DEC
     if(rc==0)
@@ -273,10 +264,6 @@ m8_tpl_dec:
 	}
 #endif //CONFIG_AML_SECU_BOOT_V2
 
-#if defined (CONFIG_VLSI_EMULATOR)
-m8_tpl_ucl_dec:
-    serial_puts("Load uncompressed image from SD 1 for PxP!\n");
-#else
 
 #ifdef CONFIG_MESON_TRUSTZONE
 	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_OFFSET_POSITION_IN_SRAM);
@@ -299,8 +286,6 @@ m8_tpl_ucl_dec:
     }
 #endif
 #endif
-
-#endif //#if defined (CONFIG_VLSI_EMULATOR)
 
 #ifndef CONFIG_IMPROVE_UCL_DEC
     if(!rc)

@@ -11,7 +11,7 @@
 #ifndef CONFIG_M8
 #define CONFIG_M8
 #endif // ifndef CONFIG_M8
-//#define	CONFIG_VLSI_EMULATOR 1
+
 //#define TEST_UBOOT_BOOT_SPEND_TIME
 
 // cart type of each port

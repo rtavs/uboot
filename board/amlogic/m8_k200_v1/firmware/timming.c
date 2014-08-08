@@ -198,15 +198,9 @@ static struct ddr_set __ddr_setting={
 	.t_pctl_1us_pck		=  CFG_M8_DDR_CLK/2,
 	.t_pctl_100ns_pck	=  CFG_M8_DDR_CLK/20,
 
-#if defined (CONFIG_VLSI_EMULATOR)
-	.t_pctl_init_us		=  2,
-	.t_pctl_rsth_us		=  2,
-	.t_pctl_rstl_us		=  0,
-#else
 	.t_pctl_init_us		=  512,
 	.t_pctl_rsth_us		=  500,
 	.t_pctl_rstl_us		=  100,
-#endif //#if defined (CONFIG_VLSI_EMULATOR)
 
 	.t_pctl_mcfg =   1 |	//[B0] mem-bl: 0 for 4; 1 for 8
 			  (0 << 2) |	//[B2] bl8int_en.   enable bl8 interrupt function.Only valid for DDR2
@@ -468,11 +462,8 @@ STATIC_PREFIX_DATA struct pll_clk_settings __plls
 	.vid2_pll_cntl = 0x61000032,
 	.clk81=159375000, //2.55GHz/4/4=159.375MHz
 
-#if defined (CONFIG_VLSI_EMULATOR)
-    .spi_setting=0xeb949, //it need fine tune?
-#else
     .spi_setting=0xea949, //it need fine tune?
-#endif
+
     .nfc_cfg=(((0)&0xf)<<10) | (0<<9) | (0<<5) | 5,
     .sdio_cmd_clk_divide=5,
     .sdio_time_short=(250*180000)/(2*(12)),

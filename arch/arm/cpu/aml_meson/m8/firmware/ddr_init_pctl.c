@@ -804,13 +804,8 @@ m8_ddr_pxp_emulator_step:
 	if(CONFIG_M8_DDR1_ONLY != nM8_DDR_CHN_SET) //DDR 0
 	{
 
-#if defined(CONFIG_VLSI_EMULATOR)
-		while((readl(P_DDR0_PUB_PGSR0) != 0x8000005f) &&
-			(readl(P_DDR0_PUB_PGSR0) != 0xC000005f))
-#else
 		while((readl(P_DDR0_PUB_PGSR0) != 0x8000007f) &&
 			(readl(P_DDR0_PUB_PGSR0) != 0xC000007f))
-#endif //CONFIG_VLSI_EMULATOR
 		{
 			//ddr_udelay(10);
 			if(readl(P_DDR0_PUB_PGSR0) & PUB_PGSR0_QSGERR)
@@ -826,13 +821,8 @@ m8_ddr_pxp_emulator_step:
 
 	if(CONFIG_M8_DDR0_ONLY != nM8_DDR_CHN_SET) //DDR 1
 	{
-#if defined(CONFIG_VLSI_EMULATOR)
-		while((readl(P_DDR1_PUB_PGSR0) != 0x8000005f) &&
-			(readl(P_DDR1_PUB_PGSR0) != 0xC000005f))
-#else
 		while((readl(P_DDR1_PUB_PGSR0) != 0x8000007f) &&
 			(readl(P_DDR1_PUB_PGSR0) != 0xC000007f))
-#endif //CONFIG_VLSI_EMULATOR
 		{
 			//ddr_udelay(10);
 			if(readl(P_DDR1_PUB_PGSR0) & PUB_PGSR0_QSGERR)
@@ -953,9 +943,6 @@ m8_ddr_pxp_emulator_step:
 		hx_serial_puts("Aml log : DDR1 - BIT deskew & data eye done\n");
 	}
 
-#if defined(CONFIG_VLSI_EMULATOR)
-m8_ddr_vlsi_emulator_done:
-#endif //CONFIG_VLSI_EMULATOR
 
 	//===============================================
 

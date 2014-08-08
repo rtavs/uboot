@@ -396,10 +396,6 @@ ifeq  ($(CONFIG_SELF_COMPRESS),y)
 ALL += $(obj)u-boot-comp.bin
 endif
 
-ifeq ($(CONFIG_VLSI_EMULATOR),y)
-ALL += $(obj)u-boot.hex
-endif
-
 ifeq ($(CONFIG_JOIN_UBOOT_SECUREOS),y)
 SECURE_OS_BIN ?= secure_os/otzone-ucl.bin
 UBOOT_SECURE_OS := $(obj)uboot-secureos.bin
@@ -409,13 +405,6 @@ endif
 AML_USB_UBOOT_NAME = u-boot-usb.bin
 
 all:		$(ALL)
-
-ifeq ($(CONFIG_VLSI_EMULATOR),y)
-$(obj)u-boot.hex:	$(obj)u-boot.bin
-		xxd -p -c1 $< > $@
-		$(OBJDUMP) -D -x build/firmware.out > firmware.asm
-endif
-
 
 #$(obj)u-boot.hex:	$(obj)u-boot
 #		$(OBJCOPY) ${OBJCFLAGS} -O ihex $< $@
@@ -475,11 +464,8 @@ $(obj)u-boot-orig.bin:	$(obj)u-boot
 	$(BOARD_SIZE_CHECK)
 
 ifneq ($(CONFIG_IMPROVE_UCL_DEC),y)
-ifneq ($(CONFIG_VLSI_EMULATOR),y)
 $(obj)u-boot.bin:	$(obj)u-boot-comp.bin $(obj)firmware.bin
-else
-$(obj)u-boot.bin:	$(obj)u-boot-orig.bin $(obj)firmware.bin
-endif
+
 ifndef CONFIG_M6_SECU_BOOT
 	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
 

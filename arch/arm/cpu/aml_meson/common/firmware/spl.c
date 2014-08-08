@@ -141,17 +141,13 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     power_init(POWER_INIT_MODE_NORMAL);
 #endif
 
-#if !defined(CONFIG_VLSI_EMULATOR)
     // initial pll
     pll_init(&__plls);
 	serial_init(__plls.uart);
     #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
        serial_init_uart_a(__plls.uart);
     #endif
-#else
-	serial_init(readl(P_UART_CONTROL(UART_PORT_CONS))|UART_CNTL_MASK_TX_EN|UART_CNTL_MASK_RX_EN);
-	serial_puts("\n\nAmlogic log: UART OK for emulator!\n");
-#endif //#if !defined(CONFIG_VLSI_EMULATOR)
+
 
 
 	//TEMP add

@@ -69,9 +69,6 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	//serial_puts("\nSPL log : ICACHE & DCACHE ON\n");
 #endif	//CONFIG_AML_SPL_L1_CACHE_ON
 
-#if defined(CONFIG_VLSI_EMULATOR)
-	size= 0xC0000; //max is 1MBytes ?
-#else
 	size=__TEXT_SIZE;
 
 #if defined(AML_UBOOT_SINFO_OFFSET)
@@ -84,7 +81,6 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 		size = __TEXT_SIZE;
 #endif //AML_UBOOT_SINFO_OFFSET
 
-#endif
 	//boot_id = 1;
 	if(boot_id>1)
         boot_id=0;
