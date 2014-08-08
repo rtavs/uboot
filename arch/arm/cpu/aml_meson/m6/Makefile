@@ -31,14 +31,9 @@ COBJS-$(CONFIG_AML_HDMI_TX) += hdmi_tx_set.o enc_clk_config.o
 
 ifdef CONFIG_AML_SUSPEND
 COBJS += suspend.o
-ifndef CONFIG_MESON_TRUSTZONE
 COBJS += firmwareld.o
 endif
-endif
 
-ifdef CONFIG_MESON_TRUSTZONE
-COBJS += trustzone.o
-endif
 
 ifdef CONFIG_AML_SECURE
 COBJS += secure_firmwareld.o
@@ -52,8 +47,6 @@ all:	dsp_firmware $(obj).depend $(LIB)
 $(LIB):	$(OBJS)
 	$(call cmd_link_o_target, $(OBJS))
 
-ifndef CONFIG_MESON_TRUSTZONE
-
 ifdef CONFIG_AML_SUSPEND
 FIRMWARE_AUTO_UPDATE=y
 export FIRMWARE_AUTO_UPDATE
@@ -65,10 +58,6 @@ arc_code:
 		make -C $(SRCTREE)/$(CPUDIR)/$(SOC)/firmware/arc_power
 
 endif
-
-
-endif
-
 
 .PHONY: dsp_firmware
 ifdef CONFIG_DSP_VSYNC_INTERRUPT

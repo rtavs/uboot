@@ -12,7 +12,6 @@ unsigned debug_buf[EFUSE_DWORDS] = {0};
 
 void __efuse_write_byte( unsigned long addr, unsigned long data )
 {
-#ifndef CONFIG_MESON_TRUSTZONE
 #ifdef EFUSE_DEBUG
 	char *p = (char*)debug_buf;
 	p[addr] = data;
@@ -84,12 +83,10 @@ void __efuse_write_byte( unsigned long addr, unsigned long data )
 	//set efuse PD=1
 	WRITE_EFUSE_REG_BITS( P_EFUSE_CNTL1, 1, 27, 1);
 
-#endif   // endif trustzone
 }
 
 void __efuse_read_dword( unsigned long addr, unsigned long *data )
 {
-#ifndef CONFIG_MESON_TRUSTZONE
 #ifdef EFUSE_DEBUG
 	unsigned *p =debug_buf;
 	*data = p[addr>>2];
@@ -149,12 +146,10 @@ void __efuse_read_dword( unsigned long addr, unsigned long *data )
 	WRITE_EFUSE_REG_BITS( P_EFUSE_CNTL1, 1, 27, 1);
 
     //printf("__efuse_read_dword: addr=%ld, data=0x%lx\n", addr, *data);
-#endif   // end if trustzone
 }
 
 int efuse_init(void)
 {
-#ifndef CONFIG_MESON_TRUSTZONE
     /* disable efuse encryption */
     WRITE_EFUSE_REG_BITS( P_EFUSE_CNTL4, CNTL4_ENCRYPT_ENABLE_OFF,
         CNTL4_ENCRYPT_ENABLE_BIT, CNTL4_ENCRYPT_ENABLE_SIZE );
@@ -184,6 +179,5 @@ int efuse_init(void)
 	p[3] = p[63] = 0xA3;
 #endif
 #endif
-#endif   // endif trustzone
     return 0;
 }

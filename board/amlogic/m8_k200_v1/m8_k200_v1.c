@@ -18,10 +18,6 @@
 #include <amlogic/aml_pmu_common.h>
 #endif
 
-#ifdef CONFIG_MESON_TRUSTZONE
-#include <trustzone.c>
-#endif
-
 DECLARE_GLOBAL_DATA_PTR;
 
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
@@ -590,15 +586,8 @@ U_BOOT_CMD(
 
 static int do_checkhw(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
-#ifndef CONFIG_MESON_TRUSTZONE
        unsigned int *pID1 =(unsigned int *)0xd9040004;
        //unsigned int *pID2 =(unsigned int *)0xd904002c;
-#else
-       unsigned int ID1 = meson_trustzone_read_socrev1();
-       //unsigned int ID2 = meson_trustzone_read_socrev2();
-       unsigned int *pID1 = &ID1;
-       //unsigned int *pID2 = &ID2;
-#endif
 
   switch(*pID1)
 	{

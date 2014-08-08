@@ -324,10 +324,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
                 unsigned*               ubootBinAddr        = (unsigned*)tplSrcDataAddr;
 
                 uclDecompressInfo->decompressedAddr = (unsigned char*)CONFIG_SYS_TEXT_BASE;
-#ifdef CONFIG_MESON_TRUSTZONE
-                tplSrcDataAddr += READ_SIZE;
-                serial_puts("READ_SIZE "), serial_put_hex(READ_SIZE, 32), serial_puts(",");
-#endif//#ifdef CONFIG_MESON_TRUSTZONE
                 ret = _usb_ucl_decompress(tplSrcDataAddr, uclDecompressInfo->decompressedAddr, &uclDecompressInfo->decompressedLen);
                 if(ret){
                     break;
@@ -340,24 +336,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
                         break;
                     }
                 }
-
-#ifdef CONFIG_MESON_TRUSTZONE
-                secureosOffset = ubootBinAddr[(READ_SIZE - SECURE_OS_OFFSET_POSITION_IN_SRAM)>>2];
-                serial_puts("secureos offset "), serial_put_hex(secureosOffset, 32), serial_puts(",");
-                uclDecompressInfo->decompressedAddr = (unsigned char*)SECURE_OS_DECOMPRESS_ADDR;
-                ret = _usb_ucl_decompress((unsigned char*)ubootBinAddr + secureosOffset,
-                        uclDecompressInfo->decompressedAddr, &uclDecompressInfo->decompressedLen);
-                if(ret){
-                    break;
-                }
-                unsigned* psecureargs = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECUREARGS_ADDRESS_IN_SRAM);
-                *psecureargs = 0;
-#ifdef CONFIG_MESON_SECUREARGS
-                *psecureargs = __secureargs;
-#endif// #ifdef CONFIG_MESON_SECUREARGS
-
-#endif//#ifdef CONFIG_MESON_TRUSTZONE
-
             }
             break;
 

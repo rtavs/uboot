@@ -37,18 +37,4 @@ int efuse_write_usr(char* buf, size_t count, loff_t* ppos);
 #define EFUSE_BYTES				512   //(EFUSE_BITS/8)
 #define EFUSE_DWORDS		128   //(EFUSE_BITS/32)
 
-#ifdef CONFIG_MESON_TRUSTZONE
-// efuse HAL_API arg
-struct efuse_hal_api_arg{
-	unsigned int cmd;		// R/W
-	unsigned int offset;
-	unsigned int size;
-	unsigned int buffer_phy;
-	unsigned int retcnt_phy;
-};
-#define EFUSE_HAL_API_READ	0
-#define EFUSE_HAL_API_WRITE 1
-#define EFUSE_HAL_API_WRITE_PATTERN 2
-#endif
-
 #endif

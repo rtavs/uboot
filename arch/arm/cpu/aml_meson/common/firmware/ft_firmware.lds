@@ -55,6 +55,4 @@ SECTIONS
 	_bssend = . ;
 }
 ASSERT(_end <= AHB_SRAM_BASE + READ_SIZE, "ROM BOOT bootstrap too big");
-#ifndef CONFIG_MESON_TRUSTZONE
 ASSERT(_bssend <= AHB_SRAM_BASE + READ_SIZE, "ROM BOOT bss  too big");
-#endif

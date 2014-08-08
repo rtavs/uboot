@@ -32,16 +32,7 @@ reset:
     bl	main
 
     cmp r0, #0x0
-#ifdef CONFIG_MESON_TRUSTZONE
-	ldreq pc, __SECURE_OS_BASE
-#else
     ldreq pc,__TEXT_BASE
-#endif
-
-#ifdef CONFIG_MESON_TRUSTZONE
-__SECURE_OS_BASE:
-	.word SECURE_OS_DECOMPRESS_ADDR
-#endif
 
 __TEXT_BASE:
     .word TEXT_BASE

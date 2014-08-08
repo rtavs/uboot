@@ -57,6 +57,4 @@ SECTIONS
 	_bssend = . ;
 }
 ASSERT(_end <= CONFIG_USB_SPL_ADDR + READ_SIZE, "ROM BOOT bootstrap too big");
-#ifndef CONFIG_MESON_TRUSTZONE
 ASSERT(_bssend <= CONFIG_USB_SPL_ADDR + READ_SIZE, "ROM BOOT bss  too big");
-#endif

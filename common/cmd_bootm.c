@@ -712,13 +712,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif
 
 #ifdef CONFIG_M6_SECU_BOOT
-#ifdef CONFIG_MESON_TRUSTZONE
-	extern int meson_trustzone_boot_check(unsigned char *addr);
-	ret = meson_trustzone_boot_check((unsigned char*)load_addr);
-#else
 	extern int aml_decrypt_kernel_image(void* kernel_image_address);
 	ret = aml_decrypt_kernel_image((void*)load_addr);
-#endif
 	if(ret != 0)
 	{
 		printf("Error! Illegal kernel image, please check!\n");
@@ -727,15 +722,9 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif //CONFIG_M6_SECU_BOOT
 
 #ifdef CONFIG_AML_SECU_BOOT_V2
-#ifdef CONFIG_MESON_TRUSTZONE
-	extern int meson_trustzone_boot_check(unsigned char *addr);
-	if(!g_nIMGReadFlag)
-	ret = meson_trustzone_boot_check(aml_get_kernel_crypto_addr(argc < 2 ? NULL : argv[1]));
-#else
 	extern int aml_sec_boot_check(unsigned char *pSRC);
 	if(!g_nIMGReadFlag)
 	ret = aml_sec_boot_check(aml_get_kernel_crypto_addr(argc < 2 ? NULL : argv[1]));
-#endif
 	if(0 != ret)
 		return ret;
 #endif //CONFIG_AML_SECU_BOOT_V2

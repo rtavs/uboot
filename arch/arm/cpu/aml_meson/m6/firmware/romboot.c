@@ -2,14 +2,6 @@
 #include <asm/arch/cpu.h>
 #include <asm/arch/romboot.h>
 
-#ifdef CONFIG_MESON_TRUSTZONE
-#include <asm/arch/trustzone.h>
-#include <secureloader.c>
-#ifdef CONFIG_SPI_NOR_SECURE_STORAGE
-#include <spisecustorage.c>
-#endif
-#endif
-
 #if CONFIG_UCL
 #ifndef CONFIG_IMPROVE_UCL_DEC
 extern int uclDecompress(char* op, unsigned* o_len, char* ip);
@@ -610,11 +602,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
     int rc=0;
     unsigned temp_addr;
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	unsigned secure_addr;
-	unsigned secure_size;
-	unsigned *sram;
-#endif
 #if CONFIG_UCL
     temp_addr=target-0x800000;
 #else
@@ -662,14 +649,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
 	aml_m6_sec_boot_check((const unsigned char *)temp_addr);
 #endif //CONFIG_M6_SECU_BOOT
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_OFFSET_POSITION_IN_SRAM);
-	secure_addr = (*sram) + temp_addr - READ_SIZE;
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_SIZE_POSITION_IN_SRAM);
-	secure_size = (*sram);
-	secure_load(secure_addr, secure_size);
-#endif
-
 #if CONFIG_UCL
 #ifndef CONFIG_IMPROVE_UCL_DEC
 	unsigned len;
@@ -700,12 +679,6 @@ STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
 {
     unsigned temp_addr;
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	unsigned secure_addr;
-	unsigned secure_size;
-	unsigned *sram;
-#endif
-
 #if CONFIG_UCL
     temp_addr=target-0x800000;
 #else
@@ -716,14 +689,6 @@ STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
 #if defined(CONFIG_M6_SECU_BOOT)
 	aml_m6_sec_boot_check((const unsigned char *)temp_addr);
 #endif //CONFIG_M6_SECU_BOOT
-
-#ifdef CONFIG_MESON_TRUSTZONE
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_OFFSET_POSITION_IN_SRAM);
-	secure_addr = (*sram) + temp_addr - READ_SIZE;
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_SIZE_POSITION_IN_SRAM);
-	secure_size = (*sram);
-	secure_load(secure_addr, secure_size);
-#endif
 
 #if CONFIG_UCL
 #ifndef CONFIG_IMPROVE_UCL_DEC

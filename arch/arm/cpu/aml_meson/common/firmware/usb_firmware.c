@@ -26,11 +26,6 @@
 #include <amlogic/aml_pmu_common.h>
 #endif
 
-#ifdef CONFIG_MESON_TRUSTZONE
-#include <secureboot.c>
-unsigned int ovFlag;
-#endif
-
 static int _usb_ucl_decompress(unsigned char* compressData, unsigned char* decompressedAddr, unsigned* decompressedLen)
 {
     int ret = __LINE__;
@@ -105,33 +100,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
         AML_WATCH_DOG_START();
     }
 
-#ifdef CONFIG_MESON_TRUSTZONE
-    {
-        unsigned* ubootBinAddr  = (unsigned*)CONFIG_USB_SPL_ADDR;
-        unsigned* psecureargs   = 0;
-        unsigned  decompressedLen = 0;
-        unsigned  secureosOffset  = 0;
-        unsigned char* compressedAddr   = 0;
-        unsigned char* decompressedAddr = (unsigned char*)SECURE_OS_DECOMPRESS_ADDR;
-        int ret = 1;
-
-        secureosOffset = ubootBinAddr[(READ_SIZE - SECURE_OS_OFFSET_POSITION_IN_SRAM)>>2];
-        compressedAddr   = (unsigned char*)ubootBinAddr + secureosOffset;
-        serial_puts("secureos offset "), serial_put_hex(secureosOffset, 32), serial_puts(",");
-        ret = _usb_ucl_decompress(compressedAddr, decompressedAddr, &decompressedLen);
-        if(ret){
-            serial_puts("\nload secureos error,now reset chip to let PC know\n");
-            AML_WATCH_DOG_START();
-        }
-
-        psecureargs = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECUREARGS_ADDRESS_IN_SRAM);
-        *psecureargs = 0;
-#ifdef CONFIG_MESON_SECUREARGS
-        *psecureargs = __secureargs;
-#endif// #ifdef CONFIG_MESON_SECUREARGS
-    }
-#endif//#ifdef CONFIG_MESON_TRUSTZONE
-
     // load uboot
     {
         int ret = 1;
@@ -155,9 +123,5 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
     serial_puts("\nSystem Started\n");
 
-#ifdef CONFIG_MESON_TRUSTZONE
-    return ovFlag;
-#else
 	return 0;
-#endif
 }

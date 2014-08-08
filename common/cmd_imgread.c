@@ -153,13 +153,8 @@ static int do_image_read_dtb(cmd_tbl_t *cmdtp, int flag, int argc, char * const 
         }
 
 #ifdef CONFIG_AML_SECU_BOOT_V2
-#ifdef CONFIG_MESON_TRUSTZONE
-        extern int meson_trustzone_boot_check(unsigned char *addr);
-        rc = meson_trustzone_boot_check(loadaddr + 2048);
-#else
         extern int aml_sec_boot_check(unsigned char *pSRC);
         rc = aml_sec_boot_check(loadaddr + 2048);
-#endif
         if(rc){
             errorP("Fail when sec_check, rc=%d\n", rc);
             return __LINE__;
@@ -221,13 +216,8 @@ static int do_image_read_dtb(cmd_tbl_t *cmdtp, int flag, int argc, char * const 
         return __LINE__;
     }
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	extern int meson_trustzone_boot_check(unsigned char *addr);
-	rc = meson_trustzone_boot_check((unsigned char *)loadaddr);
-#else
 	extern int aml_sec_boot_check(unsigned char *pSRC);
 	rc = aml_sec_boot_check((unsigned char *)loadaddr);
-#endif
 	if(rc){
         errorP("Fail when sec_check, rc=%d\n", rc);
         return __LINE__;

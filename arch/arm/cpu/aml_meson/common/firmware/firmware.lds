@@ -50,15 +50,10 @@ SECTIONS
 
 	_end = .;
 	. = ALIGN(4);
-#ifdef 	CONFIG_MESON_TRUSTZONE
-	. =RAM_END-0x10000;
-#endif
 	_bssstart = . ;
 	.bss : { *(.bss) }
 	. = ALIGN(4);
 	_bssend = . ;
 }
 ASSERT(_end <= AHB_SRAM_BASE + READ_SIZE, "ROM BOOT bootstrap too big");
-#ifndef CONFIG_MESON_TRUSTZONE
 ASSERT(_bssend <= AHB_SRAM_BASE + READ_SIZE, "ROM BOOT bss  too big");
-#endif

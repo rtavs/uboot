@@ -56,11 +56,8 @@ char * get_acs_struct_addr (char *name)
 {
 	uint64_t _acs_set_addr, _acs_tmp_addr;
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	_acs_set_addr =  meson_trustzone_acs_addr(START_ADDR);
-#else
+
 	_acs_set_addr =  *((volatile unsigned int*)START_ADDR);
-#endif
 	_acs_tmp_addr = _acs_set_addr;
 
 	while(_acs_set_addr < (_acs_tmp_addr + ACS_SET_LEN)){
@@ -82,11 +79,7 @@ int  get_partition_table()
 	addr = (uint64_t)get_acs_struct_addr(TABLE_MAGIC_NAME);
 	if(addr){
 		addr = addr + 12;
-#ifdef CONFIG_MESON_TRUSTZONE
-		addr =  meson_trustzone_acs_addr(addr);
-#else
 		addr = *((volatile uint64_t *)addr);
-#endif
 		// printf("get_patition_table: addr =%llx:\n",addr);
 
 		part_table = malloc((MAX_PART_NUM * sizeof(struct partitions)));
@@ -108,11 +101,7 @@ int  get_partition_table()
 	addr = (uint64_t)get_acs_struct_addr(STORE_MAGIC_NAME);
 	if(addr) {
 		addr = addr + 12;
-#ifdef CONFIG_MESON_TRUSTZONE
-		addr =  meson_trustzone_acs_addr(addr);
-#else
 		addr = *((volatile uint64_t *)addr);
-#endif
 		// printf("get_patition_table: store config addr %llx:\n",addr);
 
         sc = (struct store_config *)addr;

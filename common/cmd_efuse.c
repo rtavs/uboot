@@ -23,16 +23,6 @@ int __aml_sec_boot_check_efuse(unsigned char *pSRC)
 int aml_sec_boot_check_efuse(unsigned char *pSRC)
 	__attribute__((weak, alias("__aml_sec_boot_check_efuse")));
 
-#ifdef CONFIG_MESON_TRUSTZONE
-ssize_t __meson_trustzone_efuse_writepattern(const char *buf, size_t count)
-{
-	printf("run weak function\n");
-	return -1;
-}
-ssize_t meson_trustzone_efuse_writepattern(const char *buf, size_t count)
-	__attribute__((weak, alias("__meson_trustzone_efuse_writepattern")));
-#endif
-
 
 int cmd_efuse(int argc, char * const argv[], char *buf)
 {
@@ -46,10 +36,9 @@ int cmd_efuse(int argc, char * const argv[], char *buf)
 		action=EFUSE_READ;
 	else if(strncmp(argv[1], "write", 5) == 0)
 		action=EFUSE_WRITE;
-#ifndef CONFIG_MESON_TRUSTZONE
 	else if(strcmp(argv[1], "dump") == 0)
 		action=EFUSE_DUMP;
-#endif
+
 	/*else if(strcmp(argv[1], "version") == 0)
 		action = EFUSE_VERSION;*/
 	else if(strcmp(argv[1], "secure_boot_set") == 0)
@@ -131,33 +120,6 @@ int cmd_efuse(int argc, char * const argv[], char *buf)
 		memset(buf, 0, info.data_len);
 		s=argv[3];
 
-#ifdef WRITE_TO_EFUSE_ENABLE
-		//usb_burning
-		if( !strncmp(title,"usid",sizeof("usid")) )				 	//efuse write usid data(data is string)
-			memcpy(buf, s, strlen(s));
-		else if( !strncmp(title,"hdcp",sizeof("hdcp")) )  			 //efuse write hdcp data(data is not string)
-			memcpy(buf, s, 288);
-		else if( !strncmp(title,"version",sizeof("version"))){
-			unsigned int ver;
-			ver = simple_strtoul(s, &end, 16);
-			buf[0]=(char)ver;
-		}
-		else													//efuse write version, mac, mac_bt, mac_wifi is data
-		{
-			for(i=0; i<info.data_len; i++){
-				buf[i] = s ? simple_strtoul(s, &end, 16) : 0;
-				if (s)
-					s = (*end) ? end+1 : end;
-			}
-
-			if(*s){
-				printf("error: The wriiten data length is too large.\n");
-				return -1;
-			}
-		}
-
-#else
-
 		if( !strncmp(title,"version",sizeof("version"))){
 			unsigned int ver;
 			ver = simple_strtoul(s, &end, 16);
@@ -175,7 +137,6 @@ int cmd_efuse(int argc, char * const argv[], char *buf)
 				return -1;
 			}
 		}
-#endif
 
 		if(efuse_write_usr(buf, info.data_len, (loff_t*)&info.offset)<0){
 			printf("error: efuse write fail.\n");
@@ -188,12 +149,6 @@ int cmd_efuse(int argc, char * const argv[], char *buf)
 	{
 		s = argv[2];
 		unsigned int nAddr = simple_strtoul(s, &end, 16);
-	#ifdef CONFIG_MESON_TRUSTZONE
-		if(meson_trustzone_efuse_writepattern(nAddr, EFUSE_BYTES)){
-			printf("aml log : efuse pattern write fail!\n");
-			return -1;
-		}
-	#else
 		int nChkVal,nChkAddr;
 		nChkVal = nChkAddr = 0;
 		efuse_read(&nChkVal,sizeof(nChkVal),(loff_t*)&nChkAddr);
@@ -211,7 +166,6 @@ int cmd_efuse(int argc, char * const argv[], char *buf)
 		{	unsigned int pos = 0;
 			efuse_write(nAddr, EFUSE_BYTES, (loff_t*)&pos);
 		}
-	#endif
 	}
 	// efuse info
 	else if(action==EFUSE_INFO){

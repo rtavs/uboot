@@ -36,10 +36,6 @@ COBJS += suspend.o
 COBJS += firmwareld.o
 endif
 
-ifdef CONFIG_MESON_TRUSTZONE
-COBJS += trustzone.o
-endif
-
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c) $(COBJS-y:.o=.c)
 OBJS	:= $(addprefix $(obj),$(SOBJS) $(COBJS))
 

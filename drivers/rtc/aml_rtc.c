@@ -31,15 +31,9 @@ int c_dbg_lvl = 0;
 #define RTC_DBG_VAL 1 << 0
 #define RTC_DBG_WR 1 << 1
 
-#ifdef CONFIG_MESON_TRUSTZONE
-extern uint32_t meson_trustzone_rtc_read_reg32(uint32_t addr);
-extern uint32_t meson_trustzone_rtc_write_reg32(uint32_t addr, uint32_t value);
-#define WR_RTC(reg, val) meson_trustzone_rtc_write_reg32(P_##reg, val)
-#define RD_RTC(reg) (meson_trustzone_rtc_read_reg32(P_##reg))
-#else
+
 #define WR_RTC(reg, val) __raw_writel(val, P_##reg)
 #define RD_RTC(reg) (__raw_readl(P_##reg))
-#endif
 
 // Define register (AOBUS/CBUS) RTC_ADDR0 bit map
 #define RTC_REG0_BIT_sclk_static     20
@@ -448,11 +442,7 @@ int aml_rtc_init(void)
 	printf("aml_rtc_init\n");
 #endif
 #ifdef CONFIG_AML_MESON_6
-#ifdef CONFIG_MESON_TRUSTZONE
-	//if(!(meson_trustzone_rtc_read_reg32(P_RTC_ADDR1) & (s_ready)))
-#else
 	//if(!(readl(P_RTC_ADDR1) & (s_ready)))
-#endif
 	{
 		printf("aml rtc init first time!\n");
 		static_register_write(get_rtc_static_reg_init_val());

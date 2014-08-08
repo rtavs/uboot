@@ -6,14 +6,6 @@
 #include "secure.c"
 #endif//#if defined(CONFIG_AML_SECU_BOOT_V2)
 
-#ifdef CONFIG_MESON_TRUSTZONE
-#include <asm/arch/trustzone.h>
-#include <secureloader.c>
-#ifdef CONFIG_SPI_NOR_SECURE_STORAGE
-#include <spisecustorage.c>
-#endif
-#endif
-
 #if CONFIG_UCL
 #ifndef CONFIG_IMPROVE_UCL_DEC
 extern int uclDecompress(char* op, unsigned* o_len, char* ip);
@@ -116,12 +108,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
 	unsigned len;
     unsigned temp_addr;
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	unsigned secure_addr;
-	unsigned secure_size;
-	unsigned *sram;
-#endif
-
 #if CONFIG_UCL
     temp_addr=target+0x800000;
 #else
@@ -169,10 +155,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
         case POR_1ST_SDIO_C:
 		serial_puts("Boot From SDIO C\n");
 		rc=sdio_read(temp_addr,size,POR_2ND_SDIO_C<<2);
-#ifdef CONFIG_MESON_TRUSTZONE
-            serial_puts("Boot From SDIO C get storage\n");
-            sdio_secure_storage_get();
-#endif
 		break;
         case POR_1ST_SDIO_B:
 		rc=sdio_read(temp_addr,size,POR_2ND_SDIO_B<<2);break;
@@ -192,14 +174,6 @@ m8_tpl_dec:
 #endif //CONFIG_AML_SECU_BOOT_V2
 
 m8_tpl_ucl_dec:
-
-#ifdef CONFIG_MESON_TRUSTZONE
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_OFFSET_POSITION_IN_SRAM);
-	secure_addr = (*sram) + temp_addr - READ_SIZE;
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_SIZE_POSITION_IN_SRAM);
-	secure_size = (*sram);
-	secure_load(secure_addr, secure_size);
-#endif
 
 #if CONFIG_UCL
 #ifndef CONFIG_IMPROVE_UCL_DEC
@@ -231,12 +205,6 @@ STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
     unsigned temp_addr;
 	unsigned len;
 
-#ifdef CONFIG_MESON_TRUSTZONE
-	unsigned secure_addr;
-	unsigned secure_size;
-	unsigned *sram;
-#endif
-
 #if CONFIG_UCL
     temp_addr=target+0x800000;
 #else
@@ -263,15 +231,6 @@ m8_tpl_dec:
 		AML_WATCH_DOG_START();
 	}
 #endif //CONFIG_AML_SECU_BOOT_V2
-
-
-#ifdef CONFIG_MESON_TRUSTZONE
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_OFFSET_POSITION_IN_SRAM);
-	secure_addr = (*sram) + temp_addr - READ_SIZE;
-	sram = (unsigned*)(AHB_SRAM_BASE + READ_SIZE-SECURE_OS_SIZE_POSITION_IN_SRAM);
-	secure_size = (*sram);
-	secure_load(secure_addr, secure_size);
-#endif
 
 
 m8_tpl_ucl_dec:

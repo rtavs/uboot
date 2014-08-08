@@ -29,11 +29,6 @@
 #include <amlogic/aml_pmu_common.h>
 #endif
 
-#ifdef CONFIG_MESON_TRUSTZONE
-#include <secureboot.c>
-unsigned int ovFlag;
-#endif
-
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
 #if defined(CONFIG_M8) || defined(CONFIG_M8B)
@@ -190,19 +185,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	serial_puts("\n");
 
 	//asm volatile ("wfi");
-	// load secureOS
-#ifdef CONFIG_MESON_TRUSTZONE
-	if(load_secureos()){
-		serial_puts("\nload secureOS fail,now reset the chip");
-		ovFlag = 1;
-		AML_WATCH_DOG_START();
-	}
-	else{
-		ovFlag = 0;
-		serial_puts("\nOV System Started\n");
-		serial_wait_tx_empty();
-	}
-#endif
 
     serial_puts("\nSystem Started\n");
 
@@ -222,20 +204,11 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     fpAddr = CONFIG_SYS_TEXT_BASE+0x800000;
 #endif
 
-#ifdef CONFIG_MESON_TRUSTZONE
-    fpAddr = SECURE_OS_DECOMPRESS_ADDR;
-#endif
-
     typedef  void (*t_func_v1)(void);
     t_func_v1 fp_program = (t_func_v1)fpAddr;
     //here need check ?
     fp_program();
 #endif
 
-
-#ifdef CONFIG_MESON_TRUSTZONE
-    return ovFlag;
-#else
 	return 0;
-#endif
 }

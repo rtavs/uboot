@@ -450,7 +450,6 @@ endif #CONFIG_AML_SECU_BOOT_V2
 else #CONFIG_M6_SECU_BOOT
 	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
 	@$(obj)tools/convert --soc $(SOC)  -s $(obj)usb_spl.bin -i $(obj)u-boot-orig.bin -o $(obj)$(AML_USB_UBOOT_NAME)
-ifndef CONFIG_MESON_TRUSTZONE
 ifdef CONFIG_M6_SECU_AUTH_KEY
 	@./tools/secu_boot/encrypto2 $@ ./tools/secu_boot/keys/rsa_key_comm_pub.dat
 else
@@ -467,7 +466,6 @@ else #CONFIG_M6TVD
 endif #CONFIG_M6TVD
 endif #CONFIG_AML_CRYPTO_UBOOT
 
-endif #CONFIG_MESON_TRUSTZONE
 endif #CONFIG_M6_SECU_BOOT
 
 else #CONFIG_IMPROVE_UCL_DEC
@@ -476,12 +474,10 @@ ifndef CONFIG_M6_SECU_BOOT
 	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
 else
 	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
-ifndef CONFIG_MESON_TRUSTZONE
 ifdef CONFIG_M6_SECU_AUTH_KEY
 	@./tools/secu_boot/encrypto2 $@ ./tools/secu_boot/keys/rsa_key_comm_pub.dat
 else
 	@./tools/secu_boot/encrypto2 $@
-endif
 endif
 endif
 

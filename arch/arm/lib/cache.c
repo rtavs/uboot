@@ -178,23 +178,6 @@ void dcache_invalid_range(unsigned start, unsigned size)
 
 }
 
-#ifdef CONFIG_MESON_TRUSTZONE
-void ov_dcache_invalid_range(unsigned start, unsigned size)
-{
-    unsigned st,end,i;
-    st=start&(~(CACHE_LINE_SIZE-1));
-    end=(start+size)&(~(CACHE_LINE_SIZE-1));
-
-    for(i=st;i<end;i+=CACHE_LINE_SIZE)
-    {
-        dcache_inv_line(i);
-    }
-#ifndef CONFIG_L2_OFF
-    l2x0_wait_inv();
-#endif
-}
-#endif
-
 void icache_invalid(void)
 {
 #ifndef CONFIG_ICACHE_OFF

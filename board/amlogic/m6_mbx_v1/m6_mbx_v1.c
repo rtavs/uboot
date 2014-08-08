@@ -461,28 +461,13 @@ set_dcdc3(1100);	//set DC-DC3 to 1100mV
 //POWER key
 inline void key_init(void)
 {
-#ifdef CONFIG_MESON_TRUSTZONE
-	unsigned temp = meson_trustzone_rtc_read_reg32(P_RTC_ADDR0);
-	temp &= (~(1<<11));
-	meson_trustzone_rtc_write_reg32(P_RTC_ADDR0, temp);
-
-	temp = meson_trustzone_rtc_read_reg32(P_RTC_ADDR1);
-	temp &= (~(1<<3));
-	meson_trustzone_rtc_write_reg32(P_RTC_ADDR1, temp);
-#else
 	clrbits_le32(P_RTC_ADDR0, (1<<11));
 	clrbits_le32(P_RTC_ADDR1, (1<<3));
-#endif
 }
 
 inline int get_key(void)
 {
-#ifdef CONFIG_MESON_TRUSTZONE
-	unsigned temp = meson_trustzone_rtc_read_reg32(P_RTC_ADDR1);
-	return (((temp >> 2) & 1) ? 0 : 1);
-#else
 	return (((readl(P_RTC_ADDR1) >> 2) & 1) ? 0 : 1);
-#endif
 }
 #ifdef CONFIG_SWITCH_BOOT_MODE
 int switch_boot_mode(void)

@@ -291,97 +291,6 @@ static efuseinfo_item_t efuseinfo_v2[] =
 	},
 };
 
-#ifdef CONFIG_MESON_TRUSTZONE
-static efuseinfo_item_t efuseinfo_v4[] =
-{
-	{
-		.title = "licence",
-		.offset = 0,
-		.enc_len = 3,
-		.data_len = 3,
-		.we = 0,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-	{
-		.title = "version",   // include machid
-		.offset = V2_EFUSE_VERSION_OFFSET, //3,
-		.enc_len = V2_EFUSE_VERSION_ENC_LEN, //1,
-		.data_len = V2_EFUSE_VERSION_DATA_LEN, //1,
-		.we = 1,
-		.bch_en = V2_EFUSE_VERSION_BCH_EN, //0,
-		.bch_reverse = V2_EFUSE_VERSION_BCH_REVERSE, //0,
-	},
-	{
-		.title = "customerid",   // include machid
-		.offset = 4,
-		.enc_len = 4,
-		.data_len = 4,
-#ifdef CONFIG_MACHID_CHECK
-		.we = 1,
-#else
-		.we = 0,
-#endif
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-	{
-		.title = "rsakey",
-		.offset = 8,
-		.enc_len = 128,
-		.data_len = 128,
-		.we = 0,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-	{
-		.title = "mac",    //for the main network interface
-		.offset = 436,
-		.enc_len = 6,
-		.data_len = 6,
-		.we=1,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-	{
-		.title = "mac_bt",  //for the second network interface or bt
-		.offset = 442,
-		.enc_len = 6,
-		.data_len = 6,
-		.we=1,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-	{
-		.title = "mac_wifi", //for the second network interface or bt
-		.offset = 448,
-		.enc_len = 6,
-		.data_len = 6,
-		.we = 1,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-	{
-		.title = "usid",
-		.offset = V2_EFUSE_USID_OFFSET,// 454,
-		.enc_len = V2_EFUSE_USID_ENC_LEN, //58,
-		.data_len = V2_EFUSE_USID_DATA_LEN, //58,
-		.we=1,
-		.bch_en = V2_EFUSE_USID_BCH_EN, //0,
-		.bch_reverse = V2_EFUSE_USID_BCH_REVERSE, //0,
-	},
-	{
-		.title = "machineid",
-		.offset = 502,
-		.enc_len = 4,
-		.data_len = 4,
-		.we = 1,
-		.bch_en = 0,
-		.bch_reverse = 0,
-	},
-};
-#endif
-
 //m8 efuse layout
 static efuseinfo_item_t efuseinfo_m8_serialNum_v1[] =
 {
@@ -526,13 +435,6 @@ efuseinfo_t efuseinfo[] =
 		.size = sizeof(efuseinfo_v2)/sizeof(efuseinfo_item_t),
 		.version = 2,
 	},
-#ifdef CONFIG_MESON_TRUSTZONE
-	{
-		.efuseinfo_version = efuseinfo_v4,
-		.size = sizeof(efuseinfo_v4)/sizeof(efuseinfo_item_t),
-		.version = 4,
-	},
-#endif
 	{
 		.efuseinfo_version = efuseinfo_m8_serialNum_v1,
 		.size = sizeof(efuseinfo_m8_serialNum_v1)/sizeof(efuseinfo_item_t),

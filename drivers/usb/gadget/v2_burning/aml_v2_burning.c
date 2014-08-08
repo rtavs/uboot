@@ -58,9 +58,6 @@ static unsigned _get_romcode_boot_id(void)
 {
     unsigned* pBootId = &C_ROM_BOOT_DEBUG->boot_id;
     unsigned boot_id = *pBootId;
-#ifdef CONFIG_MESON_TRUSTZONE
-    boot_id = meson_trustzone_sram_read_reg32(pBootId);
-#endif// #ifdef CONFIG_MESON_TRUSTZONE
 
     return boot_id;
 }

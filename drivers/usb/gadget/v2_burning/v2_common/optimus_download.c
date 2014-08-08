@@ -139,13 +139,8 @@ static int _check_partition_table_consistency(const unsigned uboot_bin)
     partTabAddrInBin  = acsSettingInBin->partition_table_addr - addrMapFromAhb2Bin;
     partsTabInBin     = (const struct partitions*)partTabAddrInBin;
 
-#ifndef CONFIG_MESON_TRUSTZONE
     acsSettingInSram  = (struct acs_setting*)(*(unsigned*)START_ADDR);
-#else
-    //twice eget value at sram address and copy 1K to memory
-    acsSettingInSram  = (struct acs_setting*)meson_trustzone_acs_addr(START_ADDR);
-    DWN_MSG("[Trust]acsSettingInSram=0x%p\n", acsSettingInSram);
-#endif// #ifndef CONFIG_MESON_TRUSTZONE
+
     partsTabInSram    = (const struct partitions*)acsSettingInSram->partition_table_addr;
     DWN_MSG("partsTabInSram=0x%p\n", partsTabInSram);
 
@@ -155,10 +150,6 @@ static int _check_partition_table_consistency(const unsigned uboot_bin)
         DWN_MSG("acs magic OR part magic in SPL not match\n");
         return __LINE__;//Not to check partTable as acs magic or part magic not match in SRAM, assert this!!
     }
-
-#ifdef CONFIG_MESON_TRUSTZONE
-    partsTabInSram    = (const struct partitions*)meson_trustzone_acs_addr((unsigned)&acsSettingInSram->partition_table_addr);
-#endif// #ifndef CONFIG_MESON_TRUSTZONE
 
     rc = memcmp(partsTabInSram, partsTabInBin, partitionTableSz);
     DWN_MSG("Check parts table %s\n", !rc ? "OK." : "FAILED!");
@@ -1254,11 +1245,7 @@ int optimus_burn_complete(const int choice)
 #if ROM_BOOT_SKIP_BOOT_ENABLED
 int optimus_enable_romboot_skip_boot(void)
 {
-#ifdef CONFIG_MESON_TRUSTZONE
-	writel(meson_trustzone_sram_read_reg32(SKIP_BOOT_REG_BACK_ADDR), 0xc8100000); //disable watchdog
-#else
 	writel(readl(SKIP_BOOT_REG_BACK_ADDR), 0xc8100000); //disable watchdog
-#endif// #ifdef CONFIG_MESON_TRUSTZONE
 
 	//enable romboot skip_boot function to jump to usb boot
     DWN_MSG("Skip boot flag[%x]\n", readl(0xc8100000));

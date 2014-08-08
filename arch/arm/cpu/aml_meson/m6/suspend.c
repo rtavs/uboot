@@ -470,12 +470,6 @@ void reset_watchdog(void)
 }
 #endif
 
-#ifdef CONFIG_MESON_TRUSTZONE
-int meson_power_suspend(void)
-{
-	return meson_trustzone_suspend_uboot();
-}
-#else
 int meson_power_suspend(void)
 {
 	static int test_flag = 0;
@@ -501,7 +495,6 @@ int meson_power_suspend(void)
 #endif
 	return 0;
 }
-#endif
 
 extern void *malloc (size_t len);
 extern void free(void*);
