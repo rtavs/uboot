@@ -688,23 +688,12 @@ unsigned char* aml_get_kernel_crypto_addr(const char* straddr)
 int g_nIMGReadFlag = 0;
 #endif //#ifdef CONFIG_AML_SECU_BOOT_V2
 
-#if defined(AML_UBOOT_LOG_PROFILE)
-extern int __g_nTE1_4BC722B3__ ;
-extern int __g_nTE2_4BC722B3__ ;
-extern int __g_nTEFlag_4BC722B3__;
-extern int __g_nTStep_4BC722B3__;
-#endif //AML_UBOOT_LOG_PROFILE
-
-
 int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	ulong		iflag;
 	ulong		load_end = 0;
 	int		    ret = 0;
 	boot_os_fn	*boot_fn;
-
-	AML_LOG_INIT("cmd_bootm");
-	AML_LOG_TE("cmd_bootm");
 
 #ifdef TEST_UBOOT_BOOT_SPEND_TIME
 	bootm_start_time = get_utimer(0);
@@ -723,8 +712,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	}
 #endif
 
-	AML_LOG_TE("cmd_bootm");
-
 #ifdef CONFIG_RESET_TO_SYSTEM
     struct aml_pmu_driver *pmu_driver = NULL;
     pmu_driver = aml_pmu_get_driver();
@@ -732,8 +719,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
         pmu_driver->pmu_reset_flag_operation(RESET_FLAG_SET);
     }
 #endif
-
-	AML_LOG_TE("cmd_bootm");
 
 #ifdef CONFIG_M6_SECU_BOOT
 #ifdef CONFIG_MESON_TRUSTZONE
@@ -750,9 +735,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	}
 #endif //CONFIG_M6_SECU_BOOT
 
-
-	AML_LOG_TE("cmd_bootm");
-
 #ifdef CONFIG_AML_SECU_BOOT_V2
 #ifdef CONFIG_MESON_TRUSTZONE
 	extern int meson_trustzone_boot_check(unsigned char *addr);
@@ -766,9 +748,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	if(0 != ret)
 		return ret;
 #endif //CONFIG_AML_SECU_BOOT_V2
-
-
-	AML_LOG_TE("cmd_bootm");
 
 #ifdef CONFIG_AML_GATE_INIT
 		extern void gate_init(void);
@@ -792,12 +771,8 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			return do_bootm_subcommand(cmdtp, flag, argc, argv);
 	}
 
-	AML_LOG_TE("cmd_bootm");
-
 	if (bootm_start(cmdtp, flag, argc, argv))
 		return 1;
-
-	AML_LOG_TE("cmd_bootm");
 
 	/*
 	 * We have reached the point of no return: we are going to
@@ -819,11 +794,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	usb_stop();
 #endif
 
-	AML_LOG_TE("cmd_bootm");
-
 	ret = bootm_load_os(images.os, &load_end, 1);
-
-	AML_LOG_TE("cmd_bootm");
 
 	if (ret < 0) {
 		if (ret == BOOTM_ERR_RESET)
@@ -848,11 +819,7 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		}
 	}
 
-	AML_LOG_TE("cmd_bootm");
-
 	lmb_reserve(&images.lmb, images.os.load, (load_end - images.os.load));
-
-	AML_LOG_TE("cmd_bootm");
 
 	if (images.os.type == IH_TYPE_STANDALONE) {
 		if (iflag)
@@ -869,7 +836,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		fixup_silent_linux();
 #endif
 
-	AML_LOG_TE("cmd_bootm");
 
 #ifdef CONFIG_AUTO_SET_BOOTARGS_MEM
 	mem_size_arg_process();
@@ -890,7 +856,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		return 1;
 	}
 
-	AML_LOG_TE("cmd_bootm");
 
 	arch_preboot_os();
 
@@ -902,8 +867,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	}
 #endif
 	ulong	temp_img_addr;
-
-	AML_LOG_TE("cmd_bootm");
 
     printf("uboot time: %d us.\n", get_utimer(0));
 	boot_fn(0, argc, argv, &images);

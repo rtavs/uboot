@@ -112,13 +112,6 @@ extern int aml_lcd_init(void);
 // Pre-clear hdmi hdcp ksv ram
 extern int hdmi_hdcp_clear_ksv_ram(void);
 
-#if defined(AML_UBOOT_LOG_PROFILE)
-int __g_nTE1_4BC722B3__ = 0 ;
-int __g_nTE2_4BC722B3__ = 0 ;
-int __g_nTEFlag_4BC722B3__ = 0;
-int __g_nTStep_4BC722B3__ = 0;
-#endif //AML_UBOOT_LOG_PROFILE
-
 /************************************************************************
  * Coloured LED functionality
  ************************************************************************
@@ -612,9 +605,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 unsigned int before_nand_init =  get_utimer(0);
 #endif
 
-	AML_LOG_INIT("board");
-	AML_LOG_TE("board");
-
 #if defined(CONFIG_CMD_NAND)
 	puts ("NAND:  ");
 #ifdef  CONFIG_NEXT_NAND
@@ -633,19 +623,13 @@ unsigned int before_nand_init =  get_utimer(0);
 	printf("\ntime: from powerup to nand init finished %d us \n", after_nand_init);
 #endif
 
-	AML_LOG_TE("board");
-
 #ifdef CONFIG_STORE_COMPATIBLE
 	get_storage_device_flag(init_ret);
 #endif
 
-	AML_LOG_TE("board");
-
 #if defined(CONFIG_CMD_ONENAND)
 	onenand_init();
 #endif
-
-	AML_LOG_TE("board");
 
 #if defined (CONFIG_GENERIC_MMC) && defined(CONFIG_STORE_COMPATIBLE)
     if((device_boot_flag == SPI_EMMC_FLAG) || (device_boot_flag == EMMC_BOOT_FLAG)) { // if eMMC/tSD is exist
@@ -656,8 +640,6 @@ unsigned int before_nand_init =  get_utimer(0);
     }
 #endif
 
-	AML_LOG_TE("board");
-
 #if defined (CONFIG_PARTITIONS_STORE)
         mmc = find_mmc_device(1);
         if (mmc) {
@@ -665,33 +647,23 @@ unsigned int before_nand_init =  get_utimer(0);
         }
 #endif
 
-	AML_LOG_TE("board");
-
 #ifdef CONFIG_HAS_DATAFLASH
 	AT91F_DataflashInit();
 	dataflash_print_info();
 #endif
 
-	AML_LOG_TE("board");
-
 	/* initialize environment */
 	env_relocate ();
-
-	AML_LOG_TE("board");
 
 #ifdef CONFIG_STORE_COMPATIBLE
 	set_storage_device_flag();
 #endif
-
-	AML_LOG_TE("board");
 
 //#ifdef MX_REVD
 #if defined(CONFIG_M6) || defined(CONFIG_M6TV) || defined(CONFIG_M6TVD)
 		//if not clear, uboot command reset will fail -> blocked
 		*((volatile unsigned long *)0xc8100000) = 0;
 #endif
-
-	AML_LOG_TE("board");
 
 	if ((s = getenv ("aml_dt")) != NULL) {
 		run_command(s, 0);
@@ -703,8 +675,6 @@ unsigned int before_nand_init =  get_utimer(0);
 	}
 #endif
 
-	AML_LOG_TE("board");
-
 	if ((s = getenv ("aml_dt")) != NULL) {
 		run_command(s, 0);
 	}
@@ -713,33 +683,23 @@ unsigned int before_nand_init =  get_utimer(0);
 	vpu_probe();
 #endif
 
-	AML_LOG_TE("board");
-
 #ifdef CONFIG_VFD
 	/* must do this after the framebuffer is allocated */
 	drv_vfd_init();
 #endif /* CONFIG_VFD */
-
-	AML_LOG_TE("board");
 
 	/* IP Address */
 	gd->bd->bi_ip_addr = getenv_IPaddr ("ipaddr");
 
 	stdio_init ();	/* get the devices list going. */
 
-	AML_LOG_TE("board");
-
 	jumptable_init ();
-
-	AML_LOG_TE("board");
 
 
 #if defined(CONFIG_API)
 	/* Initialize API */
 	api_init ();
 #endif
-
-	AML_LOG_TE("board");
 
 	console_init_r ();	/* fully init console as a device */
 
@@ -751,8 +711,6 @@ unsigned int before_nand_init =  get_utimer(0);
 	/* miscellaneous platform dependent initialisations */
 	misc_init_r ();
 #endif
-
-	AML_LOG_TE("board");
 
 	 /* set up exceptions */
 	interrupt_init ();
@@ -769,8 +727,6 @@ unsigned int before_nand_init =  get_utimer(0);
 	}
 #endif /* CONFIG_DRIVER_SMC91111 || CONFIG_DRIVER_LAN91C96 */
 
-	AML_LOG_TE("board");
-
 	/* Initialize from environment */
 	if ((s = getenv ("loadaddr")) != NULL) {
 		load_addr = simple_strtoul (s, NULL, 16);
@@ -780,8 +736,6 @@ unsigned int before_nand_init =  get_utimer(0);
 		copy_filename (BootFile, s, sizeof (BootFile));
 	}
 #endif
-
-	AML_LOG_TE("board");
 
 #ifdef BOARD_LATE_INIT
 	board_late_init ();
@@ -795,16 +749,12 @@ unsigned int before_nand_init =  get_utimer(0);
 	puts ("Net:   ");
 #endif
 
-	AML_LOG_TE("board");
-
 	eth_initialize(gd->bd);
 #if defined(CONFIG_RESET_PHY_R)
 	debug ("Reset Ethernet PHY\n");
 	reset_phy();
 #endif
 #endif
-
-	AML_LOG_TE("board");
 
 #ifdef CONFIG_CMD_ADC_POWER_KEY
 	puts ("cold power up \n");
@@ -819,8 +769,6 @@ unsigned int before_nand_init =  get_utimer(0);
 		}
 #endif
 
-	AML_LOG_TE("board");
-
 #ifdef TEST_UBOOT_BOOT_SPEND_TIME
 unsigned int before_lcd_init =  get_utimer(0);
 #endif
@@ -828,16 +776,12 @@ unsigned int before_lcd_init =  get_utimer(0);
 #if CONFIG_AUTO_START_SD_BURNING
     if(is_tpl_loaded_from_ext_sdmmc())
     {
-    AML_LOG_TE("board");
         if(aml_check_is_ready_for_sdc_produce())
         {
-        AML_LOG_TE("board");
             aml_v2_sdc_producing(0, bd);
         }
     }
 #endif// #if CONFIG_AUTO_START_SD_BURNING
-
-	AML_LOG_TE("board");
 
 #ifdef CONFIG_VIDEO_AMLLCD
 	puts("LCD Initialize:   \n");
@@ -852,8 +796,6 @@ unsigned int before_lcd_init =  get_utimer(0);
 #ifdef CONFIG_POST
 	post_run (NULL, POST_RAM | post_bootmode_get(0));
 #endif
-
-	AML_LOG_TE("board");
 
 #if defined(CONFIG_PRAM) || defined(CONFIG_LOGBUFFER)
 	/*
@@ -889,14 +831,10 @@ unsigned int before_lcd_init =  get_utimer(0);
 	}
 #endif
 
-	AML_LOG_TE("board");
-
 #ifdef TEST_UBOOT_BOOT_SPEND_TIME
 	main_loop_start = get_utimer(0);
 	printf("\ntime: from powerup to start main_loop time(us):%d\n\n",main_loop_start);
 #endif
-
-	AML_LOG_TE("board");
 
 	/* main_loop() can return to retry autoboot, if so just run it again. */
 	for (;;) {

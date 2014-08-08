@@ -56,14 +56,6 @@ DECLARE_GLOBAL_DATA_PTR;
 #include <amlogic/aml_pmu.h>
 #endif
 #endif
-
-#if defined(AML_UBOOT_LOG_PROFILE)
-extern int __g_nTE1_4BC722B3__ ;
-extern int __g_nTE2_4BC722B3__ ;
-extern int __g_nTEFlag_4BC722B3__;
-extern int __g_nTStep_4BC722B3__;
-#endif //AML_UBOOT_LOG_PROFILE
-
 /*
  * Board-specific Platform code can reimplement show_boot_progress () if needed
  */
@@ -391,10 +383,6 @@ void main_loop (void)
 	int i;
 #endif
 
-
-	AML_LOG_INIT("main");
-	AML_LOG_TE("main");
-
 #if defined(CONFIG_VFD) && defined(VFD_TEST_LOGO)
 	ulong bmp = 0;		/* default bitmap */
 	extern int trab_vfd (ulong bitmap);
@@ -405,8 +393,6 @@ void main_loop (void)
 #endif
 	trab_vfd (bmp);
 #endif	/* CONFIG_VFD && VFD_TEST_LOGO */
-
-	AML_LOG_TE("main");
 
 #ifdef CONFIG_BOOTCOUNT_LIMIT
 	bootcount = bootcount_load();
@@ -429,8 +415,6 @@ void main_loop (void)
 	}
 #endif  /* CONFIG_MODEM_SUPPORT */
 
-	AML_LOG_TE("main");
-
 #ifdef CONFIG_VERSION_VARIABLE
 	{
 		extern char version_string[];
@@ -439,8 +423,6 @@ void main_loop (void)
 	}
 #endif /* CONFIG_VERSION_VARIABLE */
 
-	AML_LOG_TE("main");
-
 #ifdef CONFIG_SYS_HUSH_PARSER
 	u_boot_hush_start ();
 #endif
@@ -448,8 +430,6 @@ void main_loop (void)
 #if defined(CONFIG_HUSH_INIT_VAR)
 	hush_init_var ();
 #endif
-
-	AML_LOG_TE("main");
 
 #ifdef CONFIG_AML_SUSPEND
 #ifndef CONFIG_MESON_TRUSTZONE
@@ -460,14 +440,10 @@ extern void init_suspend_firmware(void);
 #endif
 #endif
 
-	AML_LOG_TE("main");
-
 #ifdef CONFIG_AML_SECURE
 extern void init_secure_firmware(void);
 	init_secure_firmware();
 #endif
-
-	 AML_LOG_TE("main");
 
 #ifdef CONFIG_CMD_CHIPREV
 	extern int init_env_chiprev(void);
@@ -479,22 +455,16 @@ extern void init_secure_firmware(void);
 	printf("bootargs = %s\n", env_bootargs);
 #endif
 
-	AML_LOG_TE("main");
-
 #if defined(CONFIG_AML_MESON_8)&&defined(CONFIG_EFUSE)&&defined(CONFIG_VIDEO_AMLTVOUT)
 	extern void cvbs_trimming(void);
 	cvbs_trimming();
 #endif
-
-	AML_LOG_TE("main");
 
 #ifdef CONFIG_PREBOOT
 	if ((p = getenv ("preboot")) != NULL) {
 # ifdef CONFIG_AUTOBOOT_KEYED
 		int prev = disable_ctrlc(1);	/* disable Control C checking */
 # endif
-
-	AML_LOG_TE("main");
 
 # ifndef CONFIG_SYS_HUSH_PARSER
 		run_command (p, 0);
@@ -503,29 +473,21 @@ extern void init_secure_firmware(void);
 				    FLAG_EXIT_FROM_LOOP);
 # endif
 
-	AML_LOG_TE("main");
-
 # ifdef CONFIG_AUTOBOOT_KEYED
 		disable_ctrlc(prev);	/* restore Control C checking */
 # endif
 	}
 #endif /* CONFIG_PREBOOT */
 
-	AML_LOG_TE("main");
-
 #if defined(CONFIG_UPDATE_TFTP)
 	update_tftp ();
 #endif /* CONFIG_UPDATE_TFTP */
-
-	AML_LOG_TE("main");
 
 
 #ifdef CONFIG_SWITCH_BOOT_MODE
 extern int switch_boot_mode(void);
 	switch_boot_mode();
 #endif
-
-	AML_LOG_TE("main");
 
 #ifdef CONFIG_EFUSE
 	//r_addr = getenv ("ethaddr");
@@ -544,8 +506,6 @@ extern int switch_boot_mode(void);
 	}
 #endif
 
-	AML_LOG_TE("main");
-
 #if defined(CONFIG_BOOTDELAY) && (CONFIG_BOOTDELAY >= 0)
 	s = getenv ("bootdelay");
 	bootdelay = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
@@ -555,9 +515,6 @@ extern int switch_boot_mode(void);
 # ifdef CONFIG_BOOT_RETRY_TIME
 	init_cmd_timeout ();
 # endif	/* CONFIG_BOOT_RETRY_TIME */
-
-
-	AML_LOG_TE("main");
 
 #ifdef CONFIG_POST
 	if (gd->flags & GD_FLG_POSTFAIL) {
@@ -594,8 +551,6 @@ extern int switch_boot_mode(void);
 # endif
 	}
 
-	AML_LOG_TE("main");
-
 
 # ifdef CONFIG_MENUKEY
 	if (menukey == CONFIG_MENUKEY) {
@@ -615,13 +570,8 @@ extern int switch_boot_mode(void);
 	/*
 	 * Main Loop for Monitor Command Processing
 	 */
-
-	AML_LOG_TE("main");
-
 #ifdef CONFIG_SYS_HUSH_PARSER
 	parse_file_outer();
-
-	AML_LOG_TE("main");
 
 	/* This point is never reached */
 	for (;;);

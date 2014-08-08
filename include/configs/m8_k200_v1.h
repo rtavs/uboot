@@ -1,7 +1,6 @@
 #ifndef __CONFIG_M8_K200_V1_H__
 #define __CONFIG_M8_K200_V1_H__
 
-//#define AML_UBOOT_LOG_PROFILE 1
 
 #define CONFIG_AML_MESON_8      1
 #define CONFIG_MACH_MESON8_K200_V1  // generate M8 K200 machid number
