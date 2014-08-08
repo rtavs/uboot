@@ -89,11 +89,6 @@ fi
 #
 # Create link to architecture specific headers
 #
-if [ ! -L ${SRCTREE}/include/configs/amlogic ]; then
-	cd ${SRCTREE}/include/configs
-	ln -s ../../board/amlogic/configs amlogic
-fi
-
 if [ "$SRCTREE" != "$OBJTREE" ] ; then
 	mkdir -p ${OBJTREE}/include
 	mkdir -p ${OBJTREE}/include2
