@@ -23,6 +23,8 @@ extern void efuse_init(void);
 
 ssize_t efuse_read(char *buf, size_t count, loff_t *ppos )
 {
+
+#ifdef CONFIG_EFUSE
     unsigned long contents[EFUSE_DWORDS];
 	unsigned pos = *ppos;
     unsigned long *pdw;
@@ -72,11 +74,15 @@ ssize_t efuse_read(char *buf, size_t count, loff_t *ppos )
 		return ret;
 
 #endif
+#else
+	return -1;
+#endif
 
 }
 
 ssize_t efuse_write(const char *buf, size_t count, loff_t *ppos )
 {
+#ifdef CONFIG_EFUSE
 	unsigned pos = *ppos;
 	const char *pc;
 
@@ -115,6 +121,9 @@ ssize_t efuse_write(const char *buf, size_t count, loff_t *ppos )
 	else
 		return ret;
 
+#endif
+#else
+	return -1;
 #endif
 }
 
@@ -820,6 +829,7 @@ unsigned efuse_readcustomerid(void)
 
 char* efuse_dump(void)
 {
+#ifdef CONFIG_EFUSE
 #ifndef CONFIG_MESON_TRUSTZONE
 	int i=0;
     //unsigned pos;
@@ -838,6 +848,9 @@ char* efuse_dump(void)
              CNTL1_AUTO_RD_ENABLE_BIT, CNTL1_AUTO_RD_ENABLE_SIZE );
 
      return (char*)efuse_buf;
+#else
+	return NULL;
+#endif
 #else
 	return NULL;
 #endif
