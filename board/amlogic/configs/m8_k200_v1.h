@@ -93,7 +93,7 @@
 //Amlogic SARADC support
 #define CONFIG_SARADC 1
 #define CONFIG_CMD_SARADC
-#define CONFIG_EFUSE 1
+//#define CONFIG_EFUSE 1
 //#define CONFIG_MACHID_CHECK 1
 
 //#define CONFIG_IR_REMOTE 1
