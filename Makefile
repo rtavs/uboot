@@ -270,11 +270,6 @@ endif
 
 LIBS += common/libcommon.o
 LIBS += drivers/secure/lib_secure.o
-ifdef CONFIG_SUPPORT_CUSOTMER_BOARD
-LIBS += customer/common/lib_customer_cmd.o
-LIBS += customer/drivers/lib_customer_drivers.o
-endif
-
 LIBS += lib/libfdt/libfdt.o
 LIBS += api/libapi.o
 LIBS += post/libpost.o
@@ -296,19 +291,11 @@ endif
 LIBS := $(addprefix $(obj),$(sort $(LIBS)))
 .PHONY : $(LIBS) $(TIMESTAMP_FILE) $(VERSION_FILE)
 
-ifdef CONFIG_SUPPORT_CUSOTMER_BOARD
-AML_BOARD_PATH = ./customer/board/$(BOARD)/
-LIBBOARD = customer/board/$(BOARD)/lib$(BOARD).o
-ifdef CONFIG_AML_CRYPTO_UBOOT
-BOOT_KEY_PATH = ./customer/board/$(BOARD)
-endif #CONFIG_AML_CRYPTO_UBOOT
-else  #CONFIG_SUPPORT_CUSOTMER_BOARD
 AML_BOARD_PATH = ./board/$(BOARDDIR)/
 LIBBOARD = board/$(BOARDDIR)/lib$(BOARD).o
 ifdef CONFIG_AML_CRYPTO_UBOOT
 BOOT_KEY_PATH = ./board/$(BOARDDIR)
 endif #CONFIG_AML_CRYPTO_UBOOT
-endif #CONFIG_SUPPORT_CUSOTMER_BOARD
 
 ifdef CONFIG_AML_CRYPTO_UBOOT
 ifdef CONFIG_AML_RSA_2048
@@ -772,7 +759,7 @@ unconfig:
 	$(MKCONFIG) -A $(@:_config=)
 
 sinclude $(obj).boards.depend
-$(obj).boards.depend:	boards.cfg	board/amlogic/boards.cfg	 customer/board/boards.cfg
+$(obj).boards.depend:	boards.cfg	board/amlogic/boards.cfg
 	awk '(NF && $$1 !~ /^#/) { print $$1 ": " $$1 "_config; $$(MAKE)" }' $^ > $@
 
 #

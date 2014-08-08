@@ -43,19 +43,12 @@ OBJS	:= $(addprefix $(obj),$(SOBJS)  )
 __OBJS	:= $(SOBJS) $(COBJS)
 
 BURNOBJS:= $(addprefix $(obj),$(SOBJS) $(COBJS) burn.o )
-ifdef CONFIG_SUPPORT_CUSOTMER_BOARD
-VPATH_LIST=	$(TOPDIR)/customer/board/$(BOARD) \
-						$(SRCTREE)/$(CPUDIR)/$(SOC) \
-						$(SRCTREE)/$(CPUDIR)/common	\
-						$(SRCTREE)/$(CPUDIR)  			\
-						$(SRCTREE)/common
-else
+
 VPATH_LIST=	$(TOPDIR)/board/$(BOARDDIR) \
 						$(SRCTREE)/$(CPUDIR)/$(SOC) \
 						$(SRCTREE)/$(CPUDIR)/common	\
 						$(SRCTREE)/$(CPUDIR)  			\
 						$(SRCTREE)/common
-endif
 
 VPATH_LIST:=$(VPATH_LIST:%=%/firmware)
 CFLAGS+=$(VPATH_LIST:%=-I%)

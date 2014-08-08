@@ -34,15 +34,10 @@ AARCC_FLAGS += -Wstrict-prototypes -fno-stack-protector -D__KERNEL__ -mno-cond-e
 ARCCC_FLAGS += -I./include/ -I$(TOPDIR)/arch/arm/include/asm/arch-m8/ -I$(TOPDIR)/arch/arm/include/ -I$(TOPDIR)/arch/arm/include/asm/ -I$(TOPDIR)/build/include
 ARCCC_FLAGS += -include $(TOPDIR)/build/include/config.h -I $(TOPDIR)/include/ -I $(TOPDIR)/arch/arm/include/
 
-ifdef CONFIG_SUPPORT_CUSOTMER_BOARD
-VPATH_LIST = $(TOPDIR)/customer/board/$(BOARD) \
-		$(SRCTREE)/$(CPUDIR)/$(SOC)  \
-		$(SRCTREE)/$(CPUDIR)
-else
+
 VPATH_LIST=	$(TOPDIR)/board/$(BOARDDIR) \
 		$(SRCTREE)/$(CPUDIR)/$(SOC) \
 		$(SRCTREE)/$(CPUDIR)
-endif
 
 VPATH_LIST:=$(VPATH_LIST:%=%/firmware/arc_power/)
 ARCCC_FLAGS += $(VPATH_LIST:%=-I%)

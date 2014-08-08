@@ -157,4 +157,3 @@ endif
 	@echo config command: \"make m8b_ft_v1_config\"
 
 	@echo
-sinclude $(wildcard $(SRCTREE)/customer/board/Readme.mk)
