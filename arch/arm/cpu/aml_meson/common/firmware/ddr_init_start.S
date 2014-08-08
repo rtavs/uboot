@@ -113,21 +113,12 @@ clr_bss_end:
     ldr r1,__TEXT_SIZE
     bl	main
     pop	{r0, r1, r2, r3, r4, r5, pc}
-#ifndef CONFIG_IMPROVE_UCL_DEC
-#    ldr pc,__TEXT_BASE
-#else
-#	ldr pc,__TEXT_BASE_UCL_DEC
-#endif
 _AHB_SRAM_BASE:
     .word AHB_SRAM_BASE
 _READ_SIZE:
 	.word READ_SIZE
 __TEXT_BASE:
     .word TEXT_BASE
-#ifdef CONFIG_IMPROVE_UCL_DEC
-__TEXT_BASE_UCL_DEC:
-    .word TEXT_BASE - 0x800000
-#endif
 __TEXT_SIZE:
 #ifdef CONFIG_BOARD_SIZE_LIMIT
     .word CONFIG_BOARD_SIZE_LIMIT

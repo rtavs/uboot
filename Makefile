@@ -420,7 +420,6 @@ $(obj)u-boot-orig.bin:	$(obj)u-boot
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 	$(BOARD_SIZE_CHECK)
 
-ifneq ($(CONFIG_IMPROVE_UCL_DEC),y)
 $(obj)u-boot.bin:	$(obj)u-boot-comp.bin $(obj)firmware.bin
 
 ifndef CONFIG_M6_SECU_BOOT
@@ -468,42 +467,6 @@ endif #CONFIG_AML_CRYPTO_UBOOT
 
 endif #CONFIG_M6_SECU_BOOT
 
-else #CONFIG_IMPROVE_UCL_DEC
-$(obj)u-boot.bin:	$(obj)u-boot-comp-comp.bin $(obj)firmware.bin
-ifndef CONFIG_M6_SECU_BOOT
-	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
-else
-	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
-ifdef CONFIG_M6_SECU_AUTH_KEY
-	@./tools/secu_boot/encrypto2 $@ ./tools/secu_boot/keys/rsa_key_comm_pub.dat
-else
-	@./tools/secu_boot/encrypto2 $@
-endif
-endif
-
-$(obj)u-boot-comp-comp.bin:	$(obj)u-boot-comp-comp
-	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-
-#UCL_LIBS = $(obj)arch/$(ARCH)/cpu/$(CPU)/common/firmware/serial.o
-UCL_LIBS = $(obj)arch/$(ARCH)/cpu/$(CPU)/$(SOC)/mmutable.o
-UCL_LIBS += $(obj)arch/$(ARCH)/lib/cache.o
-UCL_LIBS += $(obj)arch/$(ARCH)/lib/cache_init.o
-UCL_LIBS += $(obj)arch/$(ARCH)/lib/cache-cp15.o
-UCL_LIBS += $(obj)arch/$(ARCH)/lib/cache_v7.o
-UCL_LIBS += $(obj)lib/ucl/libucl.o
-ifneq ($(CONFIG_L2_OFF), y)
-UCL_LIBS += $(obj)arch/$(ARCH)/lib/cache-l2x0.o
-endif
-
-$(obj)u-boot-comp-comp: $(obj)u-boot-comp.bin $(UCL_BOOTLIBS) $(LIBS)  firmware
-	$(LD) -Bstatic -T $(TOPDIR)/arch/$(ARCH)/cpu/$(CPU)/uclboot/u-boot.lds \
-			-Ttext $(UCL_TEXT_BASE) $(PLATFORM_LDFLAGS) --cref $(obj)arch/$(ARCH)/cpu/$(CPU)/uclboot/start.o \
-			--start-group $(UCL_BOOTLIBS)  $(UCL_LIBS) \
-			--end-group  $(PLATFORM_LIBGCC) \
-			-Map $(obj)u-boot-ucl_a.map -o $@
-
-endif #end CONFIG_IMPROVE_UCL_DEC
-
 endif  #END CONFIG_SELF_COMPRESS
 endif #end CONFIG_AML_MESON
 
@@ -515,14 +478,8 @@ firmware:$(obj)firmware.bin
 libucl:
 	$(MAKE) -C lib/ucl
 
-ifeq ($(CONFIG_IMPROVE_UCL_DEC),y)
-$(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk libucl
-#	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@ UCL_BOOTLIBS=$(obj)lib/ucl/libucl.o
-	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@
-else #NOT CONFIG_IMPROVE_UCL_DEC
 $(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk libucl
 	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@ UCL_BOOTLIBS=$(obj)lib/ucl/libucl.o
-endif #END CONFIG_IMPROVE_UCL_DEC
 
 endif #END CONFIG_AML_MESON
 

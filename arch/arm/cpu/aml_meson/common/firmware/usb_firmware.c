@@ -35,13 +35,11 @@ static int _usb_ucl_decompress(unsigned char* compressData, unsigned char* decom
     serial_puts("decompressedAddr "), serial_put_hex((unsigned)decompressedAddr, 32), serial_puts(".\n");
 
 #if CONFIG_UCL
-#ifndef CONFIG_IMPROVE_UCL_DEC
     extern int uclDecompress(char* destAddr, unsigned* o_len, char* srcAddr);
     ret = uclDecompress((char*)decompressedAddr, decompressedLen, (char*)compressData);
 
     serial_puts("uclDecompress "), serial_puts(ret ? "FAILED!!\n": "OK.\n");
     serial_puts("\n<====ucl Decompress END. \n\n");
-#endif// #ifndef CONFIG_IMPROVE_UCL_DEC
 #endif//#if CONFIG_UCL
 
     if(ret){

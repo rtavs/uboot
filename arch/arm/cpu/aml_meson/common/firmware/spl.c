@@ -200,10 +200,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
     unsigned int fpAddr = CONFIG_SYS_TEXT_BASE;
 
-#ifdef CONFIG_IMPROVE_UCL_DEC
-    fpAddr = CONFIG_SYS_TEXT_BASE+0x800000;
-#endif
-
     typedef  void (*t_func_v1)(void);
     t_func_v1 fp_program = (t_func_v1)fpAddr;
     //here need check ?
