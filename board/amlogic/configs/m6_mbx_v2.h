@@ -27,7 +27,7 @@
 #define CONFIG_SYS_BOOTMAPSZ   PHYS_MEMORY_SIZE       /* Initial Memory map for Linux */
 
 //#define CONFIG_SWITCH_BOOT_MODE 1
-#define CONFIG_HDCP_PREFETCH 1
+//#define CONFIG_HDCP_PREFETCH 1
 
 #if defined(WRITE_TO_EFUSE_ENABLE) && defined(WRITE_TO_NAND_ENABLE)
 #error You should only select one of WRITE_TO_EFUSE_ENABLE and WRITE_TO_NAND_ENABLE
@@ -87,7 +87,7 @@
 //Amlogic SARADC support
 #define CONFIG_SARADC 1
 #define CONFIG_CMD_SARADC
-#define CONFIG_EFUSE 1
+//#define CONFIG_EFUSE 1
 //#define CONFIG_MACHID_CHECK 1
 
 #define CONFIG_L2_OFF			1
@@ -240,7 +240,6 @@
         "run nandargs;"\
         "setenv bootargs ${initargs} androidboot.firstboot=${firstboot}; "\
         "imgread kernel boot ${loadaddr};"\
-        "hdcp prefetch nand;"\
         "bootm\0" \
     "bootsdcard="\
          "echo Booting ...;"\
@@ -248,7 +247,6 @@
          "setenv bootargs ${bootsdargs}; "\
          "mmcinfo;"\
          "ext2load mmc 0 ${loadaddr} boot.img;"\
-         "hdcp prefetch nand;"\
          "bootm\0" \
     "bootupdate="\
          "echo Booting ...;"\
@@ -256,7 +254,6 @@
          "setenv bootargs ${bootupdateargs}; "\
          "mmcinfo;"\
          "fatload mmc 0 ${loadaddr} boot.img;"\
-         "hdcp prefetch nand;"\
          "bootm\0" \
 	"recovery="\
         "echo enter recovery;"\
