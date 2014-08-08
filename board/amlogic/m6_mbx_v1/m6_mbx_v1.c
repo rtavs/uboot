@@ -340,41 +340,7 @@ static void board_i2c_init(void)
 #endif /*CONFIG_AML_I2C*/
 
 
-#if CONFIG_JERRY_NAND_TEST //temp test
-#include <amlogic/nand/platform.h>
-#include <asm/arch/nand.h>
-#include <linux/mtd/partitions.h>
-static void claim_bus(uint32_t get)
-{
-	if(get==NAND_BUS_RELEASE)
-	{
-		NAND_IO_DISABLE(0);
-	}else{
-		NAND_IO_ENABLE(0);
-	}
-}
-static struct aml_nand_platform nand_plat={
-/*
-		uint32_t        reg_base;
-		    uint32_t        delay;
-		    uint32_t        rbmod;
-		    uint32_t        t_rea;
-		    uint32_t        t_rhoh;
-		    uint32_t        ce_num;
-		    uint32_t        clk_src;
-		    claim_bus_t     claim_bus;
-*/
-		.ce_num=4,
-		.rbmod=1,
-};
-void    board_nand_init(void)
-{
-	nanddebug("NAND is inited\n");
-	nand_probe(&nand_plat);
-//	cntl_init(&nand_plat);
-//	amlnand_probe();
-}
-#elif CONFIG_NAND_AML_M3 //temp test
+#if CONFIG_NAND_AML_M3 //temp test
 //#include <amlogic/nand/platform.h>
 #include <asm/arch/nand.h>
 #include <linux/mtd/partitions.h>
@@ -467,10 +433,6 @@ int board_init(void)
 {
 	gd->bd->bi_arch_number=MACH_TYPE_MESON6_REF;
 	gd->bd->bi_boot_params=BOOT_PARAMS_OFFSET;
-#if CONFIG_JERRY_NAND_TEST //temp test
-    nand_init();
-
-#endif
 
 	return 0;
 }

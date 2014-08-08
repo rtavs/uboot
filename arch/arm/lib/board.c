@@ -623,9 +623,6 @@ unsigned int before_nand_init =  get_utimer(0);
 	AML_LOG_INIT("board");
 	AML_LOG_TE("board");
 
-#if CONFIG_JERRY_NAND_TEST
-	nand_init();
-#endif
 #if defined(CONFIG_CMD_NAND)
 	puts ("NAND:  ");
 #ifdef  CONFIG_NEXT_NAND

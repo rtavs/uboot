@@ -58,7 +58,6 @@
 #define CONFIG_VCCK_VOLTAGE                     1320        // 1.32v for default vcck voltage
 
 //Enable storage devices
-//#ifndef CONFIG_JERRY_NAND_TEST
 #define CONFIG_NEXT_NAND
 
 #ifdef CONFIG_NEXT_NAND
@@ -76,7 +75,6 @@
 //#define CONFIG_CMD_PWM  1
 
 #define CONFIG_CMD_NAND  1
-//#endif
 #define CONFIG_CMD_SF    1
 
 #if defined(CONFIG_CMD_SF)

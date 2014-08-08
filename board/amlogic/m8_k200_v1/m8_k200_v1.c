@@ -476,12 +476,6 @@ int board_init(void)
     gd->bd->bi_arch_number=MACH_TYPE_MESON6_SKT;
     gd->bd->bi_boot_params=BOOT_PARAMS_OFFSET;
 
-
-#if CONFIG_JERRY_NAND_TEST //temp test
-    nand_init();
-
-#endif
-
     // LED
     clrbits_le32(P_AO_GPIO_O_EN_N, (1 << 15));
     clrbits_le32(P_AO_GPIO_O_EN_N, (1 << 31));

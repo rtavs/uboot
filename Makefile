@@ -214,13 +214,8 @@ LIBS += drivers/mmc/libmmc.o
 
 
 ifneq ($(CONFIG_NEXT_NAND),y)
-
 LIBS += drivers/mtd/libmtd.o
 LIBS += drivers/mtd/nand/libnand.o
-ifeq ($(CONFIG_JERRY_NAND_TEST),y)
-LIBS += drivers/mtd/aml_nand/libamlnand.o
-endif
-
 endif
 
 ifeq ($(CONFIG_NEXT_NAND),y)
