@@ -57,9 +57,6 @@
 //#define CONFIG_DCACHE_OFF    		1
 //#define CONFIG_ICACHE_OFF    		1
 
-//#define CONFIG_EFUSE 1
-//#define CONFIG_AML_EFUSE_INIT_PLUS 1
-
 #ifdef CONFIG_CMD_NAND
 #define CONFIG_NAND_AML_M3 1
 #define CONFIG_NAND_AML  1

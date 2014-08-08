@@ -268,11 +268,6 @@ void __dram_init_banksize(void)
 void dram_init_banksize(void)
 	__attribute__((weak, alias("__dram_init_banksize")));
 
-#ifdef CONFIG_AML_EFUSE_INIT_PLUS
-extern int efuse_aml_init_plus(void);
-#endif //CONFIG_AML_EFUSE_INIT_PLUS
-
-
 init_fnc_t *init_sequence[] = {
 #if defined(CONFIG_ARCH_CPU_INIT)
 	arch_cpu_init,		/* basic arch cpu dependent setup */
@@ -306,9 +301,6 @@ init_fnc_t *init_sequence[] = {
 	arm_pci_init,
 #endif
    hdmi_hdcp_clear_ksv_ram,
-#ifdef CONFIG_AML_EFUSE_INIT_PLUS
-    efuse_aml_init_plus,
-#endif //CONFIG_AML_EFUSE_INIT_PLUS
 	NULL,
 };
 
