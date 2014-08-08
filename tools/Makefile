@@ -68,7 +68,6 @@ BIN_FILES-$(CONFIG_SHA1_CHECK_UB_IMG) += ubsha1$(SFX)
 BIN_FILES-$(CONFIG_AML_MESON)	+=convert$(SFX)
 BIN_FILES-$(CONFIG_UCL) +=uclpack$(SFX)
 BIN_FILES-$(CONFIG_AML_SUSPEND) +=bin2code$(SFX)
-BIN_FILES-$(CONFIG_JOIN_UBOOT_SECUREOS) += join_uboot_secureos$(SFX)
 # Source files which exist outside the tools directory
 EXT_OBJ_FILES-y += common/env_embedded.o
 EXT_OBJ_FILES-y += common/image.o
@@ -94,7 +93,6 @@ OBJ_FILES-$(CONFIG_SHA1_CHECK_UB_IMG) += ubsha1.o
 OBJ_FILES-$(CONFIG_AML_MESON)	+=convert.o m1_romboot.o a3_romboot.o m3_romboot.o m6_romboot.o m8_romboot.o m6tvd_romboot.o
 OBJ_FILES-$(CONFIG_UCL) += uclpack.o
 OBJ_FILES-$(CONFIG_AML_SUSPEND) += bin2code.o
-OBJ_FILES-$(CONFIG_JOIN_UBOOT_SECUREOS) += join_uboot_secureos.o
 # Don't build by default
 #ifeq ($(ARCH),ppc)
 #BIN_FILES-y += mpc86x_clk$(SFX)

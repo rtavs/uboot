@@ -378,12 +378,6 @@ ifeq  ($(CONFIG_SELF_COMPRESS),y)
 ALL += $(obj)u-boot-comp.bin
 endif
 
-ifeq ($(CONFIG_JOIN_UBOOT_SECUREOS),y)
-SECURE_OS_BIN ?= secure_os/otzone-ucl.bin
-UBOOT_SECURE_OS := $(obj)uboot-secureos.bin
-ALL += $(UBOOT_SECURE_OS)
-endif
-
 AML_USB_UBOOT_NAME = u-boot-usb.bin
 
 all:		$(ALL)
@@ -401,25 +395,6 @@ $(obj)u-boot.bin:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 		$(BOARD_SIZE_CHECK)
 else   #ELSE CONFIG_AML_MESON
-
-ifeq ($(CONFIG_JOIN_UBOOT_SECUREOS),y)
-$(UBOOT_SECURE_OS): $(obj)u-boot.bin $(SECURE_OS_BIN)
-		$(obj)tools/join_uboot_secureos $(obj)u-boot.bin  $(SECURE_OS_BIN) $(UBOOT_SECURE_OS)
-ifdef CONFIG_AML_SECU_BOOT_V2
-	@./tools/secu_boot/encrypto3 $@
-ifdef CONFIG_AML_CRYPTO_UBOOT
-	@./tools/secu_boot/aml_encrypt_$(SOC) $(BOOT_KEY_PATH)/aml-rsa-key.$(RSA_KEY_EXT) \
-	$@.aml $@.aml.encrypt $@.aml.efuse $(BOOT_KEY_PATH)/aml-aes-key.aes
-endif
-endif
-ifdef CONFIG_M6_SECU_BOOT
-ifdef CONFIG_M6_SECU_AUTH_KEY
-	@./tools/secu_boot/encrypto2 $@ ./tools/secu_boot/keys/rsa_key_comm_pub.dat
-else
-	@./tools/secu_boot/encrypto2 $@
-endif
-endif
-endif  #END CONFIG_JOIN_UBOOT_SECUREOS
 
 #################
 ifneq ($(CONFIG_SELF_COMPRESS),y)
@@ -460,10 +435,6 @@ endif
 ifdef CONFIG_AML_SECU_BOOT_V2
 	@$(obj)tools/convert --soc $(SOC)  -s $(obj)usb_firmware.bin -i $(obj)u-boot-comp.bin -o $(obj)$(AML_USB_UBOOT_NAME).temp
 	@./tools/secu_boot/encrypto3 $@
-ifdef CONFIG_JOIN_UBOOT_SECUREOS
-		$(obj)tools/join_uboot_secureos $(obj)$(AML_USB_UBOOT_NAME).temp  $(SECURE_OS_BIN) $(obj)$(AML_USB_UBOOT_NAME).secure_os.bin
-	@cp -f $(obj)$(AML_USB_UBOOT_NAME).secure_os.bin $(obj)$(AML_USB_UBOOT_NAME).temp
-endif
 	@./tools/secu_boot/encrypto3 $(obj)$(AML_USB_UBOOT_NAME).temp
 	@rm -f $(obj)$(AML_USB_UBOOT_NAME).temp
 	@$(obj)tools/convert --soc $(SOC)+  -s $(obj)ddr_init.bin -i $(obj)$(AML_USB_UBOOT_NAME).temp.aml -o $(obj)$(AML_USB_UBOOT_NAME)
