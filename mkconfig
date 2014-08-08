@@ -20,8 +20,7 @@ soc=""
 options=""
 if [ \( $# -eq 2 \) -a \( "$1" = "-A" \) ] ; then
 	# Automatic mode
-
-	line=`cat boards.cfg board/amlogic/boards.cfg | egrep -i "^[[:space:]]*${2}[[:space:]]"  ` ||  {
+	line=`egrep -i "^[[:space:]]*${2}[[:space:]]" boards.cfg` || {
 		echo "make: *** No rule to make target \`$2_config'.  Stop." >&2
 		exit 1
 	}
