@@ -5,7 +5,6 @@
 #define CONFIG_MACH_MESON6_MBX
 //#define CONFIG_MESON_ARM_GIC_FIQ
 
-//#define TEST_UBOOT_BOOT_SPEND_TIME
 
 /*
  *  write to efuse/nand when usb_burning

@@ -11,8 +11,6 @@
 #define CONFIG_M8
 #endif // ifndef CONFIG_M8
 
-//#define TEST_UBOOT_BOOT_SPEND_TIME
-
 // cart type of each port
 #define PORT_A_CARD_TYPE            CARD_TYPE_UNKNOWN
 #define PORT_B_CARD_TYPE            CARD_TYPE_UNKNOWN

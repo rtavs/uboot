@@ -206,13 +206,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
     serial_puts("\nSystem Started\n");
 
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-	unsigned int spl_boot_end = TIMERE_GET();
-	serial_puts("\ntime: spl boot time(us):");
-	serial_put_dec(spl_boot_end);
-	//serial_put_dword((spl_boot_end));
-#endif
-
 #if defined(CONFIG_M8) || defined(CONFIG_M8B)
 	//if bootup failed, switch to next boot device
 	AML_WATCH_DOG_DISABLE(); //disable watchdog

@@ -7,8 +7,6 @@
 
 #define CONFIG_SPI_NAND_EMMC_COMPATIBLE   1
 
-//#define TEST_UBOOT_BOOT_SPEND_TIME
-
 /*
  *  write to efuse/nand when usb_burning
  *  WRITE_TO_EFUSE_ENABLE and WRITE_TO_NAND_ENABLE should not be both existed

@@ -297,11 +297,6 @@ init_fnc_t *init_sequence[] = {
 	NULL,
 };
 
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-#include <asm/arch/timer.h>
-unsigned int spl_boot_end,lib_board_init_f_start,lib_board_init_f_end;
-unsigned int lib_board_init_r_start,main_loop_start;
-#endif
 extern ulong __mmu_table;
 void board_init_f (ulong bootflag)
 {
@@ -523,12 +518,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	icache_invalid();
 	//end 2013.07.16
 
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-	lib_board_init_r_start = get_utimer(0);
-
-	printf("\ntime: from powerup to board_init_r time(us):%d\n",(lib_board_init_r_start));
-#endif
-
 	gd = id;
 	bd = gd->bd;
 
@@ -600,11 +589,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 		hang ();
 	}
 #endif
-
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-unsigned int before_nand_init =  get_utimer(0);
-#endif
-
 #if defined(CONFIG_CMD_NAND)
 	puts ("NAND:  ");
 #ifdef  CONFIG_NEXT_NAND
@@ -616,11 +600,6 @@ unsigned int before_nand_init =  get_utimer(0);
 #else
 	nand_init();	/* go init the NAND */
 #endif
-#endif
-
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-	unsigned int after_nand_init =  get_utimer(0);
-	printf("\ntime: from powerup to nand init finished %d us \n", after_nand_init);
 #endif
 
 #ifdef CONFIG_STORE_COMPATIBLE
@@ -769,10 +748,6 @@ unsigned int before_nand_init =  get_utimer(0);
 		}
 #endif
 
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-unsigned int before_lcd_init =  get_utimer(0);
-#endif
-
 #if CONFIG_AUTO_START_SD_BURNING
     if(is_tpl_loaded_from_ext_sdmmc())
     {
@@ -786,11 +761,6 @@ unsigned int before_lcd_init =  get_utimer(0);
 #ifdef CONFIG_VIDEO_AMLLCD
 	puts("LCD Initialize:   \n");
 	aml_lcd_init();
-#endif
-
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-	unsigned int after_lcd_init =  get_utimer(0);
-	printf("\ntime: from powerup to lcd init finished %d us \n", after_lcd_init );
 #endif
 
 #ifdef CONFIG_POST
@@ -829,11 +799,6 @@ unsigned int before_lcd_init =  get_utimer(0);
 		setenv ("mem", (char *)memsz);
 #endif
 	}
-#endif
-
-#ifdef TEST_UBOOT_BOOT_SPEND_TIME
-	main_loop_start = get_utimer(0);
-	printf("\ntime: from powerup to start main_loop time(us):%d\n\n",main_loop_start);
 #endif
 
 	/* main_loop() can return to retry autoboot, if so just run it again. */
