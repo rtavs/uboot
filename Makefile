@@ -307,9 +307,6 @@ endif #CONFIG_AML_CRYPTO_UBOOT
 
 LIBBOARD := $(addprefix $(obj),$(LIBBOARD))
 
-UCL_BOOTLIBS += arch/$(ARCH)/cpu/$(CPU)/uclboot/ucl_lib_$(CPU).o
-UCL_BOOTLIBS := $(addprefix $(obj),$(UCL_BOOTLIBS))
-
 # Add GCC lib
 ifdef USE_PRIVATE_LIBGCC
 ifeq ("$(USE_PRIVATE_LIBGCC)", "yes")
@@ -344,7 +341,6 @@ endif
 
 __OBJS := $(subst $(obj),,$(OBJS))
 __LIBS := $(subst $(obj),,$(LIBS)) $(subst $(obj),,$(LIBBOARD))
-__UCLBOOTLIBS := $(subst $(obj),,$(UCL_BOOTLIBS))
 #########################################################################
 #########################################################################
 
@@ -411,7 +407,7 @@ libucl:
 	$(MAKE) -C lib/ucl
 
 $(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk libucl
-	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@ UCL_BOOTLIBS=$(obj)lib/ucl/libucl.o
+	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@
 
 endif #END CONFIG_AML_MESON
 
@@ -468,9 +464,6 @@ $(OBJS):	depend
 		$(MAKE) -C $(CPUDIR) $(if $(REMOTE_BUILD),$@,$(notdir $@))
 
 $(LIBS):	depend $(SUBDIRS) $(obj)firmware.bin
-		$(MAKE) -C $(dir $(subst $(obj),,$@))
-
-$(UCL_BOOTLIBS):	$(obj)u-boot-comp.bin depend $(SUBDIRS)
 		$(MAKE) -C $(dir $(subst $(obj),,$@))
 
 $(LIBBOARD):	depend $(LIBS)

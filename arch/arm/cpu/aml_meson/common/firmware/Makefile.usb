@@ -48,10 +48,10 @@ all: $(ALL) $(ELFFILES)
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 
 $(dir $(FIRMWARE))usb_firmware.out:$(OBJS) $(obj)usb_firmware.o $(target_LDS)
-	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) $(UCL_BOOTLIBS) -Map $(@:%=%.map) --cref -o $@
+	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) -Map $(@:%=%.map) --cref -o $@
 
 %.out:
-	$(LD) $(LDFLAGS) $(filter %.o,$^) $(UCL_BOOTLIBS) $(PLATFORM_LIBGCC) \
+	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
 		-Map $(@:%=%.map) --cref \
 		-o $@
 

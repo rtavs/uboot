@@ -60,7 +60,7 @@ $(dir $(FIRMWARE))ddr_init.out:$(OBJS) $(obj)ddr_init_main.o $(obj)ddr_init.lds
 
 %.out:
 
-	$(LD) $(LDFLAGS) $(filter %.o,$^) $(UCL_BOOTLIBS) $(PLATFORM_LIBGCC)\
+	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC)\
 		-Map $(@:%=%.map) --cref \
 		-o $@
 $(target_LDS):$(origin_LDS)

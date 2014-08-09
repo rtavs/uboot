@@ -89,7 +89,7 @@ $(basename $(FIRMWARE)).out:$(OBJS) $(obj)spl.o $(target_LDS)
 $(dir $(FIRMWARE))aml-debug-rom.out:$(OBJS) $(obj)debugrom.o $(obj)firmware.lds
 endif
 %.out:
-	$(LD) $(LDFLAGS) $(filter %.o,$^) $(UCL_BOOTLIBS) $(PLATFORM_LIBGCC) \
+	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
 		-Map $(@:%=%.map) --cref \
 		-o $@
 $(target_LDS):$(origin_LDS)
