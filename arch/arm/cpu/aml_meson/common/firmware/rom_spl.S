@@ -115,11 +115,7 @@ __TEXT_SIZE:
 #ifdef CONFIG_BOARD_SIZE_LIMIT
     .word CONFIG_BOARD_SIZE_LIMIT
 #else
-#ifdef CONFIG_AML_SECURE
-   .word 0x70000 - READ_SIZE
-#else
    .word 0x60000 - READ_SIZE
-#endif
 #endif
 
 

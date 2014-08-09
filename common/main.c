@@ -437,11 +437,6 @@ extern void init_suspend_firmware(void);
 
 #endif
 
-#ifdef CONFIG_AML_SECURE
-extern void init_secure_firmware(void);
-	init_secure_firmware();
-#endif
-
 #ifdef CONFIG_CMD_CHIPREV
 	extern int init_env_chiprev(void);
 	char env_bootargs[256];

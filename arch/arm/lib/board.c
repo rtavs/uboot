@@ -347,11 +347,7 @@ void board_init_f (ulong bootflag)
 	if(addr > 0x9FF00000)
 		addr = 0x9FF00000;
 #endif
-#ifdef CONFIG_AML_SECURE
-//init_secure_firmware() function (used in main.c) will use 0x9fe00000 buffer
-	if(addr > 0x9FE00000)
-		addr = 0x9FE00000;
-#endif
+
 #ifdef CONFIG_LOGBUFFER
 #ifndef CONFIG_ALT_LB_ADDR
 	/* reserve kernel log buffer */
