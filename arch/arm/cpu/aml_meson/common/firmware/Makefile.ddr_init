@@ -2,13 +2,10 @@
 
 include $(TOPDIR)/config.mk
 #$(warning $(PLATFORM_CPPFLAGS))
-ifdef SOC
+
 LDSCRIPT= $(TOPDIR)/firmware/$(ARCH)/$(CPU)/$(SOC)/u-boot.lds
 T=$(TOPDIR)/firmware/$(ARCH)/$(CPU)/$(SOC)/Makefile
-else
-LDSCRIPT= $(TOPDIR)/firmware/$(ARCH)/$(CPU)/u-boot.lds
-T=$(TOPDIR)/firmware/$(ARCH)/$(CPU)/Makefile
-endif
+
 PLATFORM_CPPFLAGS+=-DCONFIG_AMLROM_SPL
 
 LDFLAGS	= -Bstatic -T $(obj)ddr_init.lds  $(PLATFORM_LDFLAGS)

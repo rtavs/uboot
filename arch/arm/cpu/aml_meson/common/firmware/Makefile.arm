@@ -1,11 +1,8 @@
 include $(TOPDIR)/config.mk
-ifdef SOC
+
 LDSCRIPT= $(TOPDIR)/firmware/$(ARCH)/$(CPU)/$(SOC)/u-boot.lds
 T=$(TOPDIR)/firmware/$(ARCH)/$(CPU)/$(SOC)/Makefile
-else
-LDSCRIPT= $(TOPDIR)/firmware/$(ARCH)/$(CPU)/u-boot.lds
-T=$(TOPDIR)/firmware/$(ARCH)/$(CPU)/Makefile
-endif
+
 LDFLAGS	= -Bstatic -T $(obj)u-boot.lds  $(PLATFORM_LDFLAGS)
 BURNLDFLAGS	= -Bstatic -T $(obj)burner.lds  $(PLATFORM_LDFLAGS) -o 10
 #AFLAGS	+= -DAML_DEBUG_ROM -DTEXT_BASE=$(TEXT_BASE)  -I$(OBJTREE)
