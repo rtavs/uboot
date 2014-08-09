@@ -467,9 +467,6 @@
 //first before use this feature
 //#define CONFIG_M6_SECU_BOOT_2RSA   1
 
-//M6 Auth-key build to uboot
-//#define CONFIG_M6_SECU_AUTH_KEY 1
-
 
 //enable CONFIG_M6_SECU_BOOT_2K must enable CONFIG_M6_SECU_BOOT first
 #if defined(CONFIG_M6_SECU_BOOT_2K)
