@@ -144,45 +144,6 @@ static int m6_rsa_dec_pub(int index,aml_intx *n,aml_intx *e,unsigned char *ct,in
 	}struct_aml_chk_blk;//128+4+60+16+12
 
 
-#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-int get_2RSA(int index,aml_intx *n,aml_intx *e, unsigned char *key,int keylen)
-{
-	int ret=-1;
-	unsigned char szRSAPUK1[256];
-	int nOutLen=256;
-	unsigned char szRSAPUK1Hash[32];
-	unsigned char efuseHash[32];
-
-	t_func_v3 fp_00 = (t_func_v3)m6_g_action[index][0];
-	t_func_r3 fp_01 = (t_func_r3)m6_g_action[index][1];
-	t_func_v3 fp_02 = (t_func_v3)m6_g_action[index][2];
-	t_func_v3 fp_05 = (t_func_v3)m6_g_action[index][5];
-
-	fp_00((int)&szRSAPUK1Hash[0],0,sizeof(szRSAPUK1Hash));
-	fp_00((int)&efuseHash[0],0,sizeof(efuseHash));
-	fp_00((int)&szRSAPUK1[0],0,sizeof(szRSAPUK1));
-
-	keylen = 256;
-	m6_rsa_dec_pub(index,n,e,key,keylen,szRSAPUK1,&nOutLen);
-	//fp_00((int)n,0,sizeof(*n));
-	//fp_00((int)e,0,sizeof(*e));
-	fp_05((int)&efuseHash[0],136,sizeof(efuseHash));
-	ret = -1;
-	sha2_sum( szRSAPUK1Hash,szRSAPUK1,128+4);
-	if(!fp_01((int)&szRSAPUK1Hash[0],(int)&efuseHash[0],32)){
-		fp_02((int)(&n->dp[0]),(int)&szRSAPUK1[0],128);
-		n->used = 32;
-		fp_02((int)(&e->dp[0]),(int)(&szRSAPUK1[0]+128),4);
-		e->used = 1;
-		ret = 0;
-
-		fp_02((int)key,(int)&szRSAPUK1[0],keylen);
-		int i;
-	}
-	return ret;
-}
-#endif
-
 typedef struct{
 	unsigned char ks[16];
 } aml_aes_key_t_x;

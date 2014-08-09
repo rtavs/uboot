@@ -413,8 +413,6 @@
 //M6 security boot enable
 //#define CONFIG_M6_SECU_BOOT		 1
 //M6 2-RSA signature enable, enable CONFIG_M6_SECU_BOOT
-//first before use this feature
-//#define CONFIG_M6_SECU_BOOT_2RSA   1
 
 
 //enable CONFIG_M6_SECU_BOOT_2K must enable CONFIG_M6_SECU_BOOT first

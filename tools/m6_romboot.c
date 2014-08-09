@@ -58,11 +58,7 @@ int m6_write(FILE * fp_spl,FILE * fp_in ,FILE * fp_out)
 	#define AML_TWO_RSA_1 (0x30315352)   //RS10
 	#define AML_TWO_RSA_2 (0x30325352)   //RS20
 	#define AML_M6_SECURE_BOOT_ID   (0x4C42364D) //M6BL
-	#ifdef CONFIG_M6_SECU_BOOT_2RSA
-	*pID = AML_TWO_RSA_2;
-	#else
 	*pID = AML_TWO_RSA_1;
-	#endif
 	pID--;
 	*pID = AML_M6_SECURE_BOOT_ID;
 #endif //

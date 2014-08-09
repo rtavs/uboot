@@ -176,16 +176,6 @@ static void aml_m6_sec_boot_check_2RSA_key(const unsigned char *pSRC)
 
 		e.dp[0] = 0x010001;
 		e.used = 1;
-#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-		//get_2RSA(int index,aml_intx *n,aml_intx *e, unsigned char *key,int len);
-		unsigned char *pRSAPUK1 = (unsigned char *)pBlk + sizeof(struct_aml_chk_blk)+256;
-		//unsigned char szRSAPUK1[256];
-		if(get_2RSA(index,&n,&e,pRSAPUK1,256)){
-			serial_puts("\nError! RSA 1st key is corrupt!\n");
-			writel((1<<22) | (3<<24)|500, P_WATCHDOG_TC);
-			while(1);
-		}
-#endif //#if defined(CONFIG_M6_SECU_BOOT_2RSA)
 		unsigned char *pAESkey = (unsigned char *)pBlk + sizeof(struct_aml_chk_blk);
 
 		unsigned char szAESkey[256];
@@ -364,47 +354,6 @@ static void aml_m6_sec_boot_check_2RSA_key(const unsigned char *pSRC)
 		e.dp[0] = 0x010001;
 		e.used = 1;
 
-#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-		unsigned char *pRSAPUK1 = (unsigned char *)pBlk + sizeof(struct_aml_chk_blk)+256;
-
-		unsigned char szRSAPUK1[256];
-		memset_aml(szRSAPUK1,0,sizeof(szRSAPUK1));
-
-		memset_aml(&c,0,sizeof(c));
-		memcpy_aml(c.dp,pRSAPUK1,128);
-		c.used=32;
-
-		fp_exptmodx(&c,&e,&n,&m);
-		memcpy_aml(szRSAPUK1,m.dp,124);
-
-		memset_aml(&c,0,sizeof(c));
-		memcpy_aml(c.dp,pRSAPUK1+128,128);
-		c.used=32;
-
-		fp_exptmodx(&c,&e,&n,&m);
-		memcpy_aml(szRSAPUK1+124,m.dp,124);
-
-		memset_aml(&n,0,sizeof(c));
-		memset_aml(&e,0,sizeof(c));
-
-		memcpy_aml(n.dp,szRSAPUK1,128);
-		n.used = 32;
-
-		memcpy_aml(e.dp,szRSAPUK1+128,4);
-		e.used = 1;
-
-		unsigned char szRSAPUK1Hash[32];
-		memset_aml(szRSAPUK1Hash,0,sizeof(szRSAPUK1Hash));
-
-		sha2_sum( szRSAPUK1Hash,szRSAPUK1,128+4);
-
-		if(memcmp_aml(szRSAPUK1Hash,szEFUSE+128+8,32))
-		{
-			serial_puts("\nError! RSA 1st key is corrupt!\n");
-			AML_WATCH_DOG_START();
-		}
-#endif //#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-
 		unsigned char *pAESkey = (unsigned char *)pBlk + sizeof(struct_aml_chk_blk);
 
 		typedef struct{
@@ -475,11 +424,6 @@ static void aml_m6_sec_boot_check_2RSA_key(const unsigned char *pSRC)
 			serial_puts("\nErr! UBoot is corrupt!\n");
 			AML_WATCH_DOG_START();
 		}
-
-#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-		memcpy_aml(pRSAPUK1,szRSAPUK1,sizeof(szRSAPUK1));
-#endif //#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-
 	}
 	else
 	{
@@ -492,37 +436,6 @@ static void aml_m6_sec_boot_check_2RSA_key(const unsigned char *pSRC)
 
 static void aml_m6_sec_boot_check(const unsigned char *pSRC)
 {
-
-#if defined(CONFIG_M6_SECU_BOOT_2RSA)
-
-#define AML_UBOOT_SIZE_MAX 			(600*1024)
-#define AML_MX_UCL_SIZE_ADDR 		(AHB_SRAM_BASE+0x20)
-//note: the length of uboot ucl image which has beed hashed is placed to AML_MX_UCL_SIZE_ADDR
-#define AML_MX_UCL_HASH_ADDR_1 		(AHB_SRAM_BASE+0x24)
-#define AML_MX_UCL_HASH_SIZE_1 		(16)
-#define AML_MX_UCL_HASH_ADDR_2 		(AHB_SRAM_BASE+0x1A0)
-#define AML_MX_UCL_HASH_SIZE_2 		(16)
-//note:  the hash key of uboot ucl image is splitted to two parts (16+16bytes) and locate in  AML_MX_UCL_HASH_ADDR_1/2
-
-	writel(readl(0xda004004) & ~0x80000510,0xda004004);//clear JTAG for long time hash
-	unsigned char szHashUCL[SHA256_HASH_BYTES];
-	unsigned int nSizeUCL = *((unsigned int *)(AML_MX_UCL_SIZE_ADDR)); //get ucl length to be hashed
-	memcpy(szHashUCL,(const void *)AML_MX_UCL_HASH_ADDR_1,AML_MX_UCL_HASH_SIZE_1);   //get 1st hash key
-	memcpy(szHashUCL+AML_MX_UCL_HASH_SIZE_1,(const void *)AML_MX_UCL_HASH_ADDR_2,AML_MX_UCL_HASH_SIZE_2);//get 2nd hash key
-	//to clear
-	memcpy((void *)AML_MX_UCL_SIZE_ADDR,(const void *)(AML_MX_UCL_HASH_ADDR_1+16),AML_MX_UCL_HASH_SIZE_1+4);
-	memcpy((void *)AML_MX_UCL_HASH_ADDR_2,(const void *)(AML_MX_UCL_HASH_ADDR_1+16),AML_MX_UCL_HASH_SIZE_1);
-
-	if((!nSizeUCL) || (nSizeUCL > AML_UBOOT_SIZE_MAX) || //illegal uboot image size
-		sha_256(szHashUCL,pSRC,nSizeUCL))
-	{
-		//serial_puts("\nError! UBoot is corrupt!\n");
-		serial_puts("\nErr! UBoot is corrupt!\n");
-		AML_WATCH_DOG_START();
-	}
-
-#endif
-
 	aml_m6_sec_boot_check_2RSA_key((const unsigned char *)pSRC);
 
 }
