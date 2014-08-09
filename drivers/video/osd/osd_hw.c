@@ -1266,11 +1266,11 @@ void osd_init_hw(void)
 	osd_hw.updated[OSD1]=0;
 	osd_hw.updated[OSD2]=0;
 	//here we will init default value ,these value only set once .
-    #if defined (CONFIG_M6TVD)||defined(CONFIG_M6TV)
+    #if defined(CONFIG_M6TV)
 	setbits_le32(P_VPU_OSD1_MMC_CTRL, 1<<12); // set OSD to vdisp2
 	writel(0xc01f,P_MMC_CHAN4_CTRL); // adjust vdisp weight and age limit
     #endif
-	#if defined (CONFIG_M6TVD)||defined(CONFIG_M6TV)
+	#if defined(CONFIG_M6TV)
 	data32 |= 18  << 5;  // hold_fifo_lines
 	#else
 	data32 |= 4   << 5;  // hold_fifo_lines
@@ -1286,7 +1286,7 @@ void osd_init_hw(void)
 	clrbits_le32(P_VPP_MISC, VPP_PREBLEND_EN);
 	clrbits_le32(P_VPP_MISC,VPP_OSD1_POSTBLEND|VPP_OSD2_POSTBLEND );
 	//data32  = 0x1          << 0; // osd_blk_enable
-	#if defined (CONFIG_M6TVD)||defined(CONFIG_M6TV)
+	#if defined(CONFIG_M6TV)
 	data32 = 0x0 << 0; // osd_blk_enable
 	#else
 	data32 = 0x1 << 0;

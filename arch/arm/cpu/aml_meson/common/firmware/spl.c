@@ -42,12 +42,12 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
 
 //write ENCI_MACV_N0 (CBUS 0x1b30) to 0, disable Macrovision
-#if defined(CONFIG_M6) || defined(CONFIG_M6TV)||defined(CONFIG_M6TVD)
+#if defined(CONFIG_M6) || defined(CONFIG_M6TV)
 	writel(0, CBUS_REG_ADDR(ENCI_MACV_N0));
 #endif
 
 //Default to open ARM JTAG for M6 only
-#if  defined(CONFIG_M6) || defined(CONFIG_M6TV)|| defined(CONFIG_M6TVD)
+#if  defined(CONFIG_M6) || defined(CONFIG_M6TV)
 	#define AML_M6_JTAG_ENABLE
 	#define AML_M6_JTAG_SET_ARM
 

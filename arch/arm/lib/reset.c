@@ -51,7 +51,7 @@ int do_reset(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif
 #endif
 
-#if defined(CONFIG_M6) || defined(CONFIG_M8) || defined (CONFIG_M6TVD)
+#if defined(CONFIG_M6) || defined(CONFIG_M8)
 	writel(0,0xc8100000);	/*still use current boot device*/
 #endif
 

@@ -440,12 +440,8 @@ else #CONFIG_M6_SECU_BOOT
 	@./tools/secu_boot/encrypto2 $(obj)$(AML_USB_UBOOT_NAME)
 
 ifdef CONFIG_AML_CRYPTO_UBOOT
-ifeq ($(CONFIG_M6TVD),y)
-	@./tools/secu_boot/aml_encrypt_$(SOC) $(BOOT_KEY_PATH)/aml-rsa-key.$(RSA_KEY_EXT) $@.aml $@.aml.encrypt $@.aml.efuse $(BOOT_KEY_PATH)/aml-aes-key.aes
-else #CONFIG_M6TVD
 	@./tools/secu_boot/aml_encrypt_$(SOC) $(BOOT_KEY_PATH)/aml-rsa-key.$(RSA_KEY_EXT) $@.aml
 	@./tools/secu_boot/aml_encrypt_$(SOC) $(BOOT_KEY_PATH)/aml-rsa-key.$(RSA_KEY_EXT) $(obj)$(AML_USB_UBOOT_NAME).aml
-endif #CONFIG_M6TVD
 endif #CONFIG_AML_CRYPTO_UBOOT
 
 endif #CONFIG_M6_SECU_BOOT
