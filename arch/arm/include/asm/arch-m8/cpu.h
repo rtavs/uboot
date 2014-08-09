@@ -239,10 +239,6 @@
 #define CONFIG_USB_SPL_ADDR                         (CONFIG_SYS_TEXT_BASE - (32<<10)) //here need update when support 64KB SPL
 #define CONFIG_DDR_INIT_ADDR                        (0xd9000000) //usb driver limit, bit4 must 1, change 0xd9000000 as ACS hard coded to 0xd9000200
 
-#if !defined(CONFIG_AML_DISABLE_CRYPTO_UBOOT)
-	#define CONFIG_AML_SECU_BOOT_V2		1
-	#define CONFIG_AML_CRYPTO_UBOOT		1
-#endif //CONFIG_AML_DISABLE_CRYPTO_UBOOT
 
 #ifdef CONFIG_AML_ROMBOOT_SPL
 	#define SPL_STATIC_FUNC     static

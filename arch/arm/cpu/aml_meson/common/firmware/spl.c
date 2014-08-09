@@ -161,8 +161,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     serial_put_dec(get_utimer(nTEBegin));
     serial_puts(" us\n");
 
-#if defined(CONFIG_M8B) && defined(CONFIG_AML_SECU_BOOT_V2) && \
-    defined(CONFIG_AML_SPL_L1_CACHE_ON)
+#if defined(CONFIG_M8B) && defined(CONFIG_AML_SPL_L1_CACHE_ON)
     asm volatile ("ldr	sp, =(0x12000000)");
     //serial_puts("aml log : set SP to 0x12000000\n");
 #endif
@@ -195,8 +194,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	writel(0,0xc8100000);
 #endif
 
-#if defined(CONFIG_M8B) && defined(CONFIG_AML_SECU_BOOT_V2) && \
-    defined(CONFIG_AML_SPL_L1_CACHE_ON)
+#if defined(CONFIG_M8B) && defined(CONFIG_AML_SPL_L1_CACHE_ON)
 
     unsigned int fpAddr = CONFIG_SYS_TEXT_BASE;
 

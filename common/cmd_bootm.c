@@ -658,12 +658,6 @@ unsigned char* __aml_get_kernel_crypto_addr(const char* straddr)
     {
         unsigned useraddr = simple_strtoul(straddr, NULL, 16);
 
-#ifdef CONFIG_AML_SECU_BOOT_V2
-		extern int g_nIMGReadFlag;
-		if(_loadaddr != useraddr)
-			g_nIMGReadFlag = 0;
-#endif //#ifdef CONFIG_AML_SECU_BOOT_V2
-
         _loadaddr = useraddr ? useraddr : _loadaddr;
     }
     _loadaddr += 0x800;//shift 0x800 Android format head
@@ -679,10 +673,6 @@ unsigned char* aml_get_kernel_crypto_addr(const char* straddr)
 /*******************************************************************/
 /* bootm - boot application image from image in memory */
 /*******************************************************************/
-
-#ifdef CONFIG_AML_SECU_BOOT_V2
-int g_nIMGReadFlag = 0;
-#endif //#ifdef CONFIG_AML_SECU_BOOT_V2
 
 int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
@@ -720,14 +710,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		return ret;
 	}
 #endif //CONFIG_M6_SECU_BOOT
-
-#ifdef CONFIG_AML_SECU_BOOT_V2
-	extern int aml_sec_boot_check(unsigned char *pSRC);
-	if(!g_nIMGReadFlag)
-	ret = aml_sec_boot_check(aml_get_kernel_crypto_addr(argc < 2 ? NULL : argv[1]));
-	if(0 != ret)
-		return ret;
-#endif //CONFIG_AML_SECU_BOOT_V2
 
 #ifdef CONFIG_AML_GATE_INIT
 		extern void gate_init(void);

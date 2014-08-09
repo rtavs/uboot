@@ -16,9 +16,6 @@ endif
 	$(MAKE) -f Makefile.ddr_init
 
 
-ifdef CONFIG_AML_SECU_BOOT_V2
-	$(MAKE) -f Makefile.usb
-endif
 ifeq ($(CONFIG_CMD_RUNARC),y)
 	$(MAKE) -f Makefile.rbt
 endif

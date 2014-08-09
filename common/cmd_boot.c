@@ -47,14 +47,6 @@ int do_go (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 	printf ("## Starting application at 0x%08lX ...\n", addr);
 
-#ifdef CONFIG_AML_SECU_BOOT_V2
-	extern int aml_sec_boot_check(unsigned char *pSRC);
-	rcode = aml_sec_boot_check((unsigned char *)addr);
-	if(rcode)
-		return rcode;
-#endif //CONFIG_AML_SECU_BOOT_V2
-
-
 	/*
 	 * pass address parameter as argv[0] (aka command name),
 	 * and all remaining args

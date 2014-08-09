@@ -994,11 +994,6 @@ static int nand_load_image(cmd_tbl_t *cmdtp, nand_info_t *nand,
 
 	load_addr = addr;
 
-#ifdef CONFIG_AML_SECU_BOOT_V2
-	extern int g_nIMGReadFlag;
-	g_nIMGReadFlag = 0;
-#endif //#ifdef CONFIG_AML_SECU_BOOT_V2
-
 	/* Check if we should attempt an auto-start */
 	if (((ep = getenv("autostart")) != NULL) && (strcmp(ep, "yes") == 0)) {
 		char *local_args[2];

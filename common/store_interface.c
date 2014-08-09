@@ -392,7 +392,6 @@ int do_store(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 		else if(POR_EMMC_BOOT()){
 			store_dbg("MMC BOOT, %s %d \n",__func__,__LINE__);
 			tmp_buf= (unsigned char *)addr;
-#ifndef CONFIG_AML_SECU_BOOT_V2
             #ifdef MMC_UBOOT_CLEAR_MBR
 			//modify the 55 AA info for emmc uboot
             _mbrFlag[0] = tmp_buf[510];
@@ -400,7 +399,6 @@ int do_store(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 			tmp_buf[510]=0;
 			tmp_buf[511]=0;
 			#endif
-#endif// #if defined(CONFIG_AML_SECU_BOOT_V2)
 			sprintf(str, "mmc  write bootloader 0x%llx  0x%llx  0x%llx", addr, off, size);
 			store_dbg("command: %s\n", str);
 			ret = run_command(str, 0);
@@ -454,12 +452,10 @@ int do_store(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 				return -1;
 			}
 
-#ifndef CONFIG_AML_SECU_BOOT_V2
             #ifdef MMC_UBOOT_CLEAR_MBR
 		    tmp_buf[510]= _mbrFlag[0];
 			tmp_buf[511]= _mbrFlag[1];
 			#endif
-#endif// #ifndef CONFIG_AML_SECU_BOOT_V2
 			return ret;
 		}else{
 			store_dbg("CARD BOOT, %s %d ",__func__,__LINE__);

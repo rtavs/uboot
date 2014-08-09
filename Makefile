@@ -292,17 +292,6 @@ LIBS := $(addprefix $(obj),$(sort $(LIBS)))
 
 AML_BOARD_PATH = ./board/$(BOARDDIR)/
 LIBBOARD = board/$(BOARDDIR)/lib$(BOARD).o
-ifdef CONFIG_AML_CRYPTO_UBOOT
-BOOT_KEY_PATH = ./board/$(BOARDDIR)
-endif #CONFIG_AML_CRYPTO_UBOOT
-
-ifdef CONFIG_AML_CRYPTO_UBOOT
-ifdef CONFIG_AML_RSA_2048
-RSA_KEY_EXT = k2a
-else #CONFIG_AML_RSA_2048
-RSA_KEY_EXT = k1a
-endif #CONFIG_AML_RSA_2048
-endif #CONFIG_AML_CRYPTO_UBOOT
 
 LIBBOARD := $(addprefix $(obj),$(LIBBOARD))
 

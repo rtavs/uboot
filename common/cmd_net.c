@@ -210,11 +210,6 @@ netboot_common (proto_t proto, cmd_tbl_t *cmdtp, int argc, char * const argv[])
 	/* flush cache */
 	flush_cache(load_addr, size);
 
-#ifdef CONFIG_AML_SECU_BOOT_V2
-	extern int g_nIMGReadFlag;
-	g_nIMGReadFlag = 0;
-#endif //#ifdef CONFIG_AML_SECU_BOOT_V2
-
 	/* Loading ok, check if we should attempt an auto-start */
 	if (((s = getenv("autostart")) != NULL) && (strcmp(s,"yes") == 0)) {
 		char *local_args[2];
@@ -224,7 +219,6 @@ netboot_common (proto_t proto, cmd_tbl_t *cmdtp, int argc, char * const argv[])
 		printf ("Automatic boot of image at addr 0x%08lX ...\n",
 			load_addr);
 		show_boot_progress (82);
-
 		rcode = do_bootm (cmdtp, 0, 1, local_args);
 	}
 

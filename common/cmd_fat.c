@@ -87,14 +87,6 @@ int do_fat_fsload (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	sprintf(buf, "%lX", size);
 	setenv("filesize", buf);
 
-#ifdef CONFIG_AML_SECU_BOOT_V2
-	if(size > (2<<20)) //enough?
-	{
-		extern int g_nIMGReadFlag;
-		g_nIMGReadFlag = 0;
-	}
-#endif //#ifdef CONFIG_AML_SECU_BOOT_V2
-
 	return 0;
 }
 
