@@ -184,7 +184,6 @@ LIBS  = lib/libgeneric.o
 LIBS += lib/lzma/liblzma.o
 LIBS += lib/lzo/liblzo.o
 LIBS += lib/zlib/libz.o
-LIBS += lib/ucl/libucl.o
 LIBS += lib/rand/librandom.o
 LIBS += $(shell if [ -f board/$(VENDOR)/common/Makefile ]; then echo \
 	"board/$(VENDOR)/common/lib$(VENDOR).o"; fi)
@@ -401,12 +400,9 @@ endif #end CONFIG_AML_MESON
 
 ifeq ($(CONFIG_AML_MESON),y)
 firmware:$(obj)firmware.bin
-.PHONY :	$(obj)firmware.bin libucl
+.PHONY :	$(obj)firmware.bin
 
-libucl:
-	$(MAKE) -C lib/ucl
-
-$(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk libucl
+$(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk
 	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@
 
 endif #END CONFIG_AML_MESON
