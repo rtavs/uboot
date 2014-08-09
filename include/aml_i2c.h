@@ -237,19 +237,5 @@ struct aml_i2c_device {
 	unsigned dev_num;
 };
 
-#ifdef AML_MESON_BOARD_8726M_2010_11_18_V11
-//Please refer board schematic for detail pin connection
-//@AML8726-M_ARM_DEV_BOARD_2DDR_V1R1.pdf
-//port27-> Red	 (0x7F)
-//port26-> Green (0xBF)
-//port25-> Blue    (0xDF)
-#define I2C_LED_RED       (0x7F)
-#define I2C_LED_GREEN     (0xBF)
-#define I2C_LED_BLUE      (0xDF)
-
-//To set onboard LEDs  on/off
-void board_i2c_led_set(unsigned char byLED, unsigned char byOn);
-
-#endif //AML_MESON_BOARD_8726M_2010_11_18_V11
 
 #endif //__AML_I2C_H__

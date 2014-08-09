@@ -239,21 +239,6 @@ int do_ping (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	if (NetPingIP == 0)
 		return cmd_usage(cmdtp);
 
-#ifdef AML_MESON_BOARD_8726M_2010_11_18_V11
-/*comment:  Because the LAN chip LAN8720 do need the I2C chip TCA6424 port13 do H/W reset
-			before any action then the I2C does exist in any net related operation. Following code
-			are used to check the TCA6424 workable or not with the red & blue LED status.
-    Note:  The LED connection is board depend!!!
-*/
-#include <aml_i2c.h>
-	static int flip = 0;
-	flip = !flip;
-
-	board_i2c_led_set(I2C_LED_RED,flip); // RED LED on/off
-	board_i2c_led_set(I2C_LED_BLUE,!flip);//BLUE LED on/off
-
-#endif //AML_MESON_BOARD_8726M_2010_11_18_V11
-
 	if (NetLoop(PING) < 0) {
 		printf("ping failed; host %s is not alive\n", argv[1]);
 		return 1;
