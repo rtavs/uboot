@@ -149,7 +149,6 @@
 
 
 
-#define CONFIG_UCL 1
 #define CONFIG_SELF_COMPRESS
 
 

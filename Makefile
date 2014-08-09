@@ -405,16 +405,9 @@ $(obj)u-boot-orig.bin:	$(obj)u-boot
 	$(BOARD_SIZE_CHECK)
 else
 ###################
-ifneq ($(CONFIG_UCL),y)
+
 $(obj)u-boot-comp.bin:$(obj)u-boot-orig.bin
 	$(obj)/pack -comp $(CONFIG_COMPRESS_METHOD) -o $@ $<
-
-
-else	 # start aml compress
-##################################################
-$(obj)u-boot-comp.bin:$(obj)u-boot-orig.bin
-	$(obj)/tools/uclpack $< $@
-endif   # end CONFIG_UCL
 
 $(obj)u-boot-orig.bin:	$(obj)u-boot
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@

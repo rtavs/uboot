@@ -2,10 +2,6 @@
 #include <asm/arch/cpu.h>
 #include <asm/arch/romboot.h>
 
-#if CONFIG_UCL
-extern int uclDecompress(char* op, unsigned* o_len, char* ip);
-#endif
-
 #ifndef FIRMWARE_IN_ONE_FILE
 #define STATIC_PREFIX
 #else
@@ -600,11 +596,7 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
     int rc=0;
     unsigned temp_addr;
 
-#if CONFIG_UCL
-    temp_addr=target-0x800000;
-#else
     temp_addr=target;
-#endif
 
     unsigned * mem;
     switch(POR_GET_1ST_CFG(por_cfg))
@@ -617,12 +609,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
         case POR_1ST_SPI_RESERVED :
             mem=(unsigned *)(NOR_START_ADDR+READ_SIZE);
             spi_init();
-#if CONFIG_UCL==0
-            if((rc=check_sum(target,0,0))!=0)
-            {
-                return rc;
-            }
-#endif
             serial_puts("BootFrom SPI\n");
             memcpy((unsigned*)temp_addr,mem,size);
 #ifdef CONFIG_SPI_NOR_SECURE_STORAGE
@@ -647,15 +633,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
 	aml_m6_sec_boot_check((const unsigned char *)temp_addr);
 #endif //CONFIG_M6_SECU_BOOT
 
-#if CONFIG_UCL
-	unsigned len;
-    if(rc==0){
-        serial_puts("ucl decompress\n");
-        rc=uclDecompress((char*)target,&len,(char*)temp_addr);
-        serial_puts(rc?"decompress false\n":"decompress true\n");
-    }
-#endif
-
     if(rc==0)
         rc=check_sum((unsigned*)target,magic_info->crc[1],size);
 
@@ -670,25 +647,12 @@ STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
 {
     unsigned temp_addr;
 
-#if CONFIG_UCL
-    temp_addr=target-0x800000;
-#else
     temp_addr=target;
-#endif
     int rc=sdio_read(temp_addr,size,por_cfg);
 
 #if defined(CONFIG_M6_SECU_BOOT)
 	aml_m6_sec_boot_check((const unsigned char *)temp_addr);
 #endif //CONFIG_M6_SECU_BOOT
-
-#if CONFIG_UCL
-	unsigned len;
-    if(!rc){
-	    serial_puts("ucl decompress\n");
-	    rc=uclDecompress((char*)target,&len,(char*)temp_addr);
-        serial_puts("decompress finished\n");
-    }
-#endif
 
     if(!rc)
         rc=check_sum((unsigned*)target,magic_info->crc[1],size);
@@ -705,11 +669,7 @@ STATIC_PREFIX void load_ext(unsigned por_cfg,unsigned bootid,unsigned target)
 {
     int i;
     unsigned temp_addr;
-#if CONFIG_UCL
-    temp_addr=target-0x800000;
-#else
     temp_addr=target;
-#endif
 
     if(bootid==0&&(POR_GET_1ST_CFG(por_cfg)==POR_1ST_SPI||POR_GET_1ST_CFG(por_cfg)==POR_1ST_SPI_RESERVED))
     {
@@ -721,19 +681,7 @@ STATIC_PREFIX void load_ext(unsigned por_cfg,unsigned bootid,unsigned target)
     {
         if(__load_table[i].size==0)
             continue;
-#if CONFIG_UCL
-	unsigned len;
-	int rc;
-        if( __load_table[i].size&(~0x3fffff))
-        {
-            rc=uclDecompress((char*)(__load_table[i].dest),&len,(char*)(temp_addr+__load_table[i].src));
-            if(rc)
-            {
-                serial_put_dword(i);
-                serial_puts("decompress Fail\n");
-            }
-        }else
-#endif
+
         memcpy((void*)(__load_table[i].dest),(const void*)(__load_table[i].src+temp_addr),__load_table[i].size&0x3fffff);
     }
 }
