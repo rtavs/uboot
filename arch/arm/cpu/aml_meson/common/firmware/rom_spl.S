@@ -18,32 +18,11 @@ _start:
 	ldr	pc,_fiq
 
 reset:
-#if 0
-	ldr     r0,=0xda004004
-    ldr     r1,=0x80000510
-    str     r1,[r0]
-
-    ldr     r0,=0xc8100014
-    mov     r1,#0x4000
-    str     r1,[r0]
-
-
-    ldr     r0,=0xc1109900
-    mov     r1,#0
-    str     r1,[r0]
-    wfi
-#endif
 
     ldr     r0,=0xc1109900
     mov     r1,#0
     str     r1,[r0]
 
-#ifdef CONFIG_ROMBOOT_DEBUG
-    ldr     r0,=0xc1109900
-    mov     r1,#0
-    str     r1,[r0]
-	wfi
-#endif
     dmb
     isb
 	ldr     sp, __ROM_STACK_END  // setup stack pointer

@@ -22,32 +22,12 @@ _start:
 	add	r0, r0, #1
 	add	r0, r0, #1
 reset:
-#if 0
-	ldr     r0,=0xda004004
-    ldr     r1,=0x80000510
-    str     r1,[r0]
 
-    ldr     r0,=0xc8100014
-    mov     r1,#0x4000
-    str     r1,[r0]
-
-
-    ldr     r0,=0xc1109900
-    mov     r1,#0
-    str     r1,[r0]
-    wfi
-#endif
     push {r0, r1, r2, r3, r4, r5, lr}
     ldr     r0,=0xc1109900
     mov     r1,#0
     str     r1,[r0]
 
-#ifdef CONFIG_ROMBOOT_DEBUG
-    ldr     r0,=0xc1109900
-    mov     r1,#0
-    str     r1,[r0]
-	wfi
-#endif
     dmb
     isb
 /*
