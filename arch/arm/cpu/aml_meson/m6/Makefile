@@ -12,7 +12,6 @@ LIB	= $(obj)lib$(SOC).o
 
 COBJS-$(CONFIG_AML_SDIO)+=sdio.o
 COBJS-$(CONFIG_CMD_RUNARC)+=cmd_arc.o
-COBJS-$(CONFIG_DSP_VSYNC_INTERRUPT) += dsp.o
 COBJS	= clock.o gpio.o pinmux.o $(COBJS-y)
 COBJS  += m6_secure.o
 SOBJS := mmutable.o
@@ -32,19 +31,11 @@ COBJS-$(CONFIG_AML_HDMI_TX) += hdmi_tx_set.o enc_clk_config.o
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c) $(COBJS-y:.o=.c)
 OBJS	:= $(addprefix $(obj),$(SOBJS) $(COBJS))
 
-all:	dsp_firmware $(obj).depend $(LIB)
+all:	$(obj).depend $(LIB)
 
 $(LIB):	$(OBJS)
 	$(call cmd_link_o_target, $(OBJS))
 
-
-.PHONY: dsp_firmware
-ifdef CONFIG_DSP_VSYNC_INTERRUPT
-dsp_firmware:
-	make -C $(SRCTREE)/$(CPUDIR)/$(SOC)/dsp_firmware
-else
-dsp_firmware:
-endif
 
 #########################################################################
 

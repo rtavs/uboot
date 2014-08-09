@@ -217,8 +217,6 @@ COBJS-$(CONFIG_CMD_IMGREAD) += cmd_imgread.o
 COBJS-$(CONFIG_CMD_PWM) += cmd_pwm.o
 COBJS-$(CONFIG_CMD_LOGO) += cmd_logo.o
 
-COBJS-$(CONFIG_DSP_VSYNC_INTERRUPT) += cmd_tvdsp.o
-
 # others
 COBJS-$(CONFIG_CMD_DDR_TEST) += cmd_ddr_test.o
 COBJS-$(CONFIG_CMD_DDR_TEST) += cmd_d2pll.o

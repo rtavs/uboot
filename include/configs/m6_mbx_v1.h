@@ -476,8 +476,4 @@
 #define CONFIG_CEC_WAKE_UP 1
 
 
-//#define CONFIG_DSP_VSYNC_INTERRUPT 		1
-
-
-
 #endif //__CONFIG_M6_MBX_V1_H__
