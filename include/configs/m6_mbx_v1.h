@@ -458,20 +458,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-//M6 security boot enable
-//#define CONFIG_M6_SECU_BOOT		 1
-//M6 2-RSA signature enable, enable CONFIG_M6_SECU_BOOT
-
-
-
-//enable CONFIG_M6_SECU_BOOT_2K must enable CONFIG_M6_SECU_BOOT first
-#if defined(CONFIG_M6_SECU_BOOT_2K)
-	#if !defined(CONFIG_M6_SECU_BOOT)
-		#define CONFIG_M6_SECU_BOOT 1
-	#endif //!defined(CONFIG_M6_SECU_BOOT)
-#endif //defined(CONFIG_M6_SECU_BOOT_2K)
-
-
 //M6 L1 cache enable for uboot decompress speed up
 //#define CONFIG_AML_SPL_L1_CACHE_ON	1
 

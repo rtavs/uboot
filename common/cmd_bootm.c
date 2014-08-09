@@ -701,16 +701,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
     }
 #endif
 
-#ifdef CONFIG_M6_SECU_BOOT
-	extern int aml_decrypt_kernel_image(void* kernel_image_address);
-	ret = aml_decrypt_kernel_image((void*)load_addr);
-	if(ret != 0)
-	{
-		printf("Error! Illegal kernel image, please check!\n");
-		return ret;
-	}
-#endif //CONFIG_M6_SECU_BOOT
-
 #ifdef CONFIG_AML_GATE_INIT
 		extern void gate_init(void);
 		gate_init();

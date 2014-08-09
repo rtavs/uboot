@@ -13,7 +13,6 @@ SECTIONS
 	  *rom_spl*.o	(.text)
 
 	}
-#ifndef CONFIG_M6_SECU_BOOT
 	. =  AHB_SRAM_BASE+0x1b0;
 	.magic :{
 	  *magic.o(.text)
@@ -23,7 +22,6 @@ SECTIONS
 	.acs_entry :{
 	  *acs_entry.o(.text)
 	}
-#endif
 	. = ALIGN(4);
 	.setting		:
 	{

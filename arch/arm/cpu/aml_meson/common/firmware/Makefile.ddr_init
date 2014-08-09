@@ -20,11 +20,8 @@ CFLAGS	:=$(CFLAGS:-ffixed-r8=)
 CFLAGS	+=  -DCONFIG_AML_ROMBOOT_SPL  -MD -Wno-unused-function -mno-long-calls
 AFLAGS	+= -DCONFIG_AMLROM_SPL -DTEXT_BASE=$(TEXT_BASE) -MD
 
-ifndef CONFIG_M6_SECU_BOOT
+
 SOBJS	 = ddr_init_start.o magic.o acs_entry.o jetlab.o
-else
-SOBJS	 = ddr_init_start.o jetlab.o
-endif
 
 COBJS	 = ddr_init_main.o
 

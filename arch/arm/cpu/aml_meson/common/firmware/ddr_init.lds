@@ -13,7 +13,6 @@ SECTIONS
 	  *ddr_init_start.o	(.text)
 
 	}
-#ifndef CONFIG_M6_SECU_BOOT
 	. =  CONFIG_DDR_INIT_ADDR+0x1b0;
 	.magic :{
 	  *magic.o(.text)
@@ -23,7 +22,6 @@ SECTIONS
 	.acs_entry :{
 	  *acs_entry.o(.text)
 	}
-#endif
 	. = ALIGN(4);
 	.setting		:
 	{

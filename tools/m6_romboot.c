@@ -48,20 +48,7 @@ int m6_write(FILE * fp_spl,FILE * fp_in ,FILE * fp_out)
 #endif //AML_UBOOT_SINFO_OFFSET
 
 	m6_caculate();
-#ifdef CONFIG_M6_SECU_BOOT
-	if((num << 1) > (30<<10)) //SPL size check, 2KB reserved, too large?
-		return -1;
-	unsigned int *pID = (unsigned int *)((unsigned char *)buf + READ_SIZE - 4);
-	*pID = (unsigned int)( (num << 1) + 0x100);
-	--pID;
-	#define AML_TWO_RSA_0 (0)
-	#define AML_TWO_RSA_1 (0x30315352)   //RS10
-	#define AML_TWO_RSA_2 (0x30325352)   //RS20
-	#define AML_M6_SECURE_BOOT_ID   (0x4C42364D) //M6BL
-	*pID = AML_TWO_RSA_1;
-	pID--;
-	*pID = AML_M6_SECURE_BOOT_ID;
-#endif //
+
 	fwrite(buf,sizeof(buf[0]),sizeof(buf)/sizeof(buf[0]),fp_out);
 	while(!feof(fp_spl))
 	{
@@ -83,9 +70,6 @@ int m6_write_ex(FILE * fp_spl,FILE * fp_in ,FILE * fp_out,unsigned addr)
     memset(buf,0,sizeof(buf));
 	num = fread(buf,sizeof(buf[0]),sizeof(buf)/sizeof(buf[0]),fp_spl);   // add num assignment to avoid compile warning
 	m6_caculate();
-#ifdef CONFIG_M6_SECU_BOOT
-	*((int *)((unsigned char *)buf + READ_SIZE - 4))= num*sizeof(buf[0]);
-#endif //CONFIG_HISUN
 	fwrite(buf,sizeof(buf[0]),sizeof(buf)/sizeof(buf[0]),fp_out);
 	while(!feof(fp_spl))
 	{
