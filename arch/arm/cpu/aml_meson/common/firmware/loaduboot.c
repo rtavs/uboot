@@ -56,11 +56,9 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	unsigned size;
 	int rc=0;
 
-#if !defined(CONFIG_AML_EXT_PGM)
     serial_puts("\nHHH\n");
-#endif
 
-#if defined(CONFIG_AML_SMP) && !defined(CONFIG_AML_EXT_PGM)
+#if defined(CONFIG_AML_SMP)
 	load_smp_code();
 #endif
 
@@ -96,11 +94,6 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	aml_cache_disable();
 	//dcache_flush();
 #endif	//CONFIG_AML_SPL_L1_CACHE_ON
-
-#if defined(CONFIG_AML_EXT_PGM)
-	return rc;
-#endif
-
 
 #ifndef CONFIG_DISABLE_INTERNAL_U_BOOT_CHECK
 	if(!rc&&check_sum((unsigned*)__TEXT_BASE,0,0)==0)

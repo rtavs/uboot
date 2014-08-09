@@ -425,12 +425,6 @@ $(obj)u-boot.bin:	$(obj)u-boot-comp.bin $(obj)firmware.bin
 ifndef CONFIG_M6_SECU_BOOT
 	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
 
-ifdef CONFIG_AML_EXT_PGM
-	@$(obj)tools/uclpack $(AML_BOARD_PATH)code_raw.bin $(obj)code_raw_ucl.bin
-	@$(obj)tools/convert --soc $(SOC)  -s $(obj)ft_firmware.bin -i $(obj)code_raw_ucl.bin -o $(obj)ft-u-boot.bin
-	@rm -fr $(obj)code_raw_ucl.bin
-endif
-
 ifdef CONFIG_AML_SECU_BOOT_V2
 	@$(obj)tools/convert --soc $(SOC)  -s $(obj)usb_firmware.bin -i $(obj)u-boot-comp.bin -o $(obj)$(AML_USB_UBOOT_NAME).temp
 	@./tools/secu_boot/encrypto3 $@

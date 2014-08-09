@@ -45,7 +45,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	writel(readl(0xc8100014)|0x4000,0xc8100014);
 #endif
 
-#if !defined(CONFIG_AML_EXT_PGM_SILENT)
 	//Note: Following msg is used to calculate romcode boot time
 	//         Please DO NOT remove it!
     serial_puts("\nTE : ");
@@ -61,14 +60,11 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	serial_puts(" ");
 	serial_puts(__DATE__);
 	serial_puts("\n");
-#endif
 
     // initial pll
     pll_init(&__plls);
 	serial_init(__plls.uart);
 
-
-#if !defined(CONFIG_AML_EXT_PGM_SILENT)
 	unsigned int nPLL = readl(P_HHI_SYS_PLL_CNTL);
 	unsigned int nA9CLK = ((24 / ((nPLL>>9)& 0x1F) ) * (nPLL & 0x1FF))/ (1<<((nPLL>>16) & 0x3));
 	serial_puts("\nCPU clock is ");
@@ -76,18 +72,15 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	serial_puts("MHz\n\n");
 
     nTEBegin = TIMERE_GET();
-#endif
 
     // initial ddr
 	ddr_init_test();
 
 	//asm volatile ("ldr	sp, =(0x12000000)");
 
-#if !defined(CONFIG_AML_EXT_PGM_SILENT)
     serial_puts("\nDDR init use : ");
     serial_put_dec(get_utimer(nTEBegin));
     serial_puts(" us\n");
-#endif
 
 	//asm volatile ("wfi");
 
