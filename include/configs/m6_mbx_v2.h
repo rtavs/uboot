@@ -148,10 +148,6 @@
 #endif
 
 
-
-//#define CONFIG_SELF_COMPRESS
-
-
 #define CONFIG_CMD_AUTOSCRIPT
 //#define CONFIG_CMD_AML 1
 #define CONFIG_CMD_IMGPACK 1
