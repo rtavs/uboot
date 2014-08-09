@@ -290,9 +290,7 @@ endif
 LIBS := $(addprefix $(obj),$(sort $(LIBS)))
 .PHONY : $(LIBS) $(TIMESTAMP_FILE) $(VERSION_FILE)
 
-AML_BOARD_PATH = ./board/$(BOARDDIR)/
 LIBBOARD = board/$(BOARDDIR)/lib$(BOARD).o
-
 LIBBOARD := $(addprefix $(obj),$(LIBBOARD))
 
 # Add GCC lib
