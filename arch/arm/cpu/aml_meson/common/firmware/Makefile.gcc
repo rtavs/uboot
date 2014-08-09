@@ -2,8 +2,6 @@
 
 include $(TOPDIR)/config.mk
 $(warning $(PLATFORM_CPPFLAGS))
-LDSCRIPT= $(TOPDIR)/firmware/$(ARCH)/$(CPU)/$(SOC)/u-boot.lds
-T=$(TOPDIR)/firmware/$(ARCH)/$(CPU)/$(SOC)/Makefile
 
 PLATFORM_CPPFLAGS+=-DCONFIG_AMLROM_SPL
 
