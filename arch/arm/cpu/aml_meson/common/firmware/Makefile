@@ -26,6 +26,3 @@ ifeq ($(CONFIG_CMD_RUNARC),y)
 	$(MAKE) -f Makefile.rbt
 endif
 
-ifeq ($(CONFIG_AML_SUSPEND),y)
-	$(MAKE) -f Makefile.krbt
-endif

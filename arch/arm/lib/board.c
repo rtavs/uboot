@@ -342,12 +342,6 @@ void board_init_f (ulong bootflag)
 
 	addr = CONFIG_SYS_SDRAM_BASE + gd->ram_size;
 
-#ifdef CONFIG_AML_SUSPEND
-//init_suspend_firmware() function (used in main.c) will use 0x9ff00000 buffer
-	if(addr > 0x9FF00000)
-		addr = 0x9FF00000;
-#endif
-
 #ifdef CONFIG_LOGBUFFER
 #ifndef CONFIG_ALT_LB_ADDR
 	/* reserve kernel log buffer */

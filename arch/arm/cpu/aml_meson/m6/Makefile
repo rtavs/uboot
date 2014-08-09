@@ -29,12 +29,6 @@ COBJS += hdmi_tx_hdcp.o
 COBJS-$(CONFIG_AML_HDMI_TX) += hdmi_tx_set.o enc_clk_config.o
 
 
-ifdef CONFIG_AML_SUSPEND
-COBJS += suspend.o
-COBJS += firmwareld.o
-endif
-
-
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c) $(COBJS-y:.o=.c)
 OBJS	:= $(addprefix $(obj),$(SOBJS) $(COBJS))
 
@@ -43,17 +37,6 @@ all:	dsp_firmware $(obj).depend $(LIB)
 $(LIB):	$(OBJS)
 	$(call cmd_link_o_target, $(OBJS))
 
-ifdef CONFIG_AML_SUSPEND
-FIRMWARE_AUTO_UPDATE=y
-export FIRMWARE_AUTO_UPDATE
-$(OBJS): power_firmware.dat
-power_firmware.dat: arc_code
-		make -C $(SRCTREE)/$(CPUDIR)/$(SOC)/firmware/appf
-
-arc_code:
-		make -C $(SRCTREE)/$(CPUDIR)/$(SOC)/firmware/arc_power
-
-endif
 
 .PHONY: dsp_firmware
 ifdef CONFIG_DSP_VSYNC_INTERRUPT

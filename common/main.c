@@ -431,12 +431,6 @@ void main_loop (void)
 	hush_init_var ();
 #endif
 
-#ifdef CONFIG_AML_SUSPEND
-extern void init_suspend_firmware(void);
-	init_suspend_firmware();
-
-#endif
-
 #ifdef CONFIG_CMD_CHIPREV
 	extern int init_env_chiprev(void);
 	char env_bootargs[256];
