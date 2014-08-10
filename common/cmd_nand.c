@@ -284,7 +284,7 @@ int do_nand(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 #endif
 	const char *quiet_str = getenv("quiet");
 
-#if ((defined CONFIG_AML_NAND_KEY) || (defined MX_REVD) || (defined CONFIG_SECURE_NAND))
+#ifdef MX_REVD
 	int chip_num , tmp_chip_num, error;
 	nand = nand_info[nand_curr_device];
 	struct mtd_info *mtd =nand;
@@ -299,26 +299,6 @@ int do_nand(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 		quiet = simple_strtoul(quiet_str, NULL, 0) != 0;
 
 	cmd = argv[1];
-#ifdef CONFIG_AML_NAND_KEY
-	if (strcmp(cmd, "key") == 0){
-		aml_chip->key_protect = 1;		//force nand key can be erased
-		return 0;
-	}
-#endif
-#ifdef CONFIG_SECURE_NAND
-	if (strcmp(cmd, "secure") == 0){
-		aml_chip->secure_protect = 1;		//force nand key can be erased
-		return 0;
-	}
-#endif
-
-#ifdef CONFIG_SECURE_NAND
-		if (strcmp(cmd, "secure") == 0){
-			aml_chip->secure_protect = 1;		//force nand key can be erased
-			return 0;
-		}
-#endif
-
 	if(strcmp(cmd, "exist") == 0){
 		if(nand_info[1]){
 			printf("nand exist return 0\n");
@@ -339,20 +319,9 @@ int do_nand(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 		return 0;
 	}
 #endif
-#ifdef CONFIG_SECURE_NAND
-		if (strcmp(cmd, "secure") == 0){
-			aml_chip->secure_protect = 1;		//force nand key can be erased
-			return 0;
-		}
-#endif
 
 	if (strcmp(cmd, "info") == 0) {
-	#ifdef CONFIG_AML_NAND_KEY
-		aml_chip->key_protect = 0;		//protect nand key can not be erased
-	#endif
-	#ifdef CONFIG_SECURE_NAND
-		aml_chip->secure_protect = 0;		//protect nand secure can not be erased
-	#endif
+
 
 		putc('\n');
 		for (i = 0; i < CONFIG_SYS_MAX_NAND_DEVICE; i++) {
@@ -560,12 +529,6 @@ int do_nand(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 		}
 		ret = nand_erase_opts(nand, &opts);
 		printf("%s\n", ret ? "ERROR" : "OK");
-	#ifdef CONFIG_AML_NAND_KEY
-		aml_chip->key_protect = 0;		//protect nand key can not be erased
-	#endif
-	#ifdef CONFIG_SECURE_NAND
-		aml_chip->secure_protect = 0;		//protect nand secure can not be erased
-	#endif
 
 		return ret == 0 ? 0 : 1;
 	}

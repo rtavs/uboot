@@ -7,7 +7,7 @@
 
 #define SPI_MIN_ROOM_SIZE 0x200000
 
-//#ifdef CONFIG_SPI_NOR_SECURE_STORAGE
+
 struct aml_spivalid_node_t{
 	u64 offset;
 	u64 size;

@@ -19,11 +19,6 @@
 
 #define SET_DEFAULT_SERIALNO_IF_NOT_GET     1
 
-#if defined(CONFIG_SECURITYKEY)
-extern ssize_t uboot_get_keylist(char *listkey);
-extern ssize_t uboot_key_read(char *keyname, char *keydata);
-extern int uboot_key_initial(char *device);
-#else
 static ssize_t uboot_get_keylist(char *listkey)
 {
     return -1;
@@ -36,7 +31,6 @@ static int uboot_key_initial(char *device)
 {
     return -1;
 }
-#endif  /* CONFIG_SECURITYKEY */
 
 #define EFUSE_READ  1
 #define KEY_BYTES     512

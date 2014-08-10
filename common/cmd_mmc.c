@@ -214,20 +214,6 @@ int do_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			else if(strcmp(argv[3], "user")==0)
 				mmc_switch_partition(mmc, 0);
 			}
-			#ifdef CONFIG_AML_EMMC_KEY
-			if(strcmp(argv[1], "erase")==0){
-				int dev = simple_strtoul(argv[2], NULL, 10);
-				if(strcmp(argv[3], "key")==0){
-					struct mmc* mmc = find_mmc_device(dev);
-					if(!mmc){
-						printf("device %d is invalid\n",dev);
-						return 1;
-					}
-					mmc->key_protect = 0;
-					return 0;
-				}
-			}
-			#endif
 		return 1;
 
 	case 2:

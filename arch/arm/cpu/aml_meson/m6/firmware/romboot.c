@@ -113,10 +113,6 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
             spi_init();
             serial_puts("BootFrom SPI\n");
             memcpy((unsigned*)temp_addr,mem,size);
-#ifdef CONFIG_SPI_NOR_SECURE_STORAGE
-            serial_puts("BootFrom SPI get storage\n");
-            spi_secure_storage_get(NOR_START_ADDR,0,0);
-#endif
             break;
         case POR_1ST_SDIO_C:
 		serial_puts("BootFrom SDIO C\n");

@@ -85,14 +85,11 @@ COBJS-$(CONFIG_STORE_COMPATIBLE) += env_amlnf.o env_sf.o env_mmc.o env_switch.o
 COBJS-$(CONFIG_SPI_NAND_COMPATIBLE) += env_amlnand.o env_sf.o env_switch.o
 COBJS-$(CONFIG_SPI_NAND_EMMC_COMPATIBLE) += env_amlnand.o env_sf.o env_mmc.o env_switch.o
 # command
-COBJS-$(CONFIG_SECURITYKEY) += cmd_secukey.o
-COBJS-$(CONFIG_SECURITYKEY) += cmd_usid.o cmd_uuid.o
 COBJS-$(CONFIG_CMD_SECURESTORE) += cmd_securestore.o
 COBJS-$(CONFIG_CMD_RANDOM) +=  cmd_randomb.o
 COBJS-$(CONFIG_HDCP_PREFETCH) += cmd_hdcp.o
 COBJS-$(CONFIG_GET_AML_KEY) += cmd_get_key.o
 COBJS-$(CONFIG_UNIFY_KEY_MANAGE) += cmd_unifykey.o
-#COBJS-$(CONFIG_SECURITYKEY) += cmd_tmp.o
 COBJS-$(CONFIG_CMD_AMBAPP) += cmd_ambapp.o
 COBJS-$(CONFIG_CMD_AUTOSCRIPT) += cmd_autoscript.o
 COBJS-$(CONFIG_SOURCE) += cmd_source.o
@@ -106,7 +103,6 @@ COBJS-$(CONFIG_CMD_CONSOLE) += cmd_console.o
 COBJS-$(CONFIG_CMD_CPLBINFO) += cmd_cplbinfo.o
 COBJS-$(CONFIG_DATAFLASH_MMC_SELECT) += cmd_dataflash_mmc_mux.o
 COBJS-$(CONFIG_CMD_DATE) += cmd_date.o
-COBJS-$(CONFIG_SECURITYKEY) += cmd_boardid.o
 COBJS-$(CONFIG_CMD_CHIPREV) += cmd_chiprev.o
 ifdef CONFIG_4xx
 COBJS-$(CONFIG_CMD_SETGETDCR) += cmd_dcr.o

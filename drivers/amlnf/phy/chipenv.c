@@ -2573,22 +2573,6 @@ int  shipped_bbt_invalid_ops(struct amlnand_chip *aml_chip)
 	  }
 	  memset(buf,0x0,buf_size);
 
-#ifdef CONFIG_SECURITYKEY
-	 ret = amlnand_info_init(aml_chip, &(aml_chip->nand_key),buf,KEY_INFO_HEAD_MAGIC, CONFIG_KEYSIZE);
-	if(ret < 0){
-		aml_nand_msg("invalid nand key\n");
-		goto exit_error0;
-	}
-#endif
-
-#ifdef CONFIG_SECURE_NAND
-	ret = amlnand_info_init(aml_chip, &(aml_chip->nand_secure),buf,SECURE_INFO_HEAD_MAGIC, CONFIG_SECURE_SIZE);
-	if(ret < 0){
-		aml_nand_msg("invalid nand secure_ptr\n");
-		goto exit_error0;
-	}
-#endif
-
 	if(aml_chip->init_flag > NAND_BOOT_ERASE_PROTECT_CACHE){
 		amlnand_oops_handle(aml_chip,aml_chip->init_flag);
 	}

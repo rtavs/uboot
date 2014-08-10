@@ -19,13 +19,6 @@
  * if the key unify interface can support all kinds of keys, depend on below micro
  * #define CONFIG_UNIFY_KEY_MANAGE
  *   #define CONFIG_OF
- *   #define CONFIG_SECURITYKEY
- *   #define CONFIG_AML_NAND_KEY or #define CONFIG_NAND_KEY
- *   #define CONFIG_AML_EMMC_KEY
- *   #define CONFIG_SECURE_NAND  1
- *   #define CONFIG_SPI_NOR_SECURE_STORAGE
- *   #define CONFIG_SECURESTORAGEKEY
- *   #define CONFIG_RANDOM_GENERATE
  *   #define CONFIG_EFUSE 1
  *
  *
@@ -79,110 +72,48 @@ static int key_general_nand_init(char *buf,unsigned int len)
 static int key_general_nand_write(char *keyname,unsigned char *keydata,unsigned int datalen,enum key_manager_df_e flag)
 {
 	int err = -EINVAL;
-#ifdef CONFIG_SECURITYKEY
-	int ascii_flag;
-	if((flag != KEY_M_HEXDATA) && (flag != KEY_M_HEXASCII) && (flag != KEY_M_ALLASCII)){
-		printf("%s:%d,%s key config err\n",__func__,__LINE__,keyname);
-		return -EINVAL;
-	}
-	if((flag == KEY_M_HEXDATA) || (flag == KEY_M_ALLASCII)){
-		ascii_flag = 0;
-	}
-	else{
-		ascii_flag = 1;
-	}
-	err = uboot_key_put("auto",keyname, (char *)keydata,(int)datalen,ascii_flag);
-#endif
+
 	return err;
 }
 static int key_general_nand_read(char *keyname,unsigned char *keydata,unsigned int datalen,unsigned int *reallen,enum key_manager_df_e flag)
 {
 	int err = -EINVAL;
-#ifdef CONFIG_SECURITYKEY
-	int ascii_flag;
-	if((flag != KEY_M_HEXDATA) && (flag != KEY_M_HEXASCII) && (flag != KEY_M_ALLASCII)){
-		printf("%s:%d,%s key config err\n",__func__,__LINE__,keyname);
-		return -EINVAL;
-	}
-	if((flag == KEY_M_HEXDATA) || (flag == KEY_M_ALLASCII)){
-		ascii_flag = 0;
-	}
-	else{
-		ascii_flag = 1;
-	}
-	err = uboot_key_get("auto",keyname, (char*)keydata,datalen,ascii_flag);
-	*reallen = 0;
-	if(err >0){
-		if(ascii_flag){
-			*reallen = err;
-		}
-		else{
-			*reallen = err>>1;
-		}
-	}
-#endif
+
 	return err;
 }
 static int key_general_nand_query(char *keyname,unsigned int *keystate)
 {
 	int err = -EINVAL;
-#ifdef CONFIG_SECURITYKEY
-	err = uboot_key_query("auto",keyname,keystate);
-#endif
 	return err;
 }
 
 static int key_securestorage_init(char *buf,unsigned int len)
 {
-#ifdef CONFIG_SECURESTORAGEKEY
-	int err = -EINVAL;
-	err = securestore_key_init(buf,(int)len);
-	return err;
-#else
+
 	return 0;
-#endif
 }
 static int key_securestorage_write(char *keyname,unsigned char *keydata,unsigned int datalen,enum key_manager_df_e flag)
 {
 	int err = -EINVAL;
-#ifdef CONFIG_SECURESTORAGEKEY
-	if(flag >= KEY_M_MAX_DF){
-		printf("%s:%d,%s key config err\n",__func__,__LINE__,keyname);
-		return -EINVAL;
-	}
-	err = securestore_key_write(keyname, (char *)keydata,datalen,0);
-#endif
+
 	return err;
 }
 static int key_securestorage_read(char *keyname,unsigned char *keydata,unsigned int datalen,unsigned int *reallen,enum key_manager_df_e flag)
 {
 	int err = -EINVAL;
-#ifdef CONFIG_SECURESTORAGEKEY
-	if(flag >= KEY_M_MAX_DF){
-		printf("%s:%d,%s key config err\n",__func__,__LINE__,keyname);
-		return -EINVAL;
-	}
-	err = securestore_key_read(keyname,(char *)keydata,datalen,reallen);
-#endif
+
 	return err;
 }
 static int key_securestorage_query(char *keyname,unsigned int *keystate)
 {
 	int err = -EINVAL;
-#ifdef CONFIG_SECURESTORAGEKEY
-	err = securestore_key_query(keyname, keystate);
-#endif
+
 	return err;
 }
 static int key_securestorage_uninit(void)
 {
-#ifdef CONFIG_SECURESTORAGEKEY
-	int err = -EINVAL;
-	err = securestore_key_uninit();
-	return err;
-#else
+
 	return 0;
-#endif
 }
 
 static int key_efuse_init(char *buf,unsigned int len)

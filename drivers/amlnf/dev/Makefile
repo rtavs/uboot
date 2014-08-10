@@ -13,8 +13,6 @@ COBJS-y += amlnf_dev.o
 COBJS-y += cmd_amlnf.o
 COBJS-y += amlnf_env.o
 COBJS-y += cmd_amlnf_test.o
-COBJS-$(CONFIG_SECURITYKEY) += nandkey.o
-COBJS-$(CONFIG_SECURE_NAND) += secure_storage.o
 COBJS	:= $(COBJS-y)
 SRCS	:= $(COBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(COBJS))

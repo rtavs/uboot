@@ -308,20 +308,6 @@ int do_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
             return 0 ;
         }
 
-        #ifdef CONFIG_SECURITYKEY
-        if(strcmp(argv[1], "key")==0){
-            struct mmc* mmc;
-            char *name = "logo";
-            int dev = find_dev_num_by_partition_name (name);
-            mmc = find_mmc_device(dev);
-            if(!mmc){
-                printf("device %d is invalid\n",dev);
-                return 1;
-            }
-            mmc->key_protect = 0;
-            return 0;
-        }
-        #endif
         return cmd_usage(cmdtp);
 
 	default: /* at least 5 args */

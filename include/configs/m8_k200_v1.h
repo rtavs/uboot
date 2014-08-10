@@ -5,8 +5,6 @@
 #define CONFIG_AML_MESON_8      1
 #define CONFIG_MACH_MESON8_K200_V1  // generate M8 K200 machid number
 
-//#define CONFIG_SECURITYKEY
-
 #ifndef CONFIG_M8
 #define CONFIG_M8
 #endif // ifndef CONFIG_M8
@@ -20,21 +18,9 @@
 #define CONFIG_CONS_INDEX   2
 
 
-//#define CONFIG_SECURESTORAGEKEY
-#ifdef CONFIG_SECURESTORAGEKEY
-#ifndef CONFIG_RANDOM_GENERATE
-#define CONFIG_RANDOM_GENERATE
-#endif
-#endif
-
-//#define CONFIG_SECURITYKEY
-#ifdef CONFIG_SECURITYKEY
-#define CONFIG_AML_NAND_KEY
-#endif
 
 //#define  CONFIG_AML_GATE_INIT	1
 #define CONFIG_NEXT_NAND
-//#define CONFIG_SECURE_NAND  1
 //support "boot,bootd"
 //#define CONFIG_CMD_BOOTD 1
 

@@ -180,13 +180,6 @@ static int do_spi_flash(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[
 		return do_spi_flash_read_write(argc - 1, argv + 1);
 	if (strcmp(cmd, "erase") == 0)
 		return do_spi_flash_erase(argc - 1, argv + 1);
-#ifdef CONFIG_SPI_NOR_SECURE_STORAGE
-	if (strcmp(cmd, "secureskey") == 0){
-		void secure_storage_spi_enable(void);
-		secure_storage_spi_enable();
-		return 0;
-	}
-#endif
 
 usage:
 	return cmd_usage(cmdtp);

@@ -58,16 +58,6 @@
 #define M3_BOOT_COPY_NUM	  		4
 #define M3_BOOT_PAGES_PER_COPY	 	256
 
-#ifdef CONFIG_SECURE_NAND
-
-#define NAND_SECURE_BLK    			2
-#define SECURE_STORE_MAGIC		0x9fe7d05c
-#define REMAIN_BLOCK_NUM 			4
-#define	NAND_SEC_MAX_BLK_NUM   4
-
-#define CONFIG_SECURE_SIZE         		(0x10000*2) //128k
-#define SECURE_SIZE (CONFIG_SECURE_SIZE - (sizeof(uint32_t)))
-#endif
 
 #define NFC_BASE			  CBUS_REG_ADDR(NAND_CMD)
 #define NFC_OFF_CMD           ((NAND_CMD -NAND_CMD)<<2)
@@ -426,18 +416,6 @@ struct aml_nandkey_info_t {
          int end_block;
 };
 
-#ifdef CONFIG_SECURE_NAND
-struct aml_nandsecure_info_t{
-	struct mtd_info *mtd;
-	 struct env_valid_node_t *secure_valid_node;
-	 struct env_free_node_t *secure_free_node;
-	 u_char secure_valid;
-	 u_char secure_init;
-	 u_char part_num_before_sys;
-	 int start_block;
-	 int end_block;
-};
-#endif
 
 struct env_valid_node_t {
 	int16_t  ec;
@@ -474,18 +452,6 @@ struct aml_nandenv_info_t {
 	u_char part_num_before_sys;
 	struct aml_nand_bbt_info nand_bbt_info;
 };
-
-#ifdef CONFIG_SECURE_NAND
-typedef	struct {
-	uint32_t	crc;		/* CRC32 over data bytes	*/
-	unsigned char	data[SECURE_SIZE]; /* Environment data		*/
-} secure_t;
-
-struct secure_oobinfo_t {
-	int  name;
-    unsigned       timestamp;
-};
-#endif
 
 struct aml_nand_bch_desc{
     char * name;
@@ -709,10 +675,6 @@ struct aml_nand_chip {
 	/* device info */
 	struct device			*device;
 
-#ifdef CONFIG_SECURE_NAND
-	struct aml_nandsecure_info_t *aml_nandsecure_info;
-	unsigned secure_protect;
-#endif
     unsigned max_ecc;
     struct ecc_desc_s * ecc;
 //	unsigned onfi_mode;

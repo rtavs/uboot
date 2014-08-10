@@ -2182,12 +2182,6 @@ static int aml_nand_add_partition(struct aml_nand_chip *aml_chip)
 			mini_part_blk_num = 2;
 		else
 			mini_part_blk_num = (NAND_MINI_PART_SIZE >> phys_erase_shift);
-#ifdef CONFIG_AML_NAND_KEY
-		//if ((NAND_MINIKEY_PART_SIZE / mtd->erasesize) < NAND_MINIKEY_PART_BLOCKNUM)
-		//	mini_part_blk_num += NAND_MINIKEY_PART_BLOCKNUM; //for nand key
-		//else
-		//	mini_part_blk_num += (NAND_MINIKEY_PART_SIZE >> phys_erase_shift);
-#endif
 		start_blk = 0;
 		do {
 			offset = adjust_offset + start_blk * mtd->erasesize;
@@ -2291,17 +2285,6 @@ static int aml_nand_add_partition(struct aml_nand_chip *aml_chip)
 				sprintf(temp_parts->name, "mtd%d", part_num++);
 			}
 		}
-#ifdef CONFIG_AML_NAND_KEY
-		temp_parts = parts + (nr-1);
-		key_block = aml_chip->aml_nandkey_info->end_block - aml_chip->aml_nandkey_info->start_block + 1;
-
-		if(temp_parts->size == MTDPART_SIZ_FULL){
-			temp_parts->size = mtd->size - temp_parts->offset - key_block*mtd->erasesize;
-		}
-		else{
-			temp_parts->size -= key_block*mtd->erasesize;
-		}
-#endif
 	}
 
 	return add_mtd_partitions(mtd, parts, nr);
@@ -2920,47 +2903,10 @@ static void aml_nand_erase_cmd(struct mtd_info *mtd, int page)
 	valid_page_num = (mtd->writesize >> chip->page_shift);
 
 	block_addr = ((page / valid_page_num) >> pages_per_blk_shift);
-#ifdef CONFIG_AML_NAND_KEY
-		//never erase env_valid_node and aml_nandkey_info blocks if aml_nandkey_info valid.
-	#ifdef CONFIG_SECURE_NAND
-		if(aml_chip->aml_nandkey_info->env_valid &&( !aml_chip->key_protect)){
-
-				if(((block_addr >= aml_chip->aml_nandkey_info->start_block) && (block_addr < aml_chip->aml_nandsecure_info->start_block))){
-						return;
-				}
-			}
-		if(aml_chip->aml_nandsecure_info != NULL){
-			if(aml_chip->aml_nandsecure_info->secure_valid &&( !aml_chip->secure_protect)){
-					if(((block_addr >= aml_chip->aml_nandsecure_info->start_block) && (block_addr <= aml_chip->aml_nandsecure_info->end_block))){
-							return;
-					}
-				}
-		}
-	#else
-		if(aml_chip->aml_nandkey_info->env_valid &&( !aml_chip->key_protect)){
-
-			if(((block_addr >= aml_chip->aml_nandkey_info->start_block) && (block_addr	<= aml_chip->aml_nandkey_info->end_block))){
-					return;
-			}
-		}
-	#endif
-		if((aml_chip->aml_nandenv_info->env_valid_node->env_status) && (block_addr == aml_chip->aml_nandenv_info->env_valid_node->phy_blk_addr)){
-				 aml_nand_free_valid_env(mtd);
-	}
-#else
-
-#ifdef CONFIG_SECURE_NAND
-		if(aml_chip->aml_nandsecure_info->secure_valid &&( !aml_chip->secure_protect)){
-			if(((block_addr >= aml_chip->aml_nandsecure_info->start_block) && (block_addr <= aml_chip->aml_nandsecure_info->end_block))){
-					return;
-			}
-		}
-#endif
 
 		if ((aml_chip->aml_nandenv_info->env_valid_node->env_status) && (((page / valid_page_num) >> pages_per_blk_shift) == aml_chip->aml_nandenv_info->env_valid_node->phy_blk_addr)){
 			 aml_nand_free_valid_env(mtd);
 		}
-#endif
 
 	valid_page_num /= aml_chip->plane_num;
 
@@ -6453,64 +6399,6 @@ static int aml_nand_scan_bbt(struct mtd_info *mtd)
 	do{
 		offset = mtd->erasesize;
 		offset *= start_blk;
-#if (defined CONFIG_AML_NAND_KEY) || (defined CONFIG_SECURE_NAND)
-		struct mtd_oob_ops aml_oob_ops;
-		unsigned char key_oob_buf[sizeof(struct env_oobinfo_t)];
-		struct env_oobinfo_t *key_oobinfo;
-
-		key_oobinfo = (struct env_oobinfo_t *)key_oob_buf;
-		key_start_blk = (total_blk - (REMAIN_TAIL_BLOCK_NUM * 2));
-
-		if((key_start_blk <= start_blk)&&(start_blk < total_blk)){
-
-			aml_oob_ops.mode = MTD_OOB_AUTO;
-			aml_oob_ops.len = mtd->writesize;
-			aml_oob_ops.ooblen = sizeof(struct env_oobinfo_t);
-			aml_oob_ops.ooboffs = mtd->ecclayout->oobfree[0].offset;
-			aml_oob_ops.datbuf = data_buf;
-			aml_oob_ops.oobbuf = key_oob_buf;
-
-			memset((unsigned char *)aml_oob_ops.datbuf, 0x0, mtd->writesize);
-			memset((unsigned char *)aml_oob_ops.oobbuf, 0x0, aml_oob_ops.ooblen);
-
-			ret = mtd->read_oob(mtd, offset, &aml_oob_ops);
-			if ((ret != 0) && (ret != -EUCLEAN)) {
-				printk("here 1 step : ecc error: key_start_blk %d, block %d\n",key_start_blk,start_blk );
-				aml_chip->aml_nandenv_info->nand_bbt_info.nand_bbt[bad_blk_cnt++] = start_blk|0x8000;
-				aml_chip->block_status[start_blk] = NAND_FACTORY_BAD;
-				start_blk++;
-				continue;
-			}
-
-			   for(i=3,oob_data=0xffffffff;i>=0;i--){
-			        oob_data <<= 8;
-			        oob_data |= key_oob_buf[i];
-			   }
-
-			if(ret == 0){
-
-				if (!memcmp(key_oobinfo->name, ENV_KEY_MAGIC, 4)) {
-					printk("here 2 step : key valid:  block %d\n",start_blk );
-					start_blk++;
-					continue;
-				}
-#ifdef CONFIG_SECURE_NAND
-				else	if (oob_data == SECURE_STORE_MAGIC){
-					printk("here 2 step :  secure valid:  block %d\n",start_blk );
-					start_blk++;
-					continue;
-				}
-#endif
-				else if(oob_data != 0xffffffff){
-					printk("here 3 step : oob error:   block %d\n",start_blk );
-					aml_chip->aml_nandenv_info->nand_bbt_info.nand_bbt[bad_blk_cnt++] = start_blk|0x8000;
-					aml_chip->block_status[start_blk] = NAND_FACTORY_BAD;
-					start_blk++;
-					continue;
-				}
-			}
-		}
-#endif
 
 		for (i=0; i<aml_chip->chip_num; i++){
 
@@ -7291,17 +7179,6 @@ int aml_nand_init(struct aml_nand_chip *aml_chip)
 		err = aml_nand_env_check(mtd);
 		if (err)
 			printk("invalid nand env\n");
-#ifdef CONFIG_AML_NAND_KEY
-		extern int aml_key_init(struct aml_nand_chip *aml_chip);
-		err=aml_key_init(aml_chip);
-		if(err)
-			printk("aml key init error\n");
-#endif
-#ifdef CONFIG_SECURE_NAND
-		err = secure_device_init(mtd);
-		if(err)
-			printk("aml secure init error\n");
-#endif
 
 #ifdef NEW_NAND_SUPPORT
 		if((aml_chip->new_nand_info.type) && (aml_chip->new_nand_info.type < 10) && (aml_chip->new_nand_info.read_rety_info.default_flag == 0)){

@@ -25,7 +25,6 @@ include $(TOPDIR)/config.mk
 
 LIB	:= $(obj)libsecurestoragekey.o
 
-COBJS-$(CONFIG_SECURESTORAGEKEY) += sskey.o
 
 
 COBJS	:= $(COBJS-y)

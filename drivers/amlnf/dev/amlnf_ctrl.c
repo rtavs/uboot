@@ -491,26 +491,6 @@ int aml_sys_info_init(struct amlnand_chip *aml_chip)
 	}
 	memset(buf,0x0,buf_size);
 
-#ifdef CONFIG_SECURITYKEY
-		if(nand_key->arg_valid == 0){
-			ret = aml_key_init(aml_chip);
-			if(ret < 0){
-				aml_nand_msg("nand key init failed");
-			goto exit_error;
-			}
-		}
-#endif
-
-#ifdef CONFIG_SECURE_NAND
-		if(nand_secure->arg_valid == 0){
-			ret = aml_secure_init(aml_chip);
-			if(ret < 0){
-				aml_nand_msg("nand secure init failed");
-			goto exit_error;
-			}
-		}
-#endif
-
 	if((uboot_env->arg_valid == 0) && (boot_device_flag == 1)){
 		ret = aml_ubootenv_init(aml_chip);
 		if(ret < 0){
@@ -519,25 +499,6 @@ int aml_sys_info_init(struct amlnand_chip *aml_chip)
 		}
 	}
 
-#ifdef CONFIG_SECURITYKEY
-	if(nand_key->arg_valid == 0){
-		ret = amlnand_save_info_by_name(aml_chip,&(aml_chip->nand_key),buf, KEY_INFO_HEAD_MAGIC,CONFIG_KEYSIZE);
-		if(ret < 0){
-			aml_nand_msg("nand save default key failed");
-			goto exit_error;
-		}
-	}
-#endif
-
-#ifdef CONFIG_SECURE_NAND
-	if(nand_secure->arg_valid == 0){
-		ret = amlnand_save_info_by_name(aml_chip,&(aml_chip->nand_secure),buf, SECURE_INFO_HEAD_MAGIC,CONFIG_SECURE_SIZE);
-		if(ret < 0){
-			aml_nand_msg("nand save default secure_ptr failed");
-			goto exit_error;
-		}
-	}
-#endif
 
 exit_error:
 
@@ -551,25 +512,6 @@ exit_error:
 
 int aml_sys_info_error_handle(struct amlnand_chip *aml_chip)
 {
-
-#ifdef CONFIG_SECURITYKEY
-		 if((aml_chip->nand_key.arg_valid == 1) && (aml_chip->nand_key.update_flag)){
-			aml_nand_update_key(aml_chip,NULL);
-			aml_chip->nand_key.update_flag = 0;
-			aml_nand_msg("NAND UPDATE CKECK  : arg %s: arg_valid= %d, valid_blk_addr = %d, valid_page_addr = %d",\
-					"nandkey",aml_chip->nand_key.arg_valid, aml_chip->nand_key.valid_blk_addr, aml_chip->nand_key.valid_page_addr);
-		}
-#endif
-
-#ifdef CONFIG_SECURE_NAND
-		 if((aml_chip->nand_secure.arg_valid == 1) && (aml_chip->nand_secure.update_flag)){
-			aml_nand_update_secure(aml_chip,NULL);
-			aml_chip->nand_secure.update_flag = 0;
-			aml_nand_msg("NAND UPDATE CKECK  : arg %s: arg_valid= %d, valid_blk_addr = %d, valid_page_addr = %d",\
-					"nandsecure",aml_chip->nand_secure.arg_valid, aml_chip->nand_secure.valid_blk_addr, aml_chip->nand_secure.valid_page_addr);
-		}
-#endif
-
 		 if((aml_chip->uboot_env.arg_valid == 1) && (aml_chip->uboot_env.update_flag)){
 			aml_nand_update_ubootenv(aml_chip,NULL);
 			aml_chip->uboot_env.update_flag = 0;
@@ -583,20 +525,6 @@ int aml_sys_info_error_handle(struct amlnand_chip *aml_chip)
 void amlnf_disprotect(uchar * name)
 {
 	struct amlnand_chip *aml_chip = aml_nand_chip;
-
-#ifdef CONFIG_SECURITYKEY
-	if(strcmp(name, "key") == 0){
-		aml_nand_msg("disprotect key");
-		info_disprotect |= DISPROTECT_KEY;
-	}
-#endif
-
-#ifdef CONFIG_SECURE_NAND
-	if(strcmp(name, "secure") == 0){
-		aml_nand_msg("disprotect secure");
-		info_disprotect |= DISPROTECT_SECURE;
-	}
-#endif
 
 	if(strcmp(name, "fbbt") == 0){
 		aml_nand_msg("disprotect fbbt");

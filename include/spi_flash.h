@@ -37,11 +37,6 @@ struct spi_flash {
 
 	const char	*name;
 
-#ifdef CONFIG_SPI_NOR_SECURE_STORAGE
-	unsigned secure_protect;
-	struct aml_spisecurestorage_info_t *securestorage_info;
-#endif
-
 	u32		size;
 
 	int		(*read)(struct spi_flash *flash, u32 offset,

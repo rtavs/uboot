@@ -54,55 +54,14 @@ extern void mdelay(unsigned long msec);
  */
 bool emmckey_is_protected (struct mmc *mmc)
 {
-#ifdef CONFIG_STORE_COMPATIBLE
-	#ifdef CONFIG_SECURITYKEY
-	if((info_disprotect & DISPROTECT_KEY)){ // disprotect
-		printf("emmckey_is_protected : disprotect\n ");
 		return 0;
-	}else{
-		printf("emmckey_is_protected : protect\n ");
-	// protect
-		return 1;
-	}
-	#else
-		 return 0;
-	#endif
-#else
-	#ifdef CONFIG_SECURITYKEY
-		return mmc->key_protect;
-	#else
-		return 0;
-	#endif
-#endif
+
 }
 
 bool emmckey_is_access_range_legal (struct mmc *mmc, ulong start, lbaint_t blkcnt)
 {
-#ifdef CONFIG_SECURITYKEY
-	struct aml_emmckey_info_t *emmckey_info;
-	emmckey_info = mmc->aml_emmckey_info;
-#endif
 	if(aml_is_emmc_tsd(mmc)){
-
-#ifdef CONFIG_STORE_COMPATIBLE
-	#ifdef CONFIG_SECURITYKEY
-	if(!(info_disprotect & DISPROTECT_KEY)){ // NOT allow accessing
-	        if ((emmckey_info->lba_start <= (start+blkcnt-1)) && ((emmckey_info->lba_end-1) >= start)) {
-	                printf("Emmckey: Access range is illegal!\n");
-				return false;
-	        }
-	}
-	#endif
-#else
-	#ifdef CONFIG_SECURITYKEY
-	if(mmc->key_protect){ // NOT allow accessing
-	        if ((emmckey_info->lba_start <= (start+blkcnt-1)) && ((emmckey_info->lba_end-1) >= start)) {
-	                printf("Emmckey: Access range is illegal!\n");
-				return false;
-	        }
-	}
-	#endif
-#endif
+	;
 	}
 
     return true;
@@ -1321,33 +1280,20 @@ int mmc_init(struct mmc *mmc)
 #ifdef CONFIG_STORE_COMPATIBLE
 	    if (!is_partition_checked) {
 
-#if defined(CONFIG_SECURITYKEY) && defined(CONFIG_STORE_COMPATIBLE)
+#ifdef CONFIG_STORE_COMPATIBLE
 		info_disprotect |= DISPROTECT_KEY; //disprotect key
 #endif
             if (mmc_device_init(mmc) == 0) {
                 is_partition_checked = true;
                 printk("eMMC/TSD partition table have been checked OK!\n");
 #endif
-			#ifdef CONFIG_SECURITYKEY
-				err = emmc_key_init(mmc);
-				if(err){
-					printf("%s:%d,emmc key fail\n",__func__,__LINE__);
-				}
-                // emmc_key_read();
-                // emmc_key_write();
-			#endif
-			#ifdef CONFIG_SECURE_MMC
-				err = mmc_storage_probe(mmc);
-				if(err){
-					printf("%s:%d,mmc storage  fail\n",__func__,__LINE__);
-				}
-			#endif
+
 #ifdef CONFIG_STORE_COMPATIBLE
             }
             else
                 printk("eMMC/TSD partition table have been checked ERROR!\n");
 
-#if defined(CONFIG_SECURITYKEY) && defined(CONFIG_STORE_COMPATIBLE)
+#ifdef CONFIG_STORE_COMPATIBLE
 	info_disprotect &= ~DISPROTECT_KEY; //protect key
 #endif
 
