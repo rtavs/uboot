@@ -24,7 +24,7 @@
 #error You should only select one of WRITE_TO_EFUSE_ENABLE and WRITE_TO_NAND_ENABLE
 #endif
 
-#define CONFIG_AML_TINY_USBTOOL
+//#define CONFIG_AML_TINY_USBTOOL
 
 //UART Sectoion
 #define CONFIG_CONS_INDEX   2
