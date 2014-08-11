@@ -1,18 +1,11 @@
 
 include $(TOPDIR)/config.mk
-ARMCC_$(CONFIG_ENABLE_ARMCC_DEBUGROM)=$(shell echo __CC_ARM | armcc -E -  | tail -n 1)
-ifneq ($(ARMCC_y),)
-targetComplier=arm
-else
-targetComplier=gcc
-endif
-
 
 all:
 ifdef CONFIG_AML_SMP
 	./bin2code smp_code $(SRCTREE)/$(CPUDIR)/$(SOC)/firmware/smp.bin $(SRCTREE)/$(CPUDIR)/$(SOC)/firmware/smp.dat
 endif
-	$(MAKE) -f Makefile.$(targetComplier)
+	$(MAKE) -f Makefile.gcc
 	$(MAKE) -f Makefile.ddr_init
 
 
