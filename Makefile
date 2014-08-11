@@ -267,7 +267,6 @@ LIBS += drivers/usb/gadget/v2_burning/v2_burning.o
 endif
 
 LIBS += common/libcommon.o
-LIBS += drivers/secure/lib_secure.o
 LIBS += lib/libfdt/libfdt.o
 LIBS += api/libapi.o
 LIBS += post/libpost.o
