@@ -12,7 +12,6 @@ BURNLDFLAGS	= -Bstatic -T $(obj)burner.lds  $(PLATFORM_LDFLAGS)
 #CFLAGS :=  -g --cpu cortex-a9  -Ospace  --c99 -W  --thumb \
 #				 $(filter -D%,$(CFLAGS)) $(filter -I%,$(CFLAGS))
 #-Ospace
-#LDFLAGS = --cpu cortex-a9 --info totals --info unused --info inputs --scatter firmware.scat --entry _start --keep=rom_spl_arm.o\(.magic\)
 #AFLAGS = -g --cpu cortex-a9  $(filter -I%,$(CFLAGS))
 
 
