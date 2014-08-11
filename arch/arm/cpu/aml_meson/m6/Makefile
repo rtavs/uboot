@@ -13,7 +13,6 @@ LIB	= $(obj)lib$(SOC).o
 COBJS-$(CONFIG_AML_SDIO)+=sdio.o
 COBJS-$(CONFIG_CMD_RUNARC)+=cmd_arc.o
 COBJS	= clock.o gpio.o pinmux.o $(COBJS-y)
-COBJS  += m6_secure.o
 SOBJS := mmutable.o
 
 COBJS-$(CONFIG_AML_ETHERNET) += aml_eth_clk_set.o aml_eth_pinmux.o
