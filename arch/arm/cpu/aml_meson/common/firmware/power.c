@@ -17,9 +17,7 @@ extern void hard_i2c_write168(unsigned char SlaveAddr, unsigned short RegAddr, u
 #define CONFIG_VDDAO_VOLTAGE 1200
 #endif
 
-#ifdef CONFIG_PMU_ACT8942
-    #define DEVID 0xb6
-#elif defined CONFIG_AML_PMU
+#ifdef CONFIG_AML_PMU
     #define DEVID 0x6A
 #elif defined CONFIG_RN5T618
     #define DEVID 0x64
@@ -1229,14 +1227,7 @@ void power_init(int init_mode)
     hard_i2c_init();
 
     __udelay(1000);
-#ifdef CONFIG_PMU_ACT8942
-    if(CONFIG_VDDAO_VOLTAGE <= 1200)
-        hard_i2c_write8(DEVID, 0x21, (CONFIG_VDDAO_VOLTAGE - 600) / 25);
-    else if(CONFIG_VDDAO_VOLTAGE <= 2400)
-        hard_i2c_write8(DEVID, 0x21, ((CONFIG_VDDAO_VOLTAGE - 1200) / 50) + 0x18);
-    else
-        hard_i2c_write8(DEVID, 0x21, ((CONFIG_VDDAO_VOLTAGE - 2400) / 100) + 0x30);
-#elif defined CONFIG_AML_PMU
+#ifdef CONFIG_AML_PMU
     aml1212_power_init(init_mode);
 #elif defined CONFIG_RN5T618
     rn5t618_power_init(init_mode);

@@ -229,7 +229,6 @@ LIBS += drivers/net/phy/libphy.o
 LIBS += drivers/pci/libpci.o
 LIBS += drivers/pcmcia/libpcmcia.o
 LIBS += drivers/power/libpower.o
-LIBS += drivers/pmu/libpmu.o
 LIBS += drivers/spi/libspi.o
 ifeq ($(CPU),mpc83xx)
 LIBS += drivers/qe/libqe.o
