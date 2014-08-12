@@ -33,10 +33,6 @@
 #include <amlogic/aml_tv.h>
 #include <amlogic/vinfo.h>
 
-#ifdef CONFIG_AW_AXP20
-#include <axp-gpio.h>
-#endif
-
 #define DEBUG
 
 extern GraphicDevice aml_gdev;

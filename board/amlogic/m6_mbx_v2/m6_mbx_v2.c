@@ -448,11 +448,6 @@ int board_late_init(void)
 	board_usb_init(&g_usb_config_m6_skt,BOARD_USB_MODE_HOST);
 #endif /*CONFIG_USB_DWC_OTG_HCD*/
 
-#ifdef CONFIG_AW_AXP20
-set_dcdc2(1500);	//set DC-DC2 to 1500mV
-set_dcdc3(1100);	//set DC-DC3 to 1100mV
-#endif
-
 	return 0;
 }
 #endif

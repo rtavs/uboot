@@ -35,7 +35,6 @@
 
 #define HAS_AO_MODULE
 #define CONFIG_AML_I2C	//add by Elvis Yu
-//#define CONFIG_AW_AXP20
 #define CONFIG_PWM_DEFAULT_VCCK_VOLTAGE
 #define CONFIG_VCCK_VOLTAGE                     1320        // 1.32v for default vcck voltage
 

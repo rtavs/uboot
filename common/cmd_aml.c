@@ -153,17 +153,11 @@ U_BOOT_CMD(
 );
 
 /* set  usb current limit */
-#ifdef CONFIG_AW_AXP20
-extern int axp_charger_set_usbcur_limit(int usbcur_limit);
-#endif
 #ifdef CONFIG_AML_PMU
 extern int aml_pmu_set_usb_curr_limit(int curr);
 #endif
 static int pmu_set_usbcur_limit(int usbcur_limit)
 {
-#ifdef CONFIG_AW_AXP20
-    return axp_charger_set_usbcur_limit(usbcur_limit);
-#endif
 #ifdef CONFIG_AML_PMU
     return aml_pmu_set_usb_curr_limit(usbcur_limit);
 #endif

@@ -49,9 +49,6 @@ DECLARE_GLOBAL_DATA_PTR;
 #endif
 
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-#ifdef CONFIG_AW_AXP20
-#include <axp-mfd.h>
-#endif
 #ifdef CONFIG_AML_PMU
 #include <amlogic/aml_pmu.h>
 #endif
@@ -335,9 +332,7 @@ static __inline__ int abortboot(int bootdelay)
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
     if (key == 'b' || key == 'B') {
         printf("\nNow will go to battery calibrate mode\n");
-    #ifdef CONFIG_AW_AXP20
-        axp_battery_calibrate();
-    #endif
+
     #ifdef CONFIG_AML_PMU
         aml_battery_calibrate();
     #endif

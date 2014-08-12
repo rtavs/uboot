@@ -17,9 +17,7 @@ extern void hard_i2c_write168(unsigned char SlaveAddr, unsigned short RegAddr, u
 #define CONFIG_VDDAO_VOLTAGE 1200
 #endif
 
-#ifdef CONFIG_AW_AXP20
-    #define DEVID 0x68
-#elif defined CONFIG_PMU_ACT8942
+#ifdef CONFIG_PMU_ACT8942
     #define DEVID 0xb6
 #elif defined CONFIG_AML_PMU
     #define DEVID 0x6A
@@ -135,145 +133,6 @@ static int vcck_set_default_voltage(int voltage)
     return 0;
 }
 
-#ifdef CONFIG_AW_AXP20
-void axp20_set_bits(uint32_t add, uint8_t bits, uint8_t mask)
-{
-    uint8_t val;
-    val = hard_i2c_read8(DEVID, add);
-    val &= ~(mask);                                         // clear bits;
-    val |=  (bits & mask);                                  // set bits;
-    hard_i2c_write8(DEVID, add, val);
-}
-
-int find_idx(int start, int target, int step, int size)
-{
-    int i = 0;
-    do {
-        if (start >= target) {
-            break;
-        }
-        start += step;
-        i++;
-    } while (i < size);
-    return i;
-}
-
-int axp20_set_dcdc_voltage(int dcdc, int voltage)
-{
-    int addr, size, val;
-    int idx_to, idx_cur, mask;
-
-    addr = (dcdc == 2 ? 0x23 : 0x27);
-    size = (dcdc == 2 ? 64 : 128);
-    mask = (dcdc == 2 ? 0x3f : 0x7f);
-    idx_to = find_idx(700, voltage, 25, size);                  // step is 25mV
-    idx_cur = hard_i2c_read8(DEVID, addr);
-    print_voltage_info("DCDC", dcdc, voltage, idx_cur, idx_to, addr);
-    val = idx_cur;
-    while (idx_cur != idx_to) {
-        if (idx_cur < idx_to) {                                 // adjust to target voltage step by step
-            idx_cur++;
-        } else {
-            idx_cur--;
-        }
-        val &= ~mask;
-        val |= idx_cur;
-        hard_i2c_write8(DEVID, addr, val);
-        __udelay(100);                                          // atleast delay 100uS
-    }
-    __udelay(1 * 1000);
-}
-
-static int find_ldo4(int voltage)
-{
-    int table[] = {
-        1250, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
-        2000, 2500, 2700, 2800, 3000, 3100, 3200, 3300
-    };
-    int i = 0;
-
-    for (i = 0; i < 16; i++) {
-        if (table[i] >= voltage) {
-            return i;
-        }
-    }
-    return i;
-}
-
-static void axp20_ldo_voltage(int ldo, int voltage)
-{
-    int addr, size, start, step;
-    int idx_to, idx_cur, mask;
-    int shift;
-
-    switch (ldo) {
-    case 2:
-        addr  = 0x28;
-        size  = 16;
-        step  = 100;
-        mask  = 0xf0;
-        start = 1800;
-        shift = 4;
-        break;
-    case 3:
-        addr  = 0x29;
-        size  = 128;
-        step  = 25;
-        mask  = 0x7f;
-        start = 700;
-        shift = 0;
-        break;
-    case 4:
-        addr  = 0x28;
-        mask  = 0x0f;
-        shift = 0;
-        break;
-    }
-    if (ldo != 4) {
-        idx_to = find_idx(start, voltage, step, size);
-    } else {
-        idx_to = find_ldo4(voltage);
-    }
-    idx_cur = hard_i2c_read8(DEVID, addr);
-    print_voltage_info("LDO", ldo, voltage, idx_cur, idx_to, addr);
-    idx_cur &= ~mask;
-    idx_cur |= (idx_to << shift);
-    hard_i2c_write8(DEVID, addr, idx_cur);
-}
-
-static void axp20_power_init(int init_mode)
-{
-    hard_i2c_write8(DEVID, 0x80, 0xe4);
-#ifdef CONFIG_VCCK_VOLTAGE
-    vcck_set_default_voltage(CONFIG_VCCK_VOLTAGE);
-#endif
-
-#ifdef CONFIG_DISABLE_LDO3_UNDER_VOLTAGE_PROTECT
-    axp20_set_bits(0x81, 0x00, 0x04);
-#endif
-#ifdef CONFIG_VDDAO_VOLTAGE
-    axp20_set_dcdc_voltage(3, CONFIG_VDDAO_VOLTAGE);
-#endif
-#ifdef CONFIG_VDDIO_AO
-    axp20_ldo_voltage(2, CONFIG_VDDIO_AO);
-#endif
-#ifdef CONFIG_AVDD2V5
-    axp20_ldo_voltage(3, CONFIG_AVDD2V5);
-#endif
-#ifdef CONFIG_AVDD3V3
-    axp20_ldo_voltage(4, CONFIG_AVDD3V3);
-#endif
-#ifdef CONFIG_CONST_PWM_FOR_DCDC
-    axp20_set_bits(0x80, 0x06, 0x06);
-#endif
-#ifdef CONFIG_DDR_VOLTAGE
-    /*
-     * must use direct register write...
-     */
-    hard_i2c_write8(DEVID, 0x23, (CONFIG_DDR_VOLTAGE - 700) / 25);
-#endif
-}
-#endif
 
 #ifdef CONFIG_AML_PMU
 #define AML_PMU_DCDC1       1
@@ -1370,9 +1229,7 @@ void power_init(int init_mode)
     hard_i2c_init();
 
     __udelay(1000);
-#ifdef CONFIG_AW_AXP20
-    axp20_power_init(init_mode);
-#elif defined CONFIG_PMU_ACT8942
+#ifdef CONFIG_PMU_ACT8942
     if(CONFIG_VDDAO_VOLTAGE <= 1200)
         hard_i2c_write8(DEVID, 0x21, (CONFIG_VDDAO_VOLTAGE - 600) / 25);
     else if(CONFIG_VDDAO_VOLTAGE <= 2400)
