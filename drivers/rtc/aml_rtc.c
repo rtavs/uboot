@@ -436,11 +436,7 @@ int aml_rtc_write_time(struct rtc_time *tm)
 extern void mdelay(unsigned long usec);
 int aml_rtc_init(void)
 {
-#ifdef CONFIG_AML_PMU
-    printf("aml_rtc_init, rtc counter:%d\n", ser_access_read(RTC_COUNTER_ADDR));
-#else
 	printf("aml_rtc_init\n");
-#endif
 #ifdef CONFIG_AML_MESON_6
 	//if(!(readl(P_RTC_ADDR1) & (s_ready)))
 	{

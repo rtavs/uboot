@@ -49,9 +49,7 @@ DECLARE_GLOBAL_DATA_PTR;
 #endif
 
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-#ifdef CONFIG_AML_PMU
-#include <amlogic/aml_pmu.h>
-#endif
+
 #endif
 /*
  * Board-specific Platform code can reimplement show_boot_progress () if needed
@@ -332,10 +330,6 @@ static __inline__ int abortboot(int bootdelay)
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
     if (key == 'b' || key == 'B') {
         printf("\nNow will go to battery calibrate mode\n");
-
-    #ifdef CONFIG_AML_PMU
-        aml_battery_calibrate();
-    #endif
     }
 #endif
 	printf("exit abortboot: %d\n",abort);

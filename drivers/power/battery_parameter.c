@@ -12,25 +12,6 @@
  * but have different ranges. So we need these macro for checking
  * if these parameters are valid.
  */
-#ifdef CONFIG_AML_PMU
-#define MAX_CHARGE_CURRENT      2000000                 // max charging current, in uA
-#define MIN_CHARGE_CURRENT      0                       // min charging current, in uA
-#define MAX_CHARGE_VOLTAGE      4400000                 // max charge target voltage, in uV
-#define MIN_CHARGE_VOLTAGE      4050000                 // min charge target voltage, in uV
-#define MAX_CHARGE_END_RATE     20                      // max charge end rate, (charge current / target current)
-#define MIN_CHARGE_END_RATE     10                      // min charge end rate
-#define MAX_ADC_FREQ            1000                    // SAR ADC auto frequent, see reg[A0]
-#define MIN_ADC_FREQ            1
-#define MAX_PRE_CHARGE_TIME     80                      // max pre-charge(small current) time, in minutes
-#define MIN_PRE_CHARGE_TIME     30                      // min pre-charge time
-#define MAX_FAST_CHARGE_TIME    720                     // max fast charge(const current) time, in minutes
-#define MIN_FAST_CHARGE_TIME    360                     // min fast charge time
-#define MAX_VBUS_VOLTAGE_LIMIT  4600                    // max VBUS voltage limit, in mV
-#define MIN_VBUS_VOLTAGE_LIMIT  4300                    // min VBUS voltage limit
-#define MAX_VBUS_CURRENT_LIMIT  900                     // max VBUS current limit, in mA
-#define MIN_VBUS_CURRENT_LIMIT  100                     // min VBUS current limit
-#endif
-
 
 #ifdef CONFIG_RN5T618   // TODO:fix these parameters to this PMU
 #define MAX_CHARGE_CURRENT      1800000                 // max charging current, in uA
@@ -51,24 +32,6 @@
 #define MIN_VBUS_CURRENT_LIMIT  100                     // min VBUS current limit
 #endif
 
-#if defined(CONFIG_AML1216) || defined(CONFIG_AML1218)
-#define MAX_CHARGE_CURRENT      2000000                 // max charging current, in uA
-#define MIN_CHARGE_CURRENT      0                       // min charging current, in uA
-#define MAX_CHARGE_VOLTAGE      4400000                 // max charge target voltage, in uV
-#define MIN_CHARGE_VOLTAGE      4050000                 // min charge target voltage, in uV
-#define MAX_CHARGE_END_RATE     20                      // max charge end rate, (charge current / target current)
-#define MIN_CHARGE_END_RATE     10                      // min charge end rate
-#define MAX_ADC_FREQ            1000                    // SAR ADC auto frequent, see reg[A0]
-#define MIN_ADC_FREQ            1
-#define MAX_PRE_CHARGE_TIME     80                      // max pre-charge(small current) time, in minutes
-#define MIN_PRE_CHARGE_TIME     30                      // min pre-charge time
-#define MAX_FAST_CHARGE_TIME    720                     // max fast charge(const current) time, in minutes
-#define MIN_FAST_CHARGE_TIME    360                     // min fast charge time
-#define MAX_VBUS_VOLTAGE_LIMIT  4600                    // max VBUS voltage limit, in mV
-#define MIN_VBUS_VOLTAGE_LIMIT  4300                    // min VBUS voltage limit
-#define MAX_VBUS_CURRENT_LIMIT  900                     // max VBUS current limit, in mA
-#define MIN_VBUS_CURRENT_LIMIT  100                     // min VBUS current limit
-#endif
 /*
  * key word for battery parameter parse
  */

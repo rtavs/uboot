@@ -153,14 +153,10 @@ U_BOOT_CMD(
 );
 
 /* set  usb current limit */
-#ifdef CONFIG_AML_PMU
-extern int aml_pmu_set_usb_curr_limit(int curr);
-#endif
+
 static int pmu_set_usbcur_limit(int usbcur_limit)
 {
-#ifdef CONFIG_AML_PMU
-    return aml_pmu_set_usb_curr_limit(usbcur_limit);
-#endif
+
 }
 static int do_set_usbcur_limit(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
