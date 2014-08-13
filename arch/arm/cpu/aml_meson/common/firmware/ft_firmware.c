@@ -28,7 +28,7 @@ extern void ipl_memcpy(void*, const void *, __kernel_size_t);
 
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#ifdef	CONFIG_M8
 	//enable watchdog for 5s
 	//if bootup failed, switch to next boot device
 	AML_WATCH_DOG_SET(5000); //5s
@@ -38,7 +38,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
 	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#ifdef	CONFIG_M8
 	//A9 JTAG enable
 	writel(0x102,0xda004004);
 	//TDO enable
@@ -102,7 +102,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
     serial_puts("\nSystem Started\n");
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#if defined(CONFIG_M8)
 	//if bootup failed, switch to next boot device
 	AML_WATCH_DOG_DISABLE(); //disable watchdog
 	//temp added

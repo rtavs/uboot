@@ -9,7 +9,7 @@
  #include "platform.h"
 
 
-#if !( defined(CONFIG_AML_MESON_6) || defined(CONFIG_M8) || defined(CONFIG_M8B) )
+#if !( defined(CONFIG_AML_MESON_6) || defined(CONFIG_M8))
 #error "platform is not m6 or m8!!"
 #endif//#if
 
@@ -94,7 +94,7 @@ typedef union usb_ctrl_data {
     } b;
 } usb_ctrl_data_t;
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#if defined(CONFIG_M8)
 static void set_usb_phy_config(int cfg)
 {
     const int time_dly = 500;

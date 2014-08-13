@@ -1438,42 +1438,6 @@ static int  do_netspeed(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[
 	return 0;
 
 }
-#ifdef CONFIG_M8B
-static int do_eth_cali(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
-{
-	unsigned int reg, value;
-	int rise=0;
-	int sel=0;
-	int i;
-	char *cmd = NULL;
-
-
-	if (argc < 2) {
-		return cmd_usage(cmdtp);
-	}
-	rise = simple_strtoul(argv[1], NULL, 10);
-	sel = simple_strtoul(argv[2], NULL, 10);
-	eth_aml_reg0_t eth_reg0;
-	eth_reg0.d32 = READ_CBUS_REG(0x2050);
-	eth_reg0.b.cali_start = 1;
-	eth_reg0.b.cali_rise = rise;
-	eth_reg0.b.cali_sel = sel;
-	WRITE_CBUS_REG(0x2050, eth_reg0.d32);
-	printf("0x%x\n",  READ_CBUS_REG(0x2050));
-	for(i=0;i<10000;i++){
-		value = READ_CBUS_REG(0x2051);
-		if((value>>15)&0x1)
-			printf("value == %x,  cali_len == %d, cali_idx == %d,  cali_sel =%d,  cali_rise = %d\n",value,(value>>5)&0x1f,(value&0x1f),(value>>11)&0x7,(value>>14)&0x1);
-	}
-
-	return 0;
-}
-U_BOOT_CMD(
-		cali, 3, 1, do_eth_cali,
-		"configure clock phare",
-		"             - phare mac clock.\n"
-	  );
-#endif
 
 U_BOOT_CMD(
 		netspd_f, 3, 1, do_netspeed,

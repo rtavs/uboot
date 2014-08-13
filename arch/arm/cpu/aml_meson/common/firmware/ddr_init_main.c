@@ -34,8 +34,6 @@
 
 #if defined(CONFIG_M8)
 #define _CHIP_ID        (0x19)
-#elif defined(CONFIG_M8B)
-#define _CHIP_ID        (0x1b)
 #endif//
 
 #define BIN_RUN_INFO_MAGIC_PARA      (0X3412CDABU)
@@ -125,7 +123,7 @@ static unsigned _ddr_init_main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 #endif
 
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#ifdef	CONFIG_M8
 	//A9 JTAG enable
 	writel(0x102,0xda004004);
 	//TDO enable
@@ -247,10 +245,10 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     const unsigned paraMagic = binRunInfoHead->magic;
     const unsigned ChipId    = readl(CBUS_REG_ADDR(0x1f53));
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#ifdef CONFIG_M8
 	//enable watchdog, then when bootup failed, switch to next boot device
 	AML_WATCH_DOG_SET(5000); //5s
-#endif// #if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#endif// #if defined(CONFIG_M8)
     binRunInfoHead->magic = BIN_RUN_INFO_MAGIC_RESULT; binRunInfoHead->retVal = 0xdd;
     //serial_puts("\nboot_ID "), serial_put_hex(C_ROM_BOOT_DEBUG->boot_id, 32), serial_puts("\n");
     //serial_puts("binMagic "), serial_put_hex(paraMagic, 32), serial_puts("\n");

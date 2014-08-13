@@ -20,9 +20,9 @@ int v2_usbburning(unsigned timeout)
                 return __LINE__;
         }
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#if defined(CONFIG_M8)
         AML_WATCH_DOG_DISABLE(); //disable watchdog
-#endif// #if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#endif// #if defined(CONFIG_M8)
 
         while(1)
         {

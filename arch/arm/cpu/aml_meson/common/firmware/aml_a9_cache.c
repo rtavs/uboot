@@ -352,7 +352,7 @@ static inline void mmu_setup(void)
 	uint nVal = 0;
 	for(i = 0 ; i < 0x1000;++i)
 	{
-#if defined (CONFIG_M8) || defined (CONFIG_M8B)
+#ifdef CONFIG_M8
 
 		if(i< CONFIG_MMU_DDR_SIZE || 0xd90 == i)
 			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_WB);

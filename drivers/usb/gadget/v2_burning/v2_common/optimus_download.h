@@ -167,7 +167,7 @@ int optimus_work_mode_set(int workmode);
 #define OPTIMUS_BURN_COMPLETE__REBOOT_UPDATE                (0xeb)
 #define OPTIMUS_BURN_COMPLETE__QUERY                        (0xe1)
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#if defined(CONFIG_M8)
 #define ROM_BOOT_SKIP_BOOT_ENABLED      1//skip boot function is supported by romboot
 #else
 #define ROM_BOOT_SKIP_BOOT_ENABLED      0

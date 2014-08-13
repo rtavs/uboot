@@ -61,7 +61,7 @@
 #define enable_sample_engine()		WRITE_CBUS_REG_BITS(SAR_ADC_REG0, 1, 0, 1)
 #define disable_sample_engine()		WRITE_CBUS_REG_BITS(SAR_ADC_REG0, 0, 0, 1)
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#if defined(CONFIG_M8)
 #define saradc_power_on()	WRITE_CBUS_REG_BITS(SAR_ADC_DELTA_10, 1, 10, 1)
 //#define saradc_power_off()	WRITE_CBUS_REG_BITS(SAR_ADC_DELTA_10, 0, 10, 1)
 #endif
@@ -245,7 +245,7 @@ void saradc_enable(void)
 {
 	int i;
 
-#if defined(CONFIG_M8) || defined(CONFIG_M8B)
+#if defined(CONFIG_M8)
 	saradc_power_on();
 	//printf("SAR_ADC_DELTA_10: 0x%x ,%s:%d\n",*(volatile unsigned long *)0xc11086a8,__func__,__LINE__);
 #endif
