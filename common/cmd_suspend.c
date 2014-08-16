@@ -21,18 +21,6 @@ static int do_suspend (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]
 	run_command("video dev bl_off",1);
 	run_command("video dev disable",1);
 #endif
-    /*
-     * set suspend charger current according battery parameter
-     */
-#if defined(CONFIG_PLATFORM_HAS_PMU) && defined(CONFIG_UBOOT_BATTERY_PARAMETERS)
-    struct aml_pmu_driver    *driver;
-    struct battery_parameter *para;
-    driver = aml_pmu_get_driver();
-    para   = get_battery_para();
-    if (driver && driver->pmu_set_charge_current && para) {
-        driver->pmu_set_charge_current(para->pmu_shutdown_chgcur);
-    }
-#endif
 	meson_pm_suspend();
 	return 0;
 }

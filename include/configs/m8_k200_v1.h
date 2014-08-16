@@ -120,7 +120,6 @@
 #define CONFIG_RN5T618
 #ifdef CONFIG_RN5T618
 //#define CONFIG_UBOOT_BATTERY_PARAMETER_TEST         // uboot can do battery curve test
-//#define CONFIG_UBOOT_BATTERY_PARAMETERS             // uboot can get battery parameters from dts
 #define CONFIG_ALWAYS_POWER_ON                      // if platform without battery, must have
 #define CONFIG_DISABLE_POWER_KEY_OFF                // disable power off PMU by long press power key
 

@@ -20,33 +20,6 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-#include <amlogic/battery_parameter.h>
-/*
- * add board battery parameters, this is a backup option if uboot process
- * battery parameters failed, each board shoud use your own battery parameters
- */
-int config_battery_rdc = 87;
-struct battery_curve config_battery_curve[] = {
-    {3132,      0,      0},
-    {3273,      0,      0},
-    {3414,      0,      0},
-    {3555,      0,      0},
-    {3625,      1,      3},
-    {3660,      2,      8},
-    {3696,      3,     16},
-    {3731,     10,     24},
-    {3766,     15,     38},
-    {3801,     26,     48},
-    {3836,     42,     56},
-    {3872,     52,     63},
-    {3942,     66,     74},
-    {4012,     79,     85},
-    {4083,     90,     94},
-    {4153,    100,    100}
-};
-#endif
-
 #if defined(CONFIG_CMD_NET)
 /*************************************************
   * Amlogic Ethernet controller operation

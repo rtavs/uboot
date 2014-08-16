@@ -61,26 +61,6 @@ static ulong get_sp(void);
 static int bootm_linux_fdt(int machid, bootm_headers_t *images);
 #endif
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-#include <amlogic/battery_parameter.h>
-static void setup_battery_tag(struct tag **in_params)
-{
-    struct battery_parameter *cfg;
-    cfg = get_battery_para();
-    if (!cfg) {                             // nothing got from enviroment argument
-        return ;
-    }
-
-    /*
-     * copy data to params, will pass them to kernel
-     */
-	params->hdr.tag = ATAG_BATTERY;
-	params->hdr.size = tag_size(tag_battery);
-    memcpy(&params->u.board_battery.battery_para, cfg, sizeof(struct battery_parameter));
-	params = tag_next (params);
-}
-#endif
-
 void arch_lmb_reserve(struct lmb *lmb)
 {
 	ulong sp;
@@ -195,10 +175,6 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 #endif
 #ifdef CONFIG_CMDLINE_TAG
 	setup_commandline_tag (bd, commandline);
-#endif
-
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-    setup_battery_tag(&params);
 #endif
 
 #ifdef CONFIG_INITRD_TAG

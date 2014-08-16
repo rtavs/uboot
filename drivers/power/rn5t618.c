@@ -8,10 +8,6 @@
 #include <amlogic/rn5t618.h>
 
 #include <amlogic/aml_pmu_common.h>
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-#include <amlogic/aml_lcd.h>
-#include <amlogic/battery_parameter.h>
-#endif
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
 int rn5t618_battery_calibrate(void);
 #endif
@@ -264,128 +260,9 @@ int rn5t618_set_usb_current_limit(int limit)
     return rn5t618_set_bits(0x00B7, val, 0x1f);
 }
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-static int avg_voltage = 0, avg_current = 0;
-int rn5t618_get_ocv(int rdc, int cnt)
-{
-    int vbat;
-    int ibat;
-    int ocv;
-    int charge_status;
-
-    vbat = rn5t618_get_battery_voltage();
-    ibat = rn5t618_get_battery_current();
-    charge_status = rn5t618_get_charge_status(!cnt);
-    if (charge_status == 1) {
-        ocv = vbat - (ibat * rdc) / 1000;
-    } else if (charge_status == 2) {
-        ocv = vbat + (ibat * rdc) / 1000;
-    } else {
-        ocv = vbat;
-    }
-    avg_voltage += vbat;
-    avg_current += ibat;
-    return ocv;
-}
-#endif
-
 int rn5t618_get_charging_percent()
 {
     int rest_vol;
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-    int i;
-    int ocv = 0;
-    int ocv_diff, percent_diff, ocv_diff2;
-    int percent1, percent2;
-    int charge_status;
-    int para_flag;
-    static int ocv_full  = 0;
-    static int ocv_empty = 0;
-    static int battery_rdc;
-    static struct battery_curve *battery_curve;
-
-    para_flag = get_battery_para_flag();
-    if (para_flag == PARA_UNPARSED || para_flag == PARA_PARSE_SUCCESS) {
-        /*
-         * this code runs earlier than get_battery_para(),
-         * we need to know battery parameters first.
-         */
-        if (para_flag == PARA_UNPARSED) {
-            if (parse_battery_parameters() > 0) {
-                set_battery_para_flag(PARA_PARSE_SUCCESS);
-                para_flag = PARA_PARSE_SUCCESS;
-            } else {
-                set_battery_para_flag(PARA_PARSE_FAILED);
-            }
-        }
-        if (para_flag == PARA_PARSE_SUCCESS) {
-            for (i = 0; i < 16; i++) {                  	// find out full & empty ocv in battery curve
-                if (!ocv_empty && board_battery_para.pmu_bat_curve[i].discharge_percent > 0) {
-                    ocv_empty = board_battery_para.pmu_bat_curve[i - 1].ocv;
-                }
-                if (!ocv_full && board_battery_para.pmu_bat_curve[i].discharge_percent == 100) {
-                    ocv_full = board_battery_para.pmu_bat_curve[i].ocv;
-                }
-            }
-            battery_rdc   = board_battery_para.pmu_battery_rdc;
-            battery_curve = board_battery_para.pmu_bat_curve;
-        }
-    }
-    if (get_battery_para_flag() != PARA_PARSE_SUCCESS && !ocv_full) {
-        /*
-         * parse battery parameters failed, use configured parameters
-         */
-        extern int config_battery_rdc;
-        extern struct battery_curve config_battery_curve[];
-        battery_rdc   = config_battery_rdc;
-        battery_curve = config_battery_curve;
-        for (i = 0; i < 16; i++) {                      // find out full & empty ocv in battery curve
-            if (!ocv_empty && battery_curve[i].discharge_percent > 0) {
-                ocv_empty = battery_curve[i - 1].ocv;
-            }
-            if (!ocv_full && battery_curve[i].discharge_percent == 100) {
-                ocv_full = battery_curve[i].ocv;
-            }
-        }
-    }
-    avg_voltage = 0;
-    avg_current = 0;
-    for (i = 0; i < 8; i++) {                           // calculate average ocv
-        ocv += rn5t618_get_ocv(battery_rdc, i);
-        udelay(10000);
-    }
-    ocv = ocv / 8;
-    avg_voltage /= 8;
-    avg_current /= 8;
-    printf(", voltage:%4d, current:%4d, ocv is %4d, ", avg_voltage, avg_current * rn5t618_curr_dir, ocv);
-    if (ocv >= ocv_full) {
-        return 100;
-    } else if (ocv <= ocv_empty) {
-        return 0;
-    }
-    for (i = 0; i < 15; i++) {                          // find which range this ocv is in
-        if (ocv >= battery_curve[i].ocv &&
-            ocv <  battery_curve[i + 1].ocv) {
-            break;
-        }
-    }
-    percent1 = (battery_curve[i + 1].charge_percent +
-                battery_curve[i + 1].discharge_percent) / 2;
-    percent2 = (battery_curve[i].charge_percent +
-                battery_curve[i].discharge_percent) / 2;
-    percent_diff = percent1 - percent2;
-    ocv_diff  = battery_curve[i + 1].ocv -
-                battery_curve[i].ocv;
-    ocv_diff2 = ocv - battery_curve[i].ocv;
-    rest_vol  = (percent_diff * ocv_diff2 + ocv_diff / 2)/ocv_diff;
-    rest_vol += percent2;
-    if (rest_vol > 100) {
-        rest_vol = 100;
-    } else if (rest_vol < 0) {
-        rest_vol = 0;
-    }
-    return rest_vol;
-#endif      /* CONFIG_UBOOT_BATTERY_PARAMETERS */
     /*
      * TODO, need add code to calculate battery capability when cannot get battery parameter
      */
@@ -394,29 +271,7 @@ int rn5t618_get_charging_percent()
 
 int rn5t618_set_charging_current(int current)
 {
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
-    int val;
-
-    if (current > 1800 * 1000 || current < 0) {
-        DBG("%s, wrong input of charge current:%d\n", __func__, current);
-        return -1;
-    }
-    if (current > 100) {                        // input is uA
-        current = current / 1000;
-    } else {                                    // input is charge ratio
-        current = (current * board_battery_para.pmu_battery_cap) / 100 + 100;
-    }
-    if (current > 1600) {                       // for safety, do not let charge current large than 90% of max charge current
-        current = 1600;
-    }
-    val = (current / 100) - 1;
-    if (!rn5t618_battery_test) {                // do not print when test
-        printf("%s, %dmA\n", __func__, current);
-    }
-    return rn5t618_set_bits(0x00B8, val, 0x1f);
-#else
     return 0;
-#endif
 }
 
 int rn5t618_charger_online(void)
