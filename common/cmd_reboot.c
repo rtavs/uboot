@@ -26,31 +26,12 @@
 #include <command.h>
 #include <asm/arch/reboot.h>
 
-#ifdef CONFIG_RESET_TO_SYSTEM
-#include <amlogic/aml_pmu_common.h>
-#endif
-
 int do_get_rebootmode (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	uint32_t reboot_mode_val;
-#ifdef CONFIG_RESET_TO_SYSTEM
-    struct aml_pmu_driver *pmu_driver = NULL;
-    int     reboot_flag;
-#endif
 	reboot_mode_val = reboot_mode;
 
 	debug("reboot_mode(0x%x)=0x%x\n", &reboot_mode, reboot_mode);
-#ifdef CONFIG_RESET_TO_SYSTEM
-    pmu_driver = aml_pmu_get_driver();
-    if (pmu_driver && pmu_driver->pmu_reset_flag_operation) {
-        reboot_flag = pmu_driver->pmu_reset_flag_operation(RESET_FLAG_GET);
-        printf("reboot flag = %d\n", reboot_flag);
-        if (reboot_flag) {
-            printf("abnormal reboot, direct boot to Kernel now\n");
-            run_command("run prepare; bmp display ${poweron_offset}; run bootcmd;", 0);
-        }
-    }
-#endif
 	switch(reboot_mode_val)
 	{
 		case AMLOGIC_NORMAL_BOOT:

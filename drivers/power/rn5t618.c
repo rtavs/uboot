@@ -234,9 +234,6 @@ int rn5t618_get_gpio(int gpio, int *val)
 
 void rn5t618_power_off()
 {
-#ifdef CONFIG_RESET_TO_SYSTEM
-    rn5t618_set_bits(0x0007, 0x00, 0x01);
-#endif
     rn5t618_set_gpio(0, 1);
     rn5t618_set_gpio(1, 1);
     udelay(100 * 1000);
@@ -604,44 +601,14 @@ int rn5t618_check_fault(void)
     return 0;
 }
 
-#ifdef CONFIG_RESET_TO_SYSTEM
-static int prev_boot_flag = 0;
-static int rn5t618_reset_flag_operation(int op)
-{
-    switch (op) {
-    case RESET_FLAG_GET:
-        return prev_boot_flag;
-
-    case RESET_FLAG_SET:
-        return rn5t618_set_bits(0x0007, 0x01, 0x01);
-
-    case RESET_FLAG_CLR:
-        return rn5t618_set_bits(0x0007, 0x00, 0x01);
-    }
-    return 0;
-}
-#endif
-
 int rn5t618_init(void)
 {
     uint8_t buf[10];
 
-#ifdef CONFIG_RESET_TO_SYSTEM
-    rn5t618_read(0x0007, buf);
-    printf("boot flags in PMU:0x%x", buf[0]);
-    if (buf[0] & 0x7f) {
-        /*
-         * flag in pmu register is set but not cleared before reboot,
-         * so this boot must be RESET key pressed
-         */
-        prev_boot_flag = 1;
-    }
-#endif
-
     /*
      * watchdog must be enabled if defined CONFIG_RESET_TO_SYSTEM
      */
-#if defined(CONFIG_ENABLE_PMU_WATCHDOG) || defined(CONFIG_RESET_TO_SYSTEM)
+#if defined(CONFIG_ENABLE_PMU_WATCHDOG)
     rn5t618_set_bits(0x000b, 0x00, 0xc0);                       // close watch dog timer
     rn5t618_set_bits(0x0012, 0x00, 0x40);                       // disable watchdog
     rn5t618_set_bits(0x000f, 0x01, 0x01);                       // re-power-on system after reset
@@ -722,9 +689,6 @@ struct aml_pmu_driver g_aml_pmu_driver = {
     .pmu_init_para               = rn5t618_inti_para,
 #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
     .pmu_do_battery_calibrate    = rn5t618_battery_calibrate,
-#endif
-#ifdef CONFIG_RESET_TO_SYSTEM
-    .pmu_reset_flag_operation    = rn5t618_reset_flag_operation,
 #endif
 };
 

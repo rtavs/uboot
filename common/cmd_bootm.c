@@ -59,10 +59,6 @@
 #include <lzma/LzmaTools.h>
 #endif /* CONFIG_LZMA */
 
-#ifdef CONFIG_RESET_TO_SYSTEM
-#include <amlogic/aml_pmu_common.h>
-#endif
-
 #ifdef CONFIG_LZO
 #include <linux/lzo.h>
 #endif /* CONFIG_LZO */
@@ -691,14 +687,6 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 				boot_os[i] += gd->reloc_off;
 		relocated = 1;
 	}
-#endif
-
-#ifdef CONFIG_RESET_TO_SYSTEM
-    struct aml_pmu_driver *pmu_driver = NULL;
-    pmu_driver = aml_pmu_get_driver();
-    if (pmu_driver && pmu_driver->pmu_reset_flag_operation) {
-        pmu_driver->pmu_reset_flag_operation(RESET_FLAG_SET);
-    }
 #endif
 
 #ifdef CONFIG_AML_GATE_INIT
