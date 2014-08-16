@@ -501,7 +501,6 @@
 /*-----------------------------------------------------------------------
  * power down
  */
-//#define CONFIG_CMD_RUNARC 1 /* runarc */
 //#define CONFIG_CMD_SUSPEND 1
 #define CONFIG_CMD_LOGO
 

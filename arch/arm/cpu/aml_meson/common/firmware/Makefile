@@ -7,9 +7,3 @@ ifdef CONFIG_AML_SMP
 endif
 	$(MAKE) -f Makefile.gcc
 	$(MAKE) -f Makefile.ddr_init
-
-
-ifeq ($(CONFIG_CMD_RUNARC),y)
-	$(MAKE) -f Makefile.rbt
-endif
-
