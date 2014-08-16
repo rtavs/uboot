@@ -25,9 +25,6 @@ struct aml_pmu_driver {
     int  (*pmu_usb_bc_process)(int mode);                                       // special process for usb bc
 #endif
     void (*pmu_power_off)(void);                                                // power off system
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-    void (*pmu_do_battery_calibrate)(void);                                     // calibrate battery curve
-#endif
     void (*pmu_dump_register)(void);
 };
 

@@ -48,9 +48,7 @@
 DECLARE_GLOBAL_DATA_PTR;
 #endif
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
 
-#endif
 /*
  * Board-specific Platform code can reimplement show_boot_progress () if needed
  */
@@ -216,9 +214,6 @@ static __inline__ int abortboot(int bootdelay)
 {
 	int abort = 0;
 	char cKey = 0; //for key filter, only "enter" key can triger abort
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-    char key;
-#endif
 
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT);
@@ -290,16 +285,8 @@ static __inline__ int abortboot(int bootdelay)
 # ifdef CONFIG_MENUKEY
 				menukey = getc();
 				cKey = menukey;
-            #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-                key = menukey;
-            #endif
 # else
-            #ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-				key = getc();  /* consume input	*/
-				cKey = key;
-            #else
                 cKey = getc();
-            #endif
 # endif
 	            switch (cKey) {
 	            case 0x03:      /* ^C - Ctrl+C */
@@ -327,11 +314,6 @@ static __inline__ int abortboot(int bootdelay)
 		gd->flags &= ~GD_FLG_SILENT;
 #endif
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-    if (key == 'b' || key == 'B') {
-        printf("\nNow will go to battery calibrate mode\n");
-    }
-#endif
 	printf("exit abortboot: %d\n",abort);
 	return abort;
 }

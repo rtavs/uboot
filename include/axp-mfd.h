@@ -456,7 +456,5 @@ extern int axp_reads(int reg, int len, uint8_t *val);
 extern int axp_update(int reg, uint8_t val, uint8_t mask);
 extern int axp_set_bits(int reg, uint8_t bit_mask);
 extern int axp_clr_bits(int reg, uint8_t bit_mask);
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-extern int axp_battery_calibrate(void);
-#endif
+
 #endif /* __LINUX_PMIC_AXP_H */

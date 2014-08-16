@@ -20,8 +20,4 @@ int amp_pmu_set_charging_current(int current);
 int aml_pmu_set_gpio(int pin, int val);
 int aml_pmu_get_gpio(int pin, uint8_t *val);
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETER_TEST
-int aml_battery_calibrate(void);
-#endif
-
 #endif  /* __AML_PMU_H__ */
