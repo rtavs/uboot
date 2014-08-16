@@ -605,14 +605,6 @@ int rn5t618_init(void)
 {
     uint8_t buf[10];
 
-    /*
-     * watchdog must be enabled if defined CONFIG_RESET_TO_SYSTEM
-     */
-#if defined(CONFIG_ENABLE_PMU_WATCHDOG)
-    rn5t618_set_bits(0x000b, 0x00, 0xc0);                       // close watch dog timer
-    rn5t618_set_bits(0x0012, 0x00, 0x40);                       // disable watchdog
-    rn5t618_set_bits(0x000f, 0x01, 0x01);                       // re-power-on system after reset
-#endif
 #ifdef CONFIG_DISABLE_POWER_KEY_OFF
     rn5t618_set_bits(0x0010, 0x80, 0x80);                       // disable power off PMU by long press power key
 #endif
