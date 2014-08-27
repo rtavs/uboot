@@ -32,11 +32,11 @@
 
 static void spl_hello(void)
 {
-    serial_puts("\n\n\nSPL Started: ");
-	serial_puts(__TIME__);
-	serial_puts(" ");
-	serial_puts(__DATE__);
-	serial_puts("\n");
+    serial_puts("\n\nStarting spl ...");
+    serial_puts(__TIME__);
+    serial_puts(" ");
+    serial_puts(__DATE__);
+    serial_puts("\n\n");
 }
 
 
@@ -181,7 +181,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
 	//asm volatile ("wfi");
 
-    serial_puts("\nUboot Started\n");
+    serial_puts("\nStarting uboot ...\n");
 
 #if defined(CONFIG_M8)
 	//if bootup failed, switch to next boot device
@@ -190,5 +190,9 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	writel(0,0xc8100000);
 #endif
 
-	return 0;
+    typedef  void (*uboot_entry)(void);
+    uboot_entry uboot = (uboot_entry)CONFIG_SYS_TEXT_BASE;
+    uboot();
+
+    return 0;
 }

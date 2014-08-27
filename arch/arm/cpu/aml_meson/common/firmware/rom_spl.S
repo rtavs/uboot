@@ -59,7 +59,7 @@ clr_bss_end:
     ldr r0,__TEXT_BASE
     ldr r1,__TEXT_SIZE
     bl	main
-    ldr pc,__TEXT_BASE
+    /* ldr pc,__TEXT_BASE */
 _AHB_SRAM_BASE:
     .word AHB_SRAM_BASE
 _READ_SIZE:
