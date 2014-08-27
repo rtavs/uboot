@@ -13,9 +13,7 @@
 #ifndef memcpy
 #define memcpy ipl_memcpy:
 #endif
-#ifndef CONFIG_DISABLE_INTERNAL_U_BOOT_CHECK
-short check_sum(unsigned * addr,unsigned short check_sum,unsigned size);
-#else
+
 STATIC_PREFIX short check_sum(unsigned * addr,unsigned short check_sum,unsigned size)
 {
     serial_put_dword(addr[15]);
@@ -29,7 +27,7 @@ STATIC_PREFIX short check_sum(unsigned * addr,unsigned short check_sum,unsigned 
 #endif
     return 0;
 }
-#endif
+
 
 SPL_STATIC_FUNC void fw_print_info(unsigned por_cfg,unsigned stage)
 {

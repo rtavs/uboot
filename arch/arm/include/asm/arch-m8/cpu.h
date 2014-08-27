@@ -260,7 +260,6 @@
 
 #define CONFIG_LZMA  1
 #define CONFIG_LZO
-#define CONFIG_DISABLE_INTERNAL_U_BOOT_CHECK
 /*default command select*/
 #define CONFIG_CMD_MEMORY	1 /* md mm nm mw cp cmp crc base loop mtest */
 //support "bdinfo"
