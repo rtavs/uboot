@@ -77,14 +77,24 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 #endif //AML_UBOOT_SINFO_OFFSET
 
 	//boot_id = 1;
+
+	serial_puts("\nboot_id is ");
+	serial_put_dec(boot_id);
+	serial_puts("\n\n");
+
 	if(boot_id>1)
         boot_id=0;
+
 	if(boot_id==0)
     {
        rc=fw_load_intl(por_cfg,__TEXT_BASE,size);
 	}else{
 	   rc=fw_load_extl(por_cfg,__TEXT_BASE,size);
 	}
+
+	serial_puts("\nfw_load rc is ");
+	serial_put_dec(rc);
+	serial_puts("\n\n");
 
 	//here no need to flush I/D cache?
 #if CONFIG_AML_SPL_L1_CACHE_ON
@@ -93,12 +103,14 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 #endif	//CONFIG_AML_SPL_L1_CACHE_ON
 
 #ifndef CONFIG_DISABLE_INTERNAL_U_BOOT_CHECK
+	serial_puts("\n not define disable internal uboot check\n\n");
 	if(!rc&&check_sum((unsigned*)__TEXT_BASE,0,0)==0)
 	{
 	    fw_print_info(por_cfg,boot_id);
         return rc;
     }
 #else
+	serial_puts("\n define disable internal uboot check\n\n");
     if(rc==0)
 	{
 	    fw_print_info(por_cfg,boot_id);
