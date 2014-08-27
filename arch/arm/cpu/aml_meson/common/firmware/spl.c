@@ -165,15 +165,10 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	//asm volatile ("wfi");
 
     // load uboot
-#ifdef CONFIG_ENABLE_WATCHDOG
 	if(load_uboot(__TEXT_BASE,__TEXT_SIZE)){
 		serial_puts("\nload uboot error,now reset the chip");
 		AML_WATCH_DOG_START();
 	}
-#else
-    load_uboot(__TEXT_BASE,__TEXT_SIZE);
-#endif
-
 
     serial_puts("\nTE : ");
 	serial_put_dec(TIMERE_GET());

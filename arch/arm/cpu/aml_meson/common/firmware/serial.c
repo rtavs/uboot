@@ -141,7 +141,5 @@ void do_exception(unsigned reason,unsigned lr)
     serial_put_dword(reason);
     serial_puts("\tlink addr:");
         serial_put_dword(lr);
-#ifdef CONFIG_ENABLE_WATCHDOG
 	AML_WATCH_DOG_START();//enable watch dog
-#endif
 }

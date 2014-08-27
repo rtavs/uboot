@@ -25,6 +25,5 @@
 #define CONFIG_SYS_BOOT_RAMDISK_HIGH
 #if CONFIG_AML_MESON
 #include <asm/arch/cpu.h>
-#define CONFIG_ENABLE_WATCHDOG
 #endif
 #endif
