@@ -29,6 +29,17 @@
 #include <amlogic/aml_pmu_common.h>
 #endif
 
+
+static void spl_hello(void)
+{
+    serial_puts("\n\n\nSPL Started: ");
+	serial_puts(__TIME__);
+	serial_puts(" ");
+	serial_puts(__DATE__);
+	serial_puts("\n");
+}
+
+
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
 #if defined(CONFIG_M8)
@@ -119,18 +130,8 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
 	//Note: Following msg is used to calculate romcode boot time
 	//         Please DO NOT remove it!
-    serial_puts("\nTE : ");
-    unsigned int nTEBegin = TIMERE_GET();
-    serial_put_dec(nTEBegin);
-    serial_puts("\nBT : ");
-	//Note: Following code is used to show current uboot build time
-	//         For some fail cases which in SPL stage we can not target
-	//         the uboot version quickly. It will cost about 5ms.
-	//         Please DO NOT remove it!
-	serial_puts(__TIME__);
-	serial_puts(" ");
-	serial_puts(__DATE__);
-	serial_puts("\n");
+
+    spl_hello();
 
 #ifdef CONFIG_POWER_SPL
     power_init(POWER_INIT_MODE_NORMAL);
@@ -152,7 +153,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	serial_put_dec(nA9CLK);
 	serial_puts("MHz\n\n");
 
-    nTEBegin = TIMERE_GET();
+    unsigned int nTEBegin = TIMERE_GET();
 
     // initial ddr
     ddr_init_test();
@@ -180,7 +181,7 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
 	//asm volatile ("wfi");
 
-    serial_puts("\nSystem Started\n");
+    serial_puts("\nUboot Started\n");
 
 #if defined(CONFIG_M8)
 	//if bootup failed, switch to next boot device

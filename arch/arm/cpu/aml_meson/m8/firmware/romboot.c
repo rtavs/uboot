@@ -16,12 +16,6 @@ STATIC_PREFIX short check_sum(unsigned * addr,unsigned short check_sum,unsigned 
     serial_put_dword(addr[15]);
     if(addr[15]!=CONFIG_AML_UBOOT_MAGIC)
         return -1;
-#if 0
-	int i;
-	unsigned short * p=(unsigned short *)addr;
-    for(i=0;i<size>>1;i++)
-        check_sum^=p[i];
-#endif
     return 0;
 }
 
@@ -33,51 +27,47 @@ SPL_STATIC_FUNC void fw_print_info(unsigned por_cfg,unsigned stage)
 		return;
 
     serial_puts("Boot from");
-    if(stage==0){
+    if(stage==0) {
         serial_puts(" internal device ");
-        if(POR_GET_1ST_CFG(por_cfg) != 0)	{
-	    switch(POR_GET_1ST_CFG(por_cfg))
-            //switch(POR_1ST_SPI)
-	        {
-				case POR_1ST_NAND:
-					serial_puts("1st NAND\n");
-				break;
-				//case POR_1ST_NAND_RB:
-				//	serial_puts("1st NAND RB\n");
-				break;
-				case POR_1ST_SPI:
-					serial_puts("1st SPI\n");
-				break;
-				case POR_1ST_SPI_RESERVED:
-					serial_puts("1st SPI RESERVED\n");
-				break;
-				case POR_1ST_SDIO_C:
-					serial_puts("1st SDIO C\n");
-				break;
-				case POR_1ST_SDIO_B:
-					serial_puts("1st SDIO B\n");
-				break;
-				case POR_1ST_SDIO_A:
-					serial_puts("1ST SDIO A\n");
-				break;
+        if(POR_GET_1ST_CFG(por_cfg) != 0) {
+	        switch(POR_GET_1ST_CFG(por_cfg)) {
+            case POR_1ST_NAND:
+                serial_puts("1st NAND\n");
+            break;
+            //case POR_1ST_NAND_RB:
+            //	serial_puts("1st NAND RB\n");
+            break;
+            case POR_1ST_SPI:
+                serial_puts("1st SPI\n");
+            break;
+            case POR_1ST_SPI_RESERVED:
+                serial_puts("1st SPI RESERVED\n");
+            break;
+            case POR_1ST_SDIO_C:
+                serial_puts("1st SDIO C\n");
+            break;
+            case POR_1ST_SDIO_B:
+                serial_puts("1st SDIO B\n");
+            break;
+            case POR_1ST_SDIO_A:
+                serial_puts("1ST SDIO A\n");
+            break;
 	        }
-      }
-      else{
-	switch(POR_GET_2ND_CFG(por_cfg))
-	{
-		case POR_2ND_SDIO_C:
-			serial_puts("2nd SDIO C\n");
-			break;
-		case POR_2ND_SDIO_B:
-			serial_puts("2nd SDIO B\n");
-			break;
-		case POR_2ND_SDIO_A:
-			serial_puts("2nd SDIO A\n");
-			break;
-		default:
-			serial_puts("Never checked\n");
-			break;
-	}
+      } else {
+            switch(POR_GET_2ND_CFG(por_cfg)) {
+            case POR_2ND_SDIO_C:
+                serial_puts("2nd SDIO C\n");
+                break;
+            case POR_2ND_SDIO_B:
+                serial_puts("2nd SDIO B\n");
+                break;
+            case POR_2ND_SDIO_A:
+                serial_puts("2nd SDIO A\n");
+                break;
+            default:
+                serial_puts("Never checked\n");
+                break;
+            }
       }
       return;
     }
@@ -146,6 +136,7 @@ STATIC_PREFIX int fw_init_extl(unsigned por_cfg)
 	 int rc=sdio_init(por_cfg);
    return rc;
 }
+
 STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
 {
     unsigned temp_addr;
