@@ -2,27 +2,18 @@
 
 include $(TOPDIR)/config.mk
 $(warning $(PLATFORM_CPPFLAGS))
+$(warning $(FIRMWARE))
 
 PLATFORM_CPPFLAGS+=-DCONFIG_AMLROM_SPL
 
 LDFLAGS	= -Bstatic -T $(obj)firmware.lds  $(PLATFORM_LDFLAGS)
-BURNLDFLAGS	= -Bstatic -T $(obj)burner.lds  $(PLATFORM_LDFLAGS)
-#AFLAGS	+= -DAML_DEBUG_ROM -DTEXT_BASE=$(TEXT_BASE)  -I$(OBJTREE)
-#CFLAGS	+= -DAML_DEBUG_ROM -DTEXT_BASE=$(TEXT_BASE)  -I$(OBJTREE)
-#CFLAGS :=  -g --cpu cortex-a9  -Ospace  --c99 -W  --thumb \
-#				 $(filter -D%,$(CFLAGS)) $(filter -I%,$(CFLAGS))
-#-Ospace
-#AFLAGS = -g --cpu cortex-a9  $(filter -I%,$(CFLAGS))
 
 
 CFLAGS	:=$(CFLAGS:-marm=-mthumb)
-#CFLAGS	:=$(CFLAGS:-mno-thumb-interwork=)
 CFLAGS	:=$(CFLAGS:-fPIC=)
 CFLAGS	:=$(CFLAGS:-ffixed-r8=)
 CFLAGS	+=  -DCONFIG_AML_ROMBOOT_SPL  -MD -Wno-unused-function -mno-long-calls
-AFLAGS	+= -DCONFIG_AMLROM_SPL -DTEXT_BASE=$(TEXT_BASE) -DUCL_TEXT_BASE=$(UCL_TEXT_BASE) -MD
-#CONFIG_AML_ROMBOOT_SPL
-#CC=armcc --translate_gcc --gnu --c99
+AFLAGS	+= -DCONFIG_AMLROM_SPL -DTEXT_BASE=$(TEXT_BASE) -MD
 
 
 SOBJS	 = rom_spl.o magic.o acs_entry.o jetlab.o
@@ -32,7 +23,6 @@ COBJS	 = spl.o
 OBJS	:= $(addprefix $(obj),$(SOBJS)  )
 __OBJS	:= $(SOBJS) $(COBJS)
 
-BURNOBJS:= $(addprefix $(obj),$(SOBJS) $(COBJS) burn.o )
 
 VPATH_LIST=	$(TOPDIR)/board/$(BOARDDIR) \
 						$(SRCTREE)/$(CPUDIR)/$(SOC) \
@@ -50,34 +40,31 @@ target_LDS=$(abspath $(obj)firmware.lds)
 ifeq ( $(origin_LDS),$(target_LDS))
 	target_LDS=$(OBJTREE)/firmware.lds
 endif
-ifdef CONFIG_M6
-ALL	= $(FIRMWARE) $(dir $(FIRMWARE))aml-debug-rom.bin \
-			$(basename $(FIRMWARE)).out $(dir $(FIRMWARE))aml-debug-rom.out \
-			$(dir $(FIRMWARE))usb_spl.bin $(dir $(FIRMWARE))usb_spl.out
-ELFFILES=$(basename $(FIRMWARE)).out $(dir $(FIRMWARE))aml-debug-rom.out \
-			$(dir $(FIRMWARE))usb_spl.out
 
-all: $(ALL) $(ELFFILES)
+
+ifdef CONFIG_M6
+ALL	= $(FIRMWARE) $(basename $(FIRMWARE)).out \
+			$(dir $(FIRMWARE))usb_spl.bin $(dir $(FIRMWARE))usb_spl.out
+
+all: $(ALL)
 
 %.bin:	%.out
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 $(basename $(FIRMWARE)).out:$(OBJS) $(obj)spl.o $(target_LDS)
-$(dir $(FIRMWARE))aml-debug-rom.out:$(OBJS) $(obj)debugrom.o $(obj)firmware.lds
 $(dir $(FIRMWARE))usb_spl.out:$(OBJS) $(obj)usb_spl.o $(obj)firmware.lds
 	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) -Map $(@:%=%.map) --cref -o $@
 
 else
-ALL	= $(FIRMWARE) $(dir $(FIRMWARE))aml-debug-rom.bin \
-			$(basename $(FIRMWARE)).out $(dir $(FIRMWARE))aml-debug-rom.out
-ELFFILES=$(basename $(FIRMWARE)).out $(dir $(FIRMWARE))aml-debug-rom.out
 
-all: $(ALL) $(ELFFILES)
+ALL	= $(FIRMWARE) $(basename $(FIRMWARE)).out
+
+all: $(ALL)
 
 %.bin:	%.out
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 $(basename $(FIRMWARE)).out:$(OBJS) $(obj)spl.o $(target_LDS)
-$(dir $(FIRMWARE))aml-debug-rom.out:$(OBJS) $(obj)debugrom.o $(obj)firmware.lds
 endif
+
 %.out:
 	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
 		-Map $(@:%=%.map) --cref \
