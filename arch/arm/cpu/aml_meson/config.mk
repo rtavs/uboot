@@ -9,4 +9,4 @@ else #not m8 series
 	TEXT_BASE=0x8F800000
 	UCL_TEXT_BASE=0x8F000000
 endif
-#$(warning $(PLATFORM_CPPFLAGS))
+$(warning $(PLATFORM_CPPFLAGS))

@@ -25,21 +25,26 @@ __OBJS	:= $(SOBJS) $(COBJS)
 
 
 VPATH_LIST=	$(TOPDIR)/board/$(BOARDDIR) \
-						$(SRCTREE)/$(CPUDIR)/$(SOC) \
-						$(SRCTREE)/$(CPUDIR)/common	\
-						$(SRCTREE)/$(CPUDIR)  			\
-						$(SRCTREE)/common
+			$(SRCTREE)/$(CPUDIR)/$(SOC) \
+			$(SRCTREE)/$(CPUDIR)/common
 
 VPATH_LIST:=$(VPATH_LIST:%=%/firmware)
+
 CFLAGS+=$(VPATH_LIST:%=-I%)
+
 vpath %.c $(VPATH_LIST)
 vpath %.S $(VPATH_LIST)
 vpath %.s $(VPATH_LIST)
+
 origin_LDS=$(abspath firmware.lds)
 target_LDS=$(abspath $(obj)firmware.lds)
 ifeq ( $(origin_LDS),$(target_LDS))
 	target_LDS=$(OBJTREE)/firmware.lds
 endif
+
+
+
+$(warning VPATH_LIST=$(VPATH_LIST))
 
 
 ifdef CONFIG_M6
@@ -69,6 +74,7 @@ endif
 	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
 		-Map $(@:%=%.map) --cref \
 		-o $@
+
 $(target_LDS):$(origin_LDS)
 	$(CPP) $(CPPFLAGS)   $(LDPPFLAGS) -std=c99 -D__ASSEMBLY__ -P - <$^ >$@
 
