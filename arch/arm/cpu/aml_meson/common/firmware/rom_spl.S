@@ -169,13 +169,3 @@ _pad:			.word 0x12345678 /* now 16*4=64 */
 .global _end_rom_spl
 _end_rom_spl:
 
-
-#ifdef CONFIG_M6_TEST_CPU_SWITCH
-.global get_cpu_id
-    .type   get_cpu_id, %function
-get_cpu_id:
-     MRC     p15, 0, r0, c0, c0, 5   @ Read CPU ID register
-     AND     r0, r0, #0x03           @ Mask off, leaving the CPU ID field
-     BX      lr
-     .size   get_cpu_id, .-get_cpu_id
-#endif
