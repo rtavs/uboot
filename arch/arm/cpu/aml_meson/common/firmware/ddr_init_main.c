@@ -3,7 +3,6 @@
 #include <timming.c>
 #include <uartpin.c>
 #include <serial.c>
-#include <serial_uart_a.c>
 #include <pinmux.c>
 #include <sdpinmux.c>
 #include <memtest.c>
@@ -195,9 +194,6 @@ static unsigned _ddr_init_main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     pll_init(&__plls);
 
 	serial_init(__plls.uart);
-    #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
-       serial_init_uart_a(__plls.uart);
-    #endif
 
     __udelay(100);//wait for a uart input
 

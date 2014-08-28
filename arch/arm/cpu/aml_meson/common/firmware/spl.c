@@ -3,7 +3,6 @@
 #include <timming.c>
 #include <uartpin.c>
 #include <serial.c>
-#include <serial_uart_a.c>
 #include <pinmux.c>
 #include <sdpinmux.c>
 #include <memtest.c>
@@ -140,11 +139,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     // initial pll
     pll_init(&__plls);
 	serial_init(__plls.uart);
-    #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
-       serial_init_uart_a(__plls.uart);
-    #endif
-
-
 
 	//TEMP add
 	unsigned int nPLL = readl(P_HHI_SYS_PLL_CNTL);
