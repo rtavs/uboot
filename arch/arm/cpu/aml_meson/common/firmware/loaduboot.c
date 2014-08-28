@@ -92,10 +92,10 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     }
 
 	if(rc){
-	serial_puts(__FILE__);
-		serial_puts(__FUNCTION__);
-		serial_put_dword(__LINE__);
-		AML_WATCH_DOG_START();
+        serial_puts(__FILE__);
+        serial_puts(__FUNCTION__);
+        serial_put_dword(__LINE__);
+        AML_WATCH_DOG_START();
 	}
 
 #if CONFIG_ENABLE_EXT_DEVICE_RETRY
