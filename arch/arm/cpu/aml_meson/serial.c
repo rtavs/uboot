@@ -20,17 +20,6 @@ DECLARE_GLOBAL_DATA_PTR;
 SPL_STATIC_FUNC int serial_set_pin_port(unsigned port_base);
 static void serial_putc_port (unsigned port_base,const char c);
 
-//static unsigned port_base_addrs[]={UART_PORT_0,UART_PORT_1};
-#if 0 // due to errror
-static void serial_clr_err (unsigned port_base)
-{
-    /* write to the register */
-
-	if(readl(P_UART_STATUS(port_base))&(UART_STAT_MASK_PRTY_ERR|UART_STAT_MASK_FRAM_ERR))
-		writel((readl(P_UART_CONTROL(port_base)) | UART_CNTL_MASK_CLR_ERR), P_UART_CONTROL(port_base));
-}
-#endif
-
 /*
  * Sets baudarate
  */
@@ -88,16 +77,7 @@ static void serial_set_parity_port(unsigned port_base,int type)
 
 
     uart_config = readl(P_UART_CONTROL(port_base)) & ~(UART_CNTL_MASK_PRTY_TYPE | UART_CNTL_MASK_PRTY_EN);
-#if 0   //changed by Elvis --- disable parity
-    uart_config |= UART_CNTL_MASK_PRTY_EN;
-    /* parity bits */
-    if(type&2)
-        uart_config |= UART_CNTL_MASK_PRTY_EN;
-    if(type&1)
-        uart_config |= UART_CNTL_MASK_PRTY_ODD;
-    else
-        uart_config |= UART_CNTL_MASK_PRTY_EVEN;
- #endif
+
     /* write to the register */
     writel(uart_config, P_UART_CONTROL(port_base));
 
@@ -308,6 +288,7 @@ void serial_aml_register(void)
 #endif
 }
 #endif
+
 #if !(defined CONFIG_SERIAL_MULTI)
 int serial_init(void){
 	return serial_init_port(UART_PORT_CONS);

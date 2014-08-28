@@ -16,6 +16,7 @@
 
 int serial_set_pin_port(unsigned port_base);
 
+
 SPL_STATIC_FUNC void serial_init(unsigned set)
 {
     /* baud rate */
