@@ -42,23 +42,9 @@ static void spl_hello(void)
 }
 
 
-unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
+
+static void jtag_init(void)
 {
-#if defined(CONFIG_M8)
-	//enable watchdog for 5s
-	//if bootup failed, switch to next boot device
-	AML_WATCH_DOG_SET(5000); //5s
-	writel(readl(0xc8100000), SKIP_BOOT_REG_BACK_ADDR); //[By Sam.Wu]backup the skip_boot flag to sram for v2_burning
-#endif
-	//setbits_le32(0xda004000,(1<<0));	//TEST_N enable: This bit should be set to 1 as soon as possible during the Boot process to prevent board changes from placing the chip into a production test mode
-
-	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
-
-//write ENCI_MACV_N0 (CBUS 0x1b30) to 0, disable Macrovision
-#if defined(CONFIG_M6) || defined(CONFIG_M6TV)
-	writel(0, CBUS_REG_ADDR(ENCI_MACV_N0));
-#endif
-
 //Default to open ARM JTAG for M6 only
 #if  defined(CONFIG_M6) || defined(CONFIG_M6TV)
 	#define AML_M6_JTAG_ENABLE
@@ -124,15 +110,27 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 		writel((readl(0xc8100040)|1<<24),0xc8100040);
 	#endif	//AML_M6_JTAG_SET_ARM
 
-	//Watchdog disable
-	//writel(0,0xc1109900);
-	//asm volatile ("wfi");
-
 #endif //AML_M6_JTAG_ENABLE
+}
 
-	//Note: Following msg is used to calculate romcode boot time
-	//         Please DO NOT remove it!
+unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
+{
+#if defined(CONFIG_M8)
+	//enable watchdog for 5s
+	//if bootup failed, switch to next boot device
+	AML_WATCH_DOG_SET(5000); //5s
+	writel(readl(0xc8100000), SKIP_BOOT_REG_BACK_ADDR); //[By Sam.Wu]backup the skip_boot flag to sram for v2_burning
+#endif
+	//setbits_le32(0xda004000,(1<<0));	//TEST_N enable: This bit should be set to 1 as soon as possible during the Boot process to prevent board changes from placing the chip into a production test mode
 
+	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
+
+//write ENCI_MACV_N0 (CBUS 0x1b30) to 0, disable Macrovision
+#if defined(CONFIG_M6) || defined(CONFIG_M6TV)
+	writel(0, CBUS_REG_ADDR(ENCI_MACV_N0));
+#endif
+
+    jtag_init();
     spl_hello();
 
 #ifdef CONFIG_POWER_SPL
