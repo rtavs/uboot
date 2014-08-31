@@ -317,20 +317,11 @@ struct aml_card_sd_info
 	int removed_flag;
 	int init_retry;
 	int single_blk_failed;
-#ifdef AML_CARD_SD_INFO_DETAILED
-	int  (* sdio_init)(unsigned port,struct aml_card_sd_info *sdio);
-	int  (* sdio_detect)(unsigned port,struct aml_card_sd_info *sdio);
-	void (* sdio_pwr_prepare)(unsigned port,struct aml_card_sd_info *sdio);
-	void (* sdio_pwr_on)(unsigned port,struct aml_card_sd_info *sdio);
-	void (* sdio_pwr_off)(unsigned port,struct aml_card_sd_info *sdio);
-	unsigned int sdio_pwr_flag;
-#else
 	int  (* sdio_init)(unsigned port);
 	int  (* sdio_detect)(unsigned port);
 	void (* sdio_pwr_prepare)(unsigned port);
 	void (* sdio_pwr_on)(unsigned port);
 	void (* sdio_pwr_off)(unsigned port);
-#endif
 };
 extern struct aml_card_sd_info * cpu_sdio_get(unsigned port);
 extern int                cpu_sdio_init(unsigned port);
