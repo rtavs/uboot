@@ -14,23 +14,32 @@ static void m8_caculate(void)
 	unsigned short sum=0;
 	//unsigned * magic;
 	// Calculate sum
-	for(i=0;i<0x1b0/2;i++)
-	{
+	for(i=0;i<0x1b0/2;i++) {  // 0 - 216
 		sum^=buf[i];
+        //printf("step %d, sum = 0x%4x\n", i, sum);
 	}
 
-	for(i=256;i<CHECK_SIZE/2;i++)
-	{
+    printf("\n\n");
+	for(i=256;i<CHECK_SIZE/2;i++) {
 		sum^=buf[i];
+        //printf("step %d sum = 0x%4x\n", i, sum);
 	}
+
 	buf[0x1b8/2]=sum;
+    printf("\n\n......sum = 0x%x\n\n", sum);
 }
 int m8_write(FILE * fp_spl,FILE * fp_in ,FILE * fp_out)
 {
     int count;
     int num;
     memset(buf,0,sizeof(buf));
+
+    printf("buff size=%d, array num=%d\n", sizeof(buf), (sizeof(buf)/sizeof(buf[0])));
+
 	num=fread(buf,sizeof(buf[0]),sizeof(buf)/sizeof(buf[0]),fp_spl);
+
+    printf("read size =%d\n",num);
+
 
 //note: 1. Following code is to improve the performance when load TPL (+ seucre OS)
 //             get the precise TPL size for SPL
@@ -39,6 +48,7 @@ int m8_write(FILE * fp_spl,FILE * fp_in ,FILE * fp_out)
 //         3. Here should care the READ_SIZE  is the SPL size which can be 32KB or 64KB
 #define AML_UBOOT_SINFO_OFFSET (READ_SIZE-512-32)
 #if defined(AML_UBOOT_SINFO_OFFSET)
+    printf("xxxxxxxxxxxxxxxxx\n");
 	fseek(fp_in,0,SEEK_END);
 	unsigned int nINLen = ftell(fp_in);
 	nINLen = (nINLen + 0xF ) & (~0xF);
@@ -52,18 +62,25 @@ int m8_write(FILE * fp_spl,FILE * fp_in ,FILE * fp_out)
 	m8_caculate();
 
 	fwrite(buf,sizeof(buf[0]),sizeof(buf)/sizeof(buf[0]),fp_out);
+
+
+    printf("111111111111111\n");
+
+
 	while(!feof(fp_spl))
 	{
+        printf("22222222222222\n");
 		count=fread(buf,sizeof(buf[0]),sizeof(buf)/sizeof(buf[0]),fp_spl);
 		fwrite(buf,sizeof(buf[0]),count,fp_out);
 	}
+
 	while(!feof(fp_in))
 	{
+        printf("333333333333333\n");
 		count=fread(buf,sizeof(char),sizeof(buf),fp_in);
 
         fwrite(buf,sizeof(char),count,fp_out);
 	}
-
 
 	return 0;
 }

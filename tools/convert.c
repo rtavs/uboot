@@ -219,6 +219,8 @@ int main(int argc,char * argv[])
 	    goto exit_prog;
 	}
 
+    printf("spl=%s,in=%s, out=%s\n", spl_file,in_file, out_file);
+
 	ret=entry->write(fp_spl,fp_in,fp_out);
 
 /*
