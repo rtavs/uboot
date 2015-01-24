@@ -21,8 +21,7 @@
 # MA 02111-1307 USA
 #
 
-CROSS_COMPILE ?= arm-linux-gnueabi-
-#arm-linux-
+CROSS_COMPILE ?= arm-linux-
 
 ifeq ($(BOARD),omap2420h4)
 STANDALONE_LOAD_ADDR = 0x80300000

@@ -18,6 +18,7 @@ board=""
 vendor=""
 soc=""
 options=""
+
 if [ \( $# -eq 2 \) -a \( "$1" = "-A" \) ] ; then
 	# Automatic mode
 	line=`egrep -i "^[[:space:]]*${2}[[:space:]]" boards.cfg` || {
@@ -25,7 +26,6 @@ if [ \( $# -eq 2 \) -a \( "$1" = "-A" \) ] ; then
 		exit 1
 	}
 
-	echo $line
 	set ${line}
 	# add default board name if needed
 	[ $# = 3 ] && set ${line} ${1}
@@ -46,6 +46,7 @@ done
 
 # Strip all options and/or _config suffixes
 CONFIG_NAME="${1%_config}"
+
 [ "${BOARD_NAME}" ] || BOARD_NAME="${1%_config}"
 
 arch="$2"
