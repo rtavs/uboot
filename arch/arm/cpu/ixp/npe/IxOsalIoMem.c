@@ -1,18 +1,18 @@
 /**
- * @file IxOsalIoMem.c 
+ * @file IxOsalIoMem.c
  *
- * @brief OS-independent IO/Mem implementation 
- * 
- * 
+ * @brief OS-independent IO/Mem implementation
+ *
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -25,7 +25,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -38,7 +38,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -53,7 +53,7 @@
 
 /*
  * Searches for map using one of the following criteria:
- * 
+ *
  * - enough room to include a zone starting with the physical "requestedAddress" of size "size" (for mapping)
  * - includes the virtual "requestedAddress" in its virtual address space (already mapped, for unmapping)
  * - correct coherency
@@ -97,24 +97,24 @@ ixOsalMemMapFind (UINT32 requestedAddress,
     }
 
     /*
-     * not found 
+     * not found
      */
     return NULL;
 }
 
 /*
  * This function maps an I/O mapped physical memory zone of the given size
- * into a virtual memory zone accessible by the caller and returns a cookie - 
- * the start address of the virtual memory zone. 
- * IX_OSAL_MMAP_PHYS_TO_VIRT should NOT therefore be used on the returned 
+ * into a virtual memory zone accessible by the caller and returns a cookie -
+ * the start address of the virtual memory zone.
+ * IX_OSAL_MMAP_PHYS_TO_VIRT should NOT therefore be used on the returned
  * virtual address.
  * The memory zone is to be unmapped using ixOsalMemUnmap once the caller has
- * finished using this zone (e.g. on driver unload) using the cookie as 
+ * finished using this zone (e.g. on driver unload) using the cookie as
  * parameter.
- * The IX_OSAL_READ/WRITE_LONG/SHORT macros should be used to read and write 
+ * The IX_OSAL_READ/WRITE_LONG/SHORT macros should be used to read and write
  * the mapped memory, adding the necessary offsets to the address cookie.
  *
- * Note: this function is not to be used directly. Use IX_OSAL_MEM_MAP 
+ * Note: this function is not to be used directly. Use IX_OSAL_MEM_MAP
  * instead.
  */
 PUBLIC void *
@@ -161,7 +161,7 @@ ixOsalIoMemMap (UINT32 requestedAddress,
                 if (map->virtualAddress == 0)
                 {
                     /*
-                     * failed 
+                     * failed
                      */
                     ixOsalLog (IX_OSAL_LOG_LVL_FATAL,
                         IX_OSAL_LOG_DEV_STDERR,
@@ -173,7 +173,7 @@ ixOsalIoMemMap (UINT32 requestedAddress,
             else
             {
                 /*
-                 * error, no map function for a dynamic map 
+                 * error, no map function for a dynamic map
                  */
                 ixOsalLog (IX_OSAL_LOG_LVL_FATAL,
                     IX_OSAL_LOG_DEV_STDERR,
@@ -186,7 +186,7 @@ ixOsalIoMemMap (UINT32 requestedAddress,
         }
 
         /*
-         * increment reference count 
+         * increment reference count
          */
         map->refCount++;
 
@@ -194,7 +194,7 @@ ixOsalIoMemMap (UINT32 requestedAddress,
     }
 
     /*
-     * requested address is not described in the global memory map 
+     * requested address is not described in the global memory map
      */
     ixOsalLog (IX_OSAL_LOG_LVL_FATAL,
         IX_OSAL_LOG_DEV_STDERR,
@@ -232,7 +232,7 @@ ixOsalIoMemUnmap (UINT32 requestedAddress, UINT32 endianType)
     if (requestedAddress == 0)
     {
         /*
-         * invalid virtual address 
+         * invalid virtual address
          */
         return;
     }
@@ -246,14 +246,14 @@ ixOsalIoMemUnmap (UINT32 requestedAddress, UINT32 endianType)
         if (map->refCount > 0)
         {
             /*
-             * decrement reference count 
+             * decrement reference count
              */
             map->refCount--;
 
             if (map->refCount == 0)
             {
                 /*
-                 * no longer used, deallocate 
+                 * no longer used, deallocate
                  */
                 if (map->type == IX_OSAL_DYNAMIC_MAP
                     && map->unmapFunction != NULL)
@@ -273,13 +273,13 @@ ixOsalIoMemUnmap (UINT32 requestedAddress, UINT32 endianType)
     }
 }
 
-/* 
- * This function Converts a virtual address into a physical 
+/*
+ * This function Converts a virtual address into a physical
  * address, including the dynamically mapped memory.
- * 
+ *
  * Parameters	virtAddr - virtual address to convert
- * Return value: corresponding physical address, or NULL 
- *               if there is no physical address addressable 
+ * Return value: corresponding physical address, or NULL
+ *               if there is no physical address addressable
  *               by the given virtual address
  * OS:	VxWorks, Linux, WinCE, QNX, eCos
  * Reentrant: Yes
@@ -302,13 +302,13 @@ ixOsalIoMemVirtToPhys (UINT32 virtualAddress, UINT32 requestedCoherency)
     }
 }
 
-/* 
- * This function Converts a virtual address into a physical 
+/*
+ * This function Converts a virtual address into a physical
  * address, including the dynamically mapped memory.
- * 
+ *
  * Parameters	virtAddr - virtual address to convert
- * Return value: corresponding physical address, or NULL 
- *               if there is no physical address addressable 
+ * Return value: corresponding physical address, or NULL
+ *               if there is no physical address addressable
  *               by the given virtual address
  * OS:	VxWorks, Linux, WinCE, QNX, eCos
  * Reentrant: Yes

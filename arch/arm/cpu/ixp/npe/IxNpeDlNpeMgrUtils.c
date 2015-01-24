@@ -4,19 +4,19 @@
  * @author Intel Corporation
  * @date 18 February 2002
  *
- * @brief This file contains the implementation of the private API for the 
+ * @brief This file contains the implementation of the private API for the
  *        IXP425 NPE Downloader NpeMgr Utils module
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -54,7 +54,7 @@
 #define IX_NPE_DL_MAX_NUM_OF_RETRIES 1000000 /**< Maximum number of
                                               * retries before
                                               * timeout
-					                          */  
+					                          */
 
 /*
  * Put the user defined include files required.
@@ -123,8 +123,8 @@ typedef struct
  * static variables.
  */
 
-/* 
- * contains useful address and function pointers to read/write Context Regs, 
+/*
+ * contains useful address and function pointers to read/write Context Regs,
  * eliminating some switch or if-else statements in places
  */
 static IxNpeDlCtxtRegAccessInfo ixNpeDlCtxtRegAccInfo[IX_NPEDL_CTXT_REG_MAX] =
@@ -227,7 +227,7 @@ ixNpeDlNpeMgrInsMemWrite (
 				    insMemAddress, insMemData);
     if (verify)
     {
-        /* write invalid data to this reg, so we can see if we're reading 
+        /* write invalid data to this reg, so we can see if we're reading
 	   the EXDATA register too early */
 	IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_EXDATA,
 			    ~insMemData);
@@ -268,7 +268,7 @@ ixNpeDlNpeMgrDataMemWrite (
 				    dataMemAddress, dataMemData);
     if (verify)
     {
-        /* write invalid data to this reg, so we can see if we're reading 
+        /* write invalid data to this reg, so we can see if we're reading
 	   the EXDATA register too early */
 	IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_EXDATA, ~dataMemData);
 
@@ -324,7 +324,7 @@ ixNpeDlNpeMgrExecAccRegRead (
 void
 ixNpeDlNpeMgrCommandIssue (
     UINT32 npeBaseAddress,
-    UINT32 command)     
+    UINT32 command)
 {
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrCommandIssue\n");
@@ -414,22 +414,22 @@ ixNpeDlNpeMgrDebugInstructionExec(
 	/* Watch Count register increments when NPE completes an instruction */
 	IX_NPEDL_REG_READ (npeBaseAddress, IX_NPEDL_REG_OFFSET_WC,
         &newWatchcount);
-        
+
     /*
      * force the XScale to wait until the NPE has finished execution step
      * NOTE that this delay will be very small, just long enough to allow a
      * single NPE instruction to complete execution; if instruction execution
      * is not completed before timeout retries, exit the while loop
      */
-    while ((IX_NPE_DL_MAX_NUM_OF_RETRIES > retriesCount) 
+    while ((IX_NPE_DL_MAX_NUM_OF_RETRIES > retriesCount)
         && (newWatchcount == oldWatchcount))
     {
 	    /* Watch Count register increments when NPE completes an instruction */
 	    IX_NPEDL_REG_READ (npeBaseAddress, IX_NPEDL_REG_OFFSET_WC,
 		    &newWatchcount);
-			   
+
         retriesCount++;
-    }    
+    }
 
     if (IX_NPE_DL_MAX_NUM_OF_RETRIES > retriesCount)
     {
@@ -441,12 +441,12 @@ ixNpeDlNpeMgrDebugInstructionExec(
          * after maximum retries */
         status = IX_NPEDL_CRITICAL_NPE_ERR;
     }
-    
+
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrDebugInstructionExec\n");
-		     
+
     return status;
-}    
+}
 
 
 /*
@@ -462,7 +462,7 @@ ixNpeDlNpeMgrDebugInstructionPostExec(
 
     /* clear the pipeline */
     ixNpeDlNpeMgrCommandIssue (npeBaseAddress, IX_NPEDL_EXCTL_CMD_NPE_CLR_PIPE);
-    
+
     /* restore Execution Count register contents. */
     IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_EXCT,
 			ixNpeDlSavedExecCount);
@@ -478,7 +478,7 @@ ixNpeDlNpeMgrDebugInstructionPostExec(
  */
 PRIVATE IX_STATUS
 ixNpeDlNpeMgrLogicalRegRead (
-    UINT32 npeBaseAddress, 
+    UINT32 npeBaseAddress,
     UINT32 regAddr,
     UINT32 regSize,
     UINT32 ctxtNum,
@@ -516,7 +516,7 @@ ixNpeDlNpeMgrLogicalRegRead (
     {
         return status;
     }
-    
+
     /* read value of register from Execution Data register */
     IX_NPEDL_REG_READ (npeBaseAddress,	IX_NPEDL_REG_OFFSET_EXDATA, regVal);
 
@@ -525,7 +525,7 @@ ixNpeDlNpeMgrLogicalRegRead (
 
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrLogicalRegRead\n");
-    
+
     return IX_SUCCESS;
 }
 
@@ -535,7 +535,7 @@ ixNpeDlNpeMgrLogicalRegRead (
  */
 PRIVATE IX_STATUS
 ixNpeDlNpeMgrLogicalRegWrite (
-    UINT32 npeBaseAddress, 
+    UINT32 npeBaseAddress,
     UINT32 regAddr,
     UINT32 regVal,
     UINT32 regSize,
@@ -558,19 +558,19 @@ ixNpeDlNpeMgrLogicalRegWrite (
 				      regVal >> IX_NPEDL_REG_SIZE_SHORT,
 				      IX_NPEDL_REG_SIZE_SHORT,
 				      ctxtNum, verify);
-				      
+
 	if (IX_SUCCESS != status)
 	{
 	    return status;
 	}
-	
+
 	/* Write lower half-word (short) to |d2|d3| */
 	status = ixNpeDlNpeMgrLogicalRegWrite (npeBaseAddress,
 				      regAddr + IX_NPEDL_BYTES_PER_SHORT,
                                     regVal & IX_NPEDL_MASK_LOWER_SHORT_OF_WORD,
 				      IX_NPEDL_REG_SIZE_SHORT,
 				      ctxtNum, verify);
-    
+
     if (IX_SUCCESS != status)
 	{
 	    return status;
@@ -579,7 +579,7 @@ ixNpeDlNpeMgrLogicalRegWrite (
     else
     {
         switch (regSize)
-	{ 
+	{
 	case IX_NPEDL_REG_SIZE_BYTE:
 	    npeInstruction = IX_NPEDL_INSTR_WR_REG_BYTE;
 	    mask = IX_NPEDL_MASK_LOWER_BYTE_OF_WORD;  break;
@@ -604,31 +604,31 @@ ixNpeDlNpeMgrLogicalRegWrite (
 	/* step execution of NPE intruction using Debug ECS */
 	status = ixNpeDlNpeMgrDebugInstructionExec(npeBaseAddress, npeInstruction,
 					  ctxtNum, IX_NPEDL_WR_INSTR_LDUR);
-					  
+
 	if (IX_SUCCESS != status)
 	{
-	    return status;  
-	} 
+	    return status;
+	}
     }/* condition: if reg to be written is 8-bit or 16-bit (not 32-bit) */
 
     if (verify)
     {
 	status = ixNpeDlNpeMgrLogicalRegRead (npeBaseAddress, regAddr,
 						   regSize, ctxtNum, &retRegVal);
-						   
+
         if (IX_SUCCESS == status)
         {
             if (regVal != retRegVal)
             {
                 status = IX_FAIL;
             }
-        }        
+        }
     }
 
     IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrLogicalRegWrite : status = %d\n",
 		     status);
-    
+
     return status;
 }
 
@@ -658,7 +658,7 @@ ixNpeDlNpeMgrPhysicalRegWrite (
 
     /*
      * set REGMAP for context 0 to (regAddr >> 1) to choose which pair (0-16)
-     * of physical registers to write 
+     * of physical registers to write
      */
     status = ixNpeDlNpeMgrLogicalRegWrite (npeBaseAddress,
 					   IX_NPEDL_CTXT_REG_ADDR_REGMAP,
@@ -670,11 +670,11 @@ ixNpeDlNpeMgrPhysicalRegWrite (
 	/* regAddr = 0 or 4  */
 	regAddr = (regAddr & IX_NPEDL_MASK_PHYS_REG_ADDR_LOGICAL_ADDR) *
 	    IX_NPEDL_BYTES_PER_WORD;
-    
-    status = ixNpeDlNpeMgrLogicalRegWrite (npeBaseAddress, regAddr, regValue, 
+
+    status = ixNpeDlNpeMgrLogicalRegWrite (npeBaseAddress, regAddr, regValue,
 					   IX_NPEDL_REG_SIZE_WORD, 0, verify);
     }
-    
+
     if (status != IX_SUCCESS)
     {
 	IX_NPEDL_ERROR_REPORT ("ixNpeDlNpeMgrPhysicalRegWrite: "
@@ -706,7 +706,7 @@ ixNpeDlNpeMgrCtxtRegWrite (
     UINT32 ctxtRegSize;
     IX_STATUS status = IX_SUCCESS;
 
-    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT, 
+    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrCtxtRegWrite\n");
 
     /*
@@ -721,7 +721,7 @@ ixNpeDlNpeMgrCtxtRegWrite (
 	tempRegVal &= ~IX_NPEDL_MASK_ECS_REG_0_NEXTPC;
 	tempRegVal |= (ctxtRegVal << IX_NPEDL_OFFSET_ECS_REG_0_NEXTPC) &
 	    IX_NPEDL_MASK_ECS_REG_0_NEXTPC;
-	
+
 	ixNpeDlNpeMgrExecAccRegWrite (npeBaseAddress,
 				      IX_NPEDL_ECS_BG_CTXT_REG_0, tempRegVal);
 
@@ -739,11 +739,11 @@ ixNpeDlNpeMgrCtxtRegWrite (
 	    IX_NPEDL_ERROR_REPORT ("ixNpeDlNpeMgrCtxtRegWrite: "
 				   "error writing to context store register\n");
 	}
-	
+
 	ixNpeDlNpeMgrUtilsStats.contextRegWrites++;
     }
 
-    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT, 
+    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrCtxtRegWrite : status = %d\n",
 		     status);
 

@@ -2,16 +2,16 @@
  * @file IxEthDBVlan.c
  *
  * @brief Implementation of the VLAN API
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -61,14 +61,14 @@ IxEthDBStatus ixEthDBVlanTableGet(IxEthDBPortId portID, IxEthDBVlanSet portVlanT
  * @param vlanID VLAN ID to add or remove
  * @param table VLAN set to add into or remove from
  * @param action ADD_VLAN or REMOVE_VLAN
- * 
+ *
  * @internal
  */
 IX_ETH_DB_PRIVATE
 void ixEthDBLocalVlanMembershipChange(UINT32 vlanID, IxEthDBVlanSet table, UINT32 action)
 {
     UINT32 setOffset;
-    
+
     /* add/remove VID to membership table */
     setOffset = VLAN_SET_OFFSET(vlanID); /* we need 9 bits to index the 512 byte membership array */
 
@@ -106,14 +106,14 @@ IxEthDBStatus ixEthDBVlanTableEntryUpdate(IxEthDBPortId portID, UINT32 setOffset
     PortInfo *portInfo = &ixEthDBPortInfo[portID];
     IxNpeMhMessage message;
     IX_STATUS result;
-        
-    FILL_SETPORTVLANTABLEENTRY_MSG(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID), 
-        2 * setOffset, 
-        portInfo->vlanMembership[setOffset], 
+
+    FILL_SETPORTVLANTABLEENTRY_MSG(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID),
+        2 * setOffset,
+        portInfo->vlanMembership[setOffset],
         portInfo->transmitTaggingInfo[setOffset]);
-    
+
     IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
-    
+
     return result;
 }
 
@@ -154,12 +154,12 @@ IxEthDBStatus ixEthDBVlanTableRangeUpdate(IxEthDBPortId portID)
     }
 
     IX_OSAL_CACHE_FLUSH(vlanUpdateZone, FULL_VLAN_BYTE_SIZE);
-    
+
     /* build NPE message */
-    FILL_SETPORTVLANTABLERANGE_MSG(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID), 0, 0, 
+    FILL_SETPORTVLANTABLERANGE_MSG(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID), 0, 0,
         IX_OSAL_MMU_VIRT_TO_PHYS(vlanUpdateZone));
 
-    /* send message */    
+    /* send message */
     IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
 
     return result;
@@ -184,7 +184,7 @@ IxEthDBStatus ixEthDBPortVlanMembershipChange(IxEthDBPortId portID, IxEthDBVlanI
 {
     /* change VLAN in local membership table */
     ixEthDBLocalVlanMembershipChange(vlanID, table, action);
-    
+
     /* send updated entry to NPE */
     return ixEthDBVlanTableEntryUpdate(portID, VLAN_SET_OFFSET(vlanID));
 }
@@ -194,44 +194,44 @@ IxEthDBStatus ixEthDBPortVlanMembershipChange(IxEthDBPortId portID, IxEthDBVlanI
  *
  * @param portID ID of the port
  * @param vlanTag port VLAN tag (802.1Q tag)
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanTagSet(IxEthDBPortId portID, IxEthDBVlanTag vlanTag)
 {
     IxNpeMhMessage message;
     IX_STATUS result;
-    
+
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
- 
+
     IX_ETH_DB_CHECK_VLAN_TAG(vlanTag);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-        
+
     /* add VLAN ID to local membership table */
-    ixEthDBPortVlanMembershipChange(portID, 
-        vlanTag & IX_ETH_DB_802_1Q_VLAN_MASK, 
-        ixEthDBPortInfo[portID].vlanMembership, 
+    ixEthDBPortVlanMembershipChange(portID,
+        vlanTag & IX_ETH_DB_802_1Q_VLAN_MASK,
+        ixEthDBPortInfo[portID].vlanMembership,
         ADD_VLAN);
-        
+
     /* set tag in portInfo */
     ixEthDBPortInfo[portID].vlanTag = vlanTag;
-    
+
     /* build VLAN_SetDefaultRxVID message */
-    FILL_SETDEFAULTRXVID_MSG(message, 
-        IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID), 
-        IX_IEEE802_1Q_VLAN_TPID, 
+    FILL_SETDEFAULTRXVID_MSG(message,
+        IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID),
+        IX_IEEE802_1Q_VLAN_TPID,
         vlanTag);
-    
+
     IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
-    
+
     return result;
 }
 
@@ -240,37 +240,37 @@ IxEthDBStatus ixEthDBPortVlanTagSet(IxEthDBPortId portID, IxEthDBVlanTag vlanTag
  *
  * @param portID ID of the port
  * @param vlanTag address to write the port VLAN tag (802.1Q tag) into
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanTagGet(IxEthDBPortId portID, IxEthDBVlanTag *vlanTag)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(vlanTag);
-    
+
     *vlanTag = ixEthDBPortInfo[portID].vlanTag;
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
 /**
- * @brief sets the VLAN tag (the lower 3 bytes are the PVID) of a 
+ * @brief sets the VLAN tag (the lower 3 bytes are the PVID) of a
  * database filtering record
  *
  * @param portID ID of the port
  * @param vlanTag VLAN tag (802.1Q tag)
- * 
- * Important: filtering records are automatically converted to 
+ *
+ * Important: filtering records are automatically converted to
  * IX_ETH_DB_FILTERING_VLAN record when added a VLAN tag.
  *
  * Note that this function is documented in the main component
@@ -279,75 +279,75 @@ IxEthDBStatus ixEthDBPortVlanTagGet(IxEthDBPortId portID, IxEthDBVlanTag *vlanTa
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBVlanTagSet(IxEthDBMacAddr *macAddr, IxEthDBVlanTag vlanTag)
 {
     HashNode *searchResult;
     MacDescriptor *descriptor;
-    
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
-    
+
     IX_ETH_DB_CHECK_VLAN_TAG(vlanTag);
-    
+
     searchResult = ixEthDBSearch(macAddr, IX_ETH_DB_ALL_FILTERING_RECORDS);
-    
+
     if (searchResult == NULL)
     {
         return IX_ETH_DB_NO_SUCH_ADDR;
     }
-    
+
     descriptor = (MacDescriptor *) searchResult->data;
-    
+
     /* set record type to VLAN if not already set */
     descriptor->type = IX_ETH_DB_FILTERING_VLAN_RECORD;
-    
+
     /* add vlan tag */
     descriptor->recordData.filteringVlanData.ieee802_1qTag = vlanTag;
-    
+
     /* transaction completed */
     ixEthDBReleaseHashNode(searchResult);
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
 /**
- * @brief retrieves the VLAN tag (the lower 3 bytes are the PVID) from a 
+ * @brief retrieves the VLAN tag (the lower 3 bytes are the PVID) from a
  * database VLAN filtering record
  *
  * @param portID ID of the port
  * @param vlanTag address to write the VLAN tag (802.1Q tag) into
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBVlanTagGet(IxEthDBMacAddr *macAddr, IxEthDBVlanTag *vlanTag)
 {
     HashNode *searchResult;
     MacDescriptor *descriptor;
-    
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(vlanTag);
-    
+
     searchResult = ixEthDBSearch(macAddr, IX_ETH_DB_FILTERING_VLAN_RECORD);
-    
+
     if (searchResult == NULL)
     {
         return IX_ETH_DB_NO_SUCH_ADDR;
     }
-    
+
     descriptor = (MacDescriptor *) searchResult->data;
-        
+
     /* get vlan tag */
     *vlanTag = descriptor->recordData.filteringVlanData.ieee802_1qTag;
-    
+
     /* transaction completed */
     ixEthDBReleaseHashNode(searchResult);
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -356,14 +356,14 @@ IxEthDBStatus ixEthDBVlanTagGet(IxEthDBMacAddr *macAddr, IxEthDBVlanTag *vlanTag
  *
  * @param portID ID of the port
  * @param vlanID VLAN ID to add
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanMembershipAdd(IxEthDBPortId portID, IxEthDBVlanId vlanID)
 {
     IX_ETH_DB_CHECK_PORT(portID);
@@ -389,7 +389,7 @@ IxEthDBStatus ixEthDBPortVlanMembershipAdd(IxEthDBPortId portID, IxEthDBVlanId v
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanMembershipRemove(IxEthDBPortId portID, IxEthDBVlanId vlanID)
 {
     IX_ETH_DB_CHECK_PORT(portID);
@@ -402,18 +402,18 @@ IxEthDBStatus ixEthDBPortVlanMembershipRemove(IxEthDBPortId portID, IxEthDBVlanI
 
     /* for safety isolate only the VLAN ID in the tag (the lower 12 bits) */
     vlanID = vlanID & IX_ETH_DB_802_1Q_VLAN_MASK;
-    
+
     /* check we're not asked to remove the default port VID */
     if (vlanID == IX_ETH_DB_GET_VLAN_ID(ixEthDBPortInfo[portID].vlanTag))
     {
         return IX_ETH_DB_NO_PERMISSION;
     }
-    
+
     return ixEthDBPortVlanMembershipChange(portID, vlanID, ixEthDBPortInfo[portID].vlanMembership, REMOVE_VLAN);
 }
 
 /**
- * @brief adds or removes a VLAN range from a port's 
+ * @brief adds or removes a VLAN range from a port's
  * VLAN membership table or TTI table
  *
  * @param portID ID of the port
@@ -431,33 +431,33 @@ IX_ETH_DB_PRIVATE
 IxEthDBStatus ixEthDBPortVlanMembershipRangeChange(IxEthDBPortId portID, IxEthDBVlanId vlanIDMin, IxEthDBVlanId vlanIDMax, IxEthDBVlanSet table, UINT32 action)
 {
     UINT32 setOffsetMin, setOffsetMax;
-    
+
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_VLAN_ID(vlanIDMin);
-    
+
     IX_ETH_DB_CHECK_VLAN_ID(vlanIDMax);
-    
+
     /* for safety isolate only the VLAN ID in the tags (the lower 12 bits) */
     vlanIDMin = vlanIDMin & IX_ETH_DB_802_1Q_VLAN_MASK;
     vlanIDMax = vlanIDMax & IX_ETH_DB_802_1Q_VLAN_MASK;
-    
+
     /* is this a range? */
     if (vlanIDMax < vlanIDMin)
     {
         return IX_ETH_DB_INVALID_VLAN;
     }
-    
+
     /* check that we're not specifically asked to remove the default port VID */
     if (action == REMOVE_VLAN && vlanIDMax == vlanIDMin && IX_ETH_DB_GET_VLAN_ID(ixEthDBPortInfo[portID].vlanTag) == vlanIDMin)
     {
         return IX_ETH_DB_NO_PERMISSION;
     }
-    
+
     /* compute set offsets */
     setOffsetMin = VLAN_SET_OFFSET(vlanIDMin);
     setOffsetMax = VLAN_SET_OFFSET(vlanIDMax);
@@ -488,14 +488,14 @@ IxEthDBStatus ixEthDBPortVlanMembershipRangeChange(IxEthDBPortId portID, IxEthDB
  * @param portID ID of the port
  * @param vlanIDMin start of the VLAN range
  * @param vlanIDMax end of the VLAN range
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanMembershipRangeAdd(IxEthDBPortId portID, IxEthDBVlanId vlanIDMin, IxEthDBVlanId vlanIDMax)
 {
     IX_ETH_DB_CHECK_PORT(portID);
@@ -518,7 +518,7 @@ IxEthDBStatus ixEthDBPortVlanMembershipRangeAdd(IxEthDBPortId portID, IxEthDBVla
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanMembershipRangeRemove(IxEthDBPortId portID, IxEthDBVlanId vlanIDMin, IxEthDBVlanId vlanIDMax)
 {
     IX_ETH_DB_CHECK_PORT(portID);
@@ -545,15 +545,15 @@ IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanTableSet(IxEthDBPortId portID, IxEthDBVlanSet portVlanTable, IxEthDBVlanSet vlanSet)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(vlanSet);
 
     memcpy(portVlanTable, vlanSet, sizeof (IxEthDBVlanSet));
-    
+
     return ixEthDBVlanTableRangeUpdate(portID);
 }
 
@@ -562,7 +562,7 @@ IxEthDBStatus ixEthDBPortVlanTableSet(IxEthDBPortId portID, IxEthDBVlanSet portV
  *
  * @param portID ID of the port
  * @param portVlanTable port VLAN table to retrieve
- * @param vlanSet address to 
+ * @param vlanSet address to
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
@@ -573,15 +573,15 @@ IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBVlanTableGet(IxEthDBPortId portID, IxEthDBVlanSet portVlanTable, IxEthDBVlanSet vlanSet)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(vlanSet);
-    
+
     memcpy(vlanSet, portVlanTable, sizeof (IxEthDBVlanSet));
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -597,13 +597,13 @@ IxEthDBStatus ixEthDBVlanTableGet(IxEthDBPortId portID, IxEthDBVlanSet portVlanT
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanMembershipSet(IxEthDBPortId portID, IxEthDBVlanSet vlanSet)
 {
     IxEthDBVlanId vlanID;
 
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
 
     IX_ETH_DB_CHECK_REFERENCE(vlanSet);
@@ -611,7 +611,7 @@ IxEthDBStatus ixEthDBPortVlanMembershipSet(IxEthDBPortId portID, IxEthDBVlanSet 
     /* set the bit corresponding to the PVID just in case */
     vlanID = IX_ETH_DB_GET_VLAN_ID(ixEthDBPortInfo[portID].vlanTag);
     vlanSet[VLAN_SET_OFFSET(vlanID)] |= 1 << VLAN_SET_MASK(vlanID);
-    
+
     return ixEthDBPortVlanTableSet(portID, ixEthDBPortInfo[portID].vlanMembership, vlanSet);
 }
 
@@ -627,13 +627,13 @@ IxEthDBStatus ixEthDBPortVlanMembershipSet(IxEthDBPortId portID, IxEthDBVlanSet 
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortVlanMembershipGet(IxEthDBPortId portID, IxEthDBVlanSet vlanSet)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     return ixEthDBVlanTableGet(portID, ixEthDBPortInfo[portID].vlanMembership, vlanSet);
 }
 
@@ -650,11 +650,11 @@ IxEthDBStatus ixEthDBPortVlanMembershipGet(IxEthDBPortId portID, IxEthDBVlanSet 
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBEgressVlanEntryTaggingEnabledSet(IxEthDBPortId portID, IxEthDBVlanId vlanID, BOOL enabled)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
 
     IX_ETH_DB_CHECK_VLAN_ID(vlanID);
@@ -678,21 +678,21 @@ IxEthDBStatus ixEthDBEgressVlanEntryTaggingEnabledSet(IxEthDBPortId portID, IxEt
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBEgressVlanEntryTaggingEnabledGet(IxEthDBPortId portID, IxEthDBVlanId vlanID, BOOL *enabled)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(enabled);
 
     IX_ETH_DB_CHECK_VLAN_ID(vlanID);
-    
+
     *enabled = ((ixEthDBPortInfo[portID].transmitTaggingInfo[VLAN_SET_OFFSET(vlanID)] & (1 << VLAN_SET_MASK(vlanID))) != 0);
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -710,13 +710,13 @@ IxEthDBStatus ixEthDBEgressVlanEntryTaggingEnabledGet(IxEthDBPortId portID, IxEt
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBEgressVlanRangeTaggingEnabledSet(IxEthDBPortId portID, IxEthDBVlanId vlanIDMin, IxEthDBVlanId vlanIDMax, BOOL enabled)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     return ixEthDBPortVlanMembershipRangeChange(portID, vlanIDMin, vlanIDMax, ixEthDBPortInfo[portID].transmitTaggingInfo, enabled? ADD_VLAN : REMOVE_VLAN);
 }
 
@@ -733,13 +733,13 @@ IxEthDBStatus ixEthDBEgressVlanRangeTaggingEnabledSet(IxEthDBPortId portID, IxEt
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBEgressVlanTaggingEnabledSet(IxEthDBPortId portID, IxEthDBVlanSet vlanSet)
 {
     IxEthDBVlanId vlanID;
 
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
 
     IX_ETH_DB_CHECK_REFERENCE(vlanSet);
@@ -747,12 +747,12 @@ IxEthDBStatus ixEthDBEgressVlanTaggingEnabledSet(IxEthDBPortId portID, IxEthDBVl
     /* set the PVID bit just in case */
     vlanID = IX_ETH_DB_GET_VLAN_ID(ixEthDBPortInfo[portID].vlanTag);
     vlanSet[VLAN_SET_OFFSET(vlanID)] |= 1 << VLAN_SET_MASK(vlanID);
-    
+
     return ixEthDBPortVlanTableSet(portID, ixEthDBPortInfo[portID].transmitTaggingInfo, vlanSet);
 }
 
 /**
- * @brief retrieves the Egress VLAN tagging table (the Transmit 
+ * @brief retrieves the Egress VLAN tagging table (the Transmit
  * Tagging Information table)
  *
  * @param portID ID of the port
@@ -764,13 +764,13 @@ IxEthDBStatus ixEthDBEgressVlanTaggingEnabledSet(IxEthDBPortId portID, IxEthDBVl
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBEgressVlanTaggingEnabledGet(IxEthDBPortId portID, IxEthDBVlanSet vlanSet)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     return ixEthDBVlanTableGet(portID, ixEthDBPortInfo[portID].transmitTaggingInfo, vlanSet);
 }
 
@@ -779,7 +779,7 @@ IxEthDBStatus ixEthDBEgressVlanTaggingEnabledGet(IxEthDBPortId portID, IxEthDBVl
  * Ingress tagging
  *
  * @param portID ID of the port
- * 
+ *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  *
@@ -810,19 +810,19 @@ IxEthDBStatus ixEthDBIngressVlanModeUpdate(IxEthDBPortId portID)
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBIngressVlanTaggingEnabledSet(IxEthDBPortId portID, IxEthDBTaggingAction taggingAction)
 {
     PortInfo *portInfo;
-    
+
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     portInfo = &ixEthDBPortInfo[portID];
-    
+
     if (taggingAction == IX_ETH_DB_PASS_THROUGH)
     {
         portInfo->npeTaggingAction = 0x00;
@@ -839,9 +839,9 @@ IxEthDBStatus ixEthDBIngressVlanTaggingEnabledSet(IxEthDBPortId portID, IxEthDBT
     {
         return IX_ETH_DB_INVALID_ARG;
     }
-    
+
     portInfo->taggingAction = taggingAction;
-    
+
     return ixEthDBIngressVlanModeUpdate(portID);
 }
 
@@ -850,26 +850,26 @@ IxEthDBStatus ixEthDBIngressVlanTaggingEnabledSet(IxEthDBPortId portID, IxEthDBT
  *
  * @param portID ID of the port
  * @param taggingAction location to save the default tagging behavior
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBIngressVlanTaggingEnabledGet(IxEthDBPortId portID, IxEthDBTaggingAction *taggingAction)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
 
     IX_ETH_DB_CHECK_REFERENCE(taggingAction);
-    
+
     *taggingAction = ixEthDBPortInfo[portID].taggingAction;
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -878,45 +878,45 @@ IxEthDBStatus ixEthDBIngressVlanTaggingEnabledGet(IxEthDBPortId portID, IxEthDBT
  *
  * @param portID ID of the port
  * @param frameFilter acceptable frame type filter
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBAcceptableFrameTypeSet(IxEthDBPortId portID, IxEthDBFrameFilter frameFilter)
 {
     PortInfo *portInfo;
     IxEthDBStatus result = IX_ETH_DB_SUCCESS;
-        
+
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
-    /* check parameter range 
+
+    /* check parameter range
        the ORed value of the valid values is 0x7
        a value having extra bits is invalid */
     if ((frameFilter | 0x7) != 0x7 || frameFilter == 0)
     {
         return IX_ETH_DB_INVALID_ARG;
     }
-    
+
     portInfo = &ixEthDBPortInfo[portID];
-    
+
     portInfo->frameFilter    = frameFilter;
     portInfo->npeFrameFilter = 0; /* allow all by default */
-    
+
     /* if accepting priority tagged but not all VLAN tagged
-       set the membership table to contain only VLAN ID 0 
+       set the membership table to contain only VLAN ID 0
        hence remove vlans 1-4094 and add VLAN ID 0 */
     if (((frameFilter & IX_ETH_DB_PRIORITY_TAGGED_FRAMES) != 0)
         && ((frameFilter & IX_ETH_DB_VLAN_TAGGED_FRAMES) == 0))
     {
-        result = ixEthDBPortVlanMembershipRangeChange(portID, 
+        result = ixEthDBPortVlanMembershipRangeChange(portID,
             1, IX_ETH_DB_802_1Q_MAX_VLAN_ID, portInfo->vlanMembership, REMOVE_VLAN);
 
         if (result == IX_ETH_DB_SUCCESS)
@@ -925,13 +925,13 @@ IxEthDBStatus ixEthDBAcceptableFrameTypeSet(IxEthDBPortId portID, IxEthDBFrameFi
             result = ixEthDBVlanTableRangeUpdate(portID);
         }
     }
-    
+
     /* untagged only? */
     if (frameFilter == IX_ETH_DB_UNTAGGED_FRAMES)
     {
         portInfo->npeFrameFilter = 0x01;
     }
-    
+
     /* tagged only? */
     if ((frameFilter & IX_ETH_DB_UNTAGGED_FRAMES) == 0)
     {
@@ -958,19 +958,19 @@ IxEthDBStatus ixEthDBAcceptableFrameTypeSet(IxEthDBPortId portID, IxEthDBFrameFi
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBAcceptableFrameTypeGet(IxEthDBPortId portID, IxEthDBFrameFilter *frameFilter)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(frameFilter);
-    
+
     *frameFilter = ixEthDBPortInfo[portID].frameFilter;
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -994,11 +994,11 @@ IxEthDBStatus ixEthDBUpdateTrafficClass(IxEthDBPortId portID, UINT32 classIndex)
 
     UINT32 trafficClass = ixEthDBPortInfo[portID].priorityTable[classIndex];
     UINT32 aqmQueue     = ixEthDBPortInfo[portID].ixEthDBTrafficClassAQMAssignments[trafficClass];
-    
+
     FILL_SETRXQOSENTRY(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID), classIndex, trafficClass, aqmQueue);
-    
+
     IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
-    
+
     return result;
 }
 
@@ -1014,19 +1014,19 @@ IxEthDBStatus ixEthDBUpdateTrafficClass(IxEthDBPortId portID, UINT32 classIndex)
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPriorityMappingTableSet(IxEthDBPortId portID, IxEthDBPriorityTable priorityTable)
 {
     UINT32 classIndex;
-    
+
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(priorityTable);
-           
+
     for (classIndex = 0 ; classIndex < IX_IEEE802_1Q_QOS_PRIORITY_COUNT ; classIndex++)
     {
         /* check range */
@@ -1035,18 +1035,18 @@ IxEthDBStatus ixEthDBPriorityMappingTableSet(IxEthDBPortId portID, IxEthDBPriori
             return IX_ETH_DB_INVALID_PRIORITY;
         }
     }
-    
+
     /* set new traffic classes */
     for (classIndex = 0 ; classIndex < IX_IEEE802_1Q_QOS_PRIORITY_COUNT ; classIndex++)
     {
         ixEthDBPortInfo[portID].priorityTable[classIndex] = priorityTable[classIndex];
-        
+
         if (ixEthDBUpdateTrafficClass(portID, classIndex) != IX_ETH_DB_SUCCESS)
         {
             return IX_ETH_DB_FAIL;
         }
     }
-    
+
     return IX_ETH_DB_SUCCESS;
  }
 
@@ -1062,19 +1062,19 @@ IxEthDBStatus ixEthDBPriorityMappingTableSet(IxEthDBPortId portID, IxEthDBPriori
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPriorityMappingTableGet(IxEthDBPortId portID, IxEthDBPriorityTable priorityTable)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(priorityTable);
-    
+
     memcpy(priorityTable, ixEthDBPortInfo[portID].priorityTable, sizeof (IxEthDBPriorityTable));
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -1091,13 +1091,13 @@ IxEthDBStatus ixEthDBPriorityMappingTableGet(IxEthDBPortId portID, IxEthDBPriori
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPriorityMappingClassSet(IxEthDBPortId portID, IxEthDBPriority userPriority, IxEthDBPriority trafficClass)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
 
     /* check ranges for userPriority and trafficClass */
@@ -1105,9 +1105,9 @@ IxEthDBStatus ixEthDBPriorityMappingClassSet(IxEthDBPortId portID, IxEthDBPriori
     {
         return IX_ETH_DB_INVALID_PRIORITY;
     }
-    
+
     ixEthDBPortInfo[portID].priorityTable[userPriority] = trafficClass;
-    
+
     return ixEthDBUpdateTrafficClass(portID, userPriority);
 }
 
@@ -1117,32 +1117,32 @@ IxEthDBStatus ixEthDBPriorityMappingClassSet(IxEthDBPortId portID, IxEthDBPriori
  * @param portID ID of the port
  * @param userPriority QoS (user) priority
  * @param trafficClass location to store the associated traffic class
- * 
+ *
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPriorityMappingClassGet(IxEthDBPortId portID, IxEthDBPriority userPriority, IxEthDBPriority *trafficClass)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(trafficClass);
-    
+
     /* check userPriority range */
     if (userPriority >= IX_IEEE802_1Q_QOS_PRIORITY_COUNT)
     {
         return IX_ETH_DB_INVALID_PRIORITY;
     }
-    
+
     *trafficClass = ixEthDBPortInfo[portID].priorityTable[userPriority];
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -1159,21 +1159,21 @@ IxEthDBStatus ixEthDBPriorityMappingClassGet(IxEthDBPortId portID, IxEthDBPriori
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully
  * or an appropriate error message otherwise
  */
-IX_ETH_DB_PUBLIC 
+IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBVlanPortExtractionEnable(IxEthDBPortId portID, BOOL enable)
 {
     IxNpeMhMessage message;
     IX_STATUS result;
 
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_VLAN_QOS);
 
     FILL_SETPORTIDEXTRACTIONMODE(message, portID, enable);
 
     IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
-    
+
     return result;
 }

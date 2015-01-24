@@ -6,16 +6,16 @@
  * @brief This file contains the public API of the IXP400 NPE Downloader
  *        component.
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,7 +41,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -105,7 +105,7 @@
  * @brief NpeDl function return value when image being downloaded
  *        is not meant for the device in use
  */
-#define IX_NPEDL_DEVICE_ERR 6 
+#define IX_NPEDL_DEVICE_ERR 6
 
 /**
  * @defgroup NPEImageID IXP400 NPE Image ID Definition
@@ -481,7 +481,7 @@ typedef struct
  *           download
  *         - IX_NPEDL_CRITICAL_MICROCODE_ERR if a critical microcode error
  *           occured during download
- *         - IX_NPEDL_DEVICE_ERR if the image being loaded is not meant for 
+ *         - IX_NPEDL_DEVICE_ERR if the image being loaded is not meant for
  *           the device currently running.
  *         - IX_FAIL if NPE is not available or image is failed to be located.
  *           A warning is issued if the NPE is not present.
@@ -544,7 +544,7 @@ ixNpeDlNpeInitAndStart (UINT32 npeImageId);
  *           download
  *         - IX_NPEDL_CRITICAL_MICROCODE_ERR if a critical microcode error
  *           occured during download
- *         - IX_NPEDL_DEVICE_ERR if the image being loaded is not meant for 
+ *         - IX_NPEDL_DEVICE_ERR if the image being loaded is not meant for
  *           the device currently running.
  *         - IX_FAIL if NPE is not available or image is failed to be located.
  *           A warning is issued if the NPE is not present.
@@ -837,7 +837,7 @@ ixNpeDlLatestImageGet (IxNpeDlNpeId npeId,
  *      - IX_SUCCESS if the operation was successful
  *      - IX_NPEDL_PARAM_ERR if a parameter error occured
  *      - IX_FAIL otherwise
- *      - IX_NPEDL_CRITICAL_NPE_ERR failed to reset NPE due to timeout error. 
+ *      - IX_NPEDL_CRITICAL_NPE_ERR failed to reset NPE due to timeout error.
  *        Timeout error could happen if NPE hang
  */
 PUBLIC IX_STATUS
@@ -943,7 +943,7 @@ ixNpeDlNpeExecutionStop (IxNpeDlNpeId npeId);
  *      - IX_FAIL otherwise
  */
 
-PUBLIC IX_STATUS 
+PUBLIC IX_STATUS
 ixNpeDlUnload (void);
 
 /**
@@ -976,5 +976,3 @@ ixNpeDlStatsReset (void);
 /**
  * @} defgroup IxNpeDl
  */
-
-

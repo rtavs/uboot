@@ -2,16 +2,16 @@
  * @file IxEthDBDBPortUpdate.c
  *
  * @brief Implementation of dependency and port update handling
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -61,9 +61,9 @@ extern HashTable dbHashtable;
  * @param typeArray array indexed on record types, each
  * element indicating whether the record type requires an
  * automatic update (TRUE) or not (FALSE)
- * 
+ *
  * Automatic updates are done for registered record types
- * upon adding, updating (that is, updating the record portID) 
+ * upon adding, updating (that is, updating the record portID)
  * and removing records. Whenever an automatic update is triggered
  * the appropriate ports will be provided with new database
  * information.
@@ -98,7 +98,7 @@ UINT32 ixEthDBUpdateTypeRegister(BOOL *typeArray)
  * This function browses through all the ports and determines how to waterfall the update
  * event from the trigger ports to all other ports depending on them.
  *
- * Once the list of ports to be updated is determined this function 
+ * Once the list of ports to be updated is determined this function
  * calls @ref ixEthDBCreateTrees.
  *
  * @internal
@@ -108,16 +108,16 @@ void ixEthDBUpdatePortLearningTrees(IxEthDBPortMap triggerPorts)
 {
     IxEthDBPortMap updatePorts;
     UINT32 portIndex;
-    
+
     ixEthDBUpdateLock();
-    
+
     SET_EMPTY_DEPENDENCY_MAP(updatePorts);
-    
+
     for (portIndex = 0 ; portIndex < IX_ETH_DB_NUMBER_OF_PORTS ; portIndex++)
     {
         PortInfo *port   = &ixEthDBPortInfo[portIndex];
         BOOL mapsCollide;
-        
+
         MAPS_COLLIDE(mapsCollide, triggerPorts, port->dependencyPortMap);
 
         if (mapsCollide                                   /* do triggers influence this port? */
@@ -148,11 +148,11 @@ void ixEthDBUpdatePortLearningTrees(IxEthDBPortMap triggerPorts)
             }
         }
     }
-    
+
     IX_ETH_DB_UPDATE_TRACE("DB: (Update) Updating port set\n");
 
     ixEthDBCreateTrees(updatePorts);
-        
+
     ixEthDBUpdateUnlock();
 }
 
@@ -191,7 +191,7 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
             if (!port->updateMethod.searchTreePendingWrite && IS_PORT_INCLUDED(portIndex, updatePorts))
             {
                 GET_MAP_SIZE(port->dependencyPortMap, size);
-                
+
                 IX_ETH_DB_UPDATE_TRACE("DB: (Update) Dependency map for port %d: size %d\n",
                     portIndex, size);
 
@@ -205,7 +205,7 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
             {
                 IX_ETH_DB_UPDATE_TRACE("DB: (Update) Skipped port %d from tree diff (%s)\n", portIndex,
                     port->updateMethod.searchTreePendingWrite ? "pending write access" : "ignored by query");
-            }            
+            }
         }
 
         /* if a port was found than minimalSize is not MAX_PORT_SIZE */
@@ -220,16 +220,16 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
             /* now try to find a port with minimal map difference */
             PortInfo *minimalDiffPort = NULL;
             UINT32 minimalDiff        = MAX_PORT_SIZE;
-            
+
             IX_ETH_DB_UPDATE_TRACE("DB: (Update) Minimal size port is %d\n", minPortIndex);
 
             for (portIndex = 0 ; portIndex < IX_ETH_DB_NUMBER_OF_PORTS ; portIndex++)
-            {   
+            {
                 PortInfo *diffPort = &ixEthDBPortInfo[portIndex];
                 BOOL mapIsSubset;
-                
+
                 IS_MAP_SUBSET(mapIsSubset, diffPort->dependencyPortMap, port->dependencyPortMap);
-                
+
 
                 if (portIndex != minPortIndex
                     && diffPort->updateMethod.searchTree != NULL
@@ -240,7 +240,7 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
                     UINT32 sizeDifference;
 
                     GET_MAP_SIZE(diffPort->dependencyPortMap, diffPortSize);
-                     
+
                     IX_ETH_DB_UPDATE_TRACE("DB: (Update) Checking port %d for differences...\n", portIndex);
 
                     sizeDifference = minimalSize - diffPortSize;
@@ -249,7 +249,7 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
                     {
                         minimalDiffPort = diffPort;
                         minimalDiff     = sizeDifference;
-                        
+
                         IX_ETH_DB_UPDATE_TRACE("DB: (Update) Minimal difference 0x%x was found on port %d\n",
                             minimalDiff, portIndex);
                     }
@@ -264,32 +264,32 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
                 {
                     baseTree = ixEthDBCloneMacTreeNode(minimalDiffPort->updateMethod.searchTree);
                     DIFF_MAPS(query, port->dependencyPortMap , minimalDiffPort->dependencyPortMap);
-                    
+
                     IX_ETH_DB_UPDATE_TRACE("DB: (Update) Found minimal diff, extending tree %d on query\n",
                         minimalDiffPort->portID);
                 }
                 else /* .. otherwise no similar port was found, build tree from scratch */
                 {
                     baseTree = NULL;
-                    
+
                     COPY_DEPENDENCY_MAP(query, port->dependencyPortMap);
-                    
+
                     IX_ETH_DB_UPDATE_TRACE("DB: (Update) No similar diff, creating tree from query\n");
                 }
 
                 IS_EMPTY_DEPENDENCY_MAP(result, query);
-                
+
                 if (!result) /* otherwise we don't need anything more on top of the cloned tree */
                 {
                     IX_ETH_DB_UPDATE_TRACE("DB: (Update) Adding query tree to port %d\n", minPortIndex);
-                        
+
                     /* build learning tree */
                     port->updateMethod.searchTree = ixEthDBQuery(baseTree, query, IX_ETH_DB_ALL_FILTERING_RECORDS, MAX_ELT_SIZE);
                 }
                 else
                 {
                     IX_ETH_DB_UPDATE_TRACE("DB: (Update) Query is empty, assuming identical nearest tree\n");
-                      
+
                     port->updateMethod.searchTree = baseTree;
                 }
             }
@@ -311,17 +311,17 @@ void ixEthDBCreateTrees(IxEthDBPortMap updatePorts)
         {
             portsLeft = FALSE;
 
-            IX_ETH_DB_UPDATE_TRACE("DB: (Update) No trees to create this round\n");            
+            IX_ETH_DB_UPDATE_TRACE("DB: (Update) No trees to create this round\n");
         }
     }
-    
+
     for (portIndex = 0 ; portIndex < IX_ETH_DB_NUMBER_OF_PORTS ; portIndex++)
     {
         PortInfo *updatePort = &ixEthDBPortInfo[portIndex];
 
         if (updatePort->updateMethod.searchTreePendingWrite)
         {
-            IX_ETH_DB_UPDATE_TRACE("DB: (PortUpdate) Starting procedure to upload new search tree (%snull) into NPE %d\n", 
+            IX_ETH_DB_UPDATE_TRACE("DB: (PortUpdate) Starting procedure to upload new search tree (%snull) into NPE %d\n",
                 updatePort->updateMethod.searchTree != NULL ? "not " : "",
                 portIndex);
 
@@ -362,7 +362,7 @@ IxEthDBStatus ixEthDBNPEUpdateHandler(IxEthDBPortId portID, IxEthDBRecordType ty
     {
         return IX_ETH_DB_INVALID_ARG;
     }
-    
+
     /* serialize tree into memory */
     ixEthDBNPETreeWrite(type, treeSize, port->updateMethod.npeUpdateZone, port->updateMethod.searchTree, &epDelta, &blockCount);
 
@@ -381,8 +381,8 @@ IxEthDBStatus ixEthDBNPEUpdateHandler(IxEthDBPortId portID, IxEthDBRecordType ty
     {
         IX_STATUS result;
 
-        FILL_SETMACADDRESSDATABASE_MSG(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID), 
-            epDelta, blockCount, 
+        FILL_SETMACADDRESSDATABASE_MSG(message, IX_ETH_DB_PORT_ID_TO_NPE_LOGICAL_ID(portID),
+            epDelta, blockCount,
             IX_OSAL_MMU_VIRT_TO_PHYS(port->updateMethod.npeUpdateZone));
 
         IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
@@ -410,7 +410,7 @@ IxEthDBStatus ixEthDBNPEUpdateHandler(IxEthDBPortId portID, IxEthDBRecordType ty
     {
         return ixEthDBFirewallUpdate(portID, port->updateMethod.npeUpdateZone, epDelta);
     }
-    
+
     return IX_ETH_DB_INVALID_ARG;
 }
 
@@ -425,7 +425,7 @@ IxEthDBStatus ixEthDBNPEUpdateHandler(IxEthDBPortId portID, IxEthDBRecordType ty
  * Note that this is an append procedure, the given tree needs not to be empty.
  * A "descriptor matching the query" is a descriptor whose port id is in the query map.
  * If the given tree is empty (NULL) a new tree is created and returned.
- * 
+ *
  * @return the tree root
  *
  * @internal
@@ -443,11 +443,11 @@ MacTreeNode* ixEthDBQuery(MacTreeNode *searchTree, IxEthDBPortMap query, IxEthDB
     {
         MacDescriptor *descriptor = (MacDescriptor *) iterator.node->data;
 
-        IX_ETH_DB_UPDATE_TRACE("DB: (PortUpdate) querying [%s]:%d on port map ... ", 
-            mac2string(descriptor->macAddress), 
+        IX_ETH_DB_UPDATE_TRACE("DB: (PortUpdate) querying [%s]:%d on port map ... ",
+            mac2string(descriptor->macAddress),
             descriptor->portID);
 
-	if ((descriptor->type & recordFilter) != 0 
+	if ((descriptor->type & recordFilter) != 0
             && IS_PORT_INCLUDED(descriptor->portID, query))
 	{
             MacDescriptor *descriptorClone = ixEthDBCloneMacDescriptor(descriptor);
@@ -737,4 +737,3 @@ UINT32 ixEthDBRebalanceLog2Floor(UINT32 x)
 
     return val == x ? log : log - 1;
 }
-

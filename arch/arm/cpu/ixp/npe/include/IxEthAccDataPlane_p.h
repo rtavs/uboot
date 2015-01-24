@@ -8,16 +8,16 @@
  *
  * Design Notes:
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -43,7 +43,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -95,9 +95,9 @@ typedef struct
 
 /**
  * @fn ixEthAccMbufFromSwQ
- * @brief  used during disable steps to convert mbufs from 
- *  swq format, ready to be pushed into hw queues for NPE, 
- *  back into XScale format 
+ * @brief  used during disable steps to convert mbufs from
+ *  swq format, ready to be pushed into hw queues for NPE,
+ *  back into XScale format
  */
 IX_OSAL_MBUF *ixEthAccMbufFromSwQ(IX_OSAL_MBUF *mbuf);
 
@@ -148,7 +148,7 @@ void ixEthAccDataPlaneShow(void);
 
 
 #define IX_ETH_ACC_DATAPLANE_IS_Q_EMPTY(mbuf_list) ((mbuf_list.pHead) == NULL)
-    
+
 
 #define IX_ETH_ACC_DATAPLANE_ADD_MBUF_TO_Q_HEAD(mbuf_list,mbuf_to_add) 		\
   do {										\
@@ -242,4 +242,3 @@ void ixEthTxFrameDoneQMCallback(IxQMgrQId qId, IxQMgrCallbackId callbackId);
 /**
  *@}
  */
-

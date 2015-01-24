@@ -4,16 +4,16 @@
  * @brief  Header file for the IXP400 SSP Serial Port Access (IxSspAcc)
  *
  * @version $Revision: 0.1 $
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,7 +26,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -39,13 +39,13 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
 
 /**
- * @defgroup IxSspAcc IXP400 SSP Serial Port Access (IxSspAcc) API 
+ * @defgroup IxSspAcc IXP400 SSP Serial Port Access (IxSspAcc) API
  *
  * @brief IXP400 SSP Serial Port Access Public API
  *
@@ -63,7 +63,7 @@
  */
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccDataSize
  *
  * @brief The data sizes in bits that are supported by the protocol
@@ -89,7 +89,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccPortStatus
  *
  * @brief The status of the SSP port to be set to enable/disable
@@ -103,7 +103,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccFrameFormat
  *
  * @brief The frame format that is to be used - SPI, SSP, or Microwire
@@ -118,7 +118,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccClkSource
  *
  * @brief The source to produce the SSP serial clock
@@ -132,10 +132,10 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccSpiSclkPhase
  *
- * @brief The SPI SCLK Phase: 
+ * @brief The SPI SCLK Phase:
  * 0 - SCLK is inactive one cycle at the start of a frame and 1/2 cycle at the
  *		end of a frame.
  * 1 - SCLK is inactive 1/2 cycle at the start of a frame and one cycle at the
@@ -150,7 +150,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccSpiSclkPolarity
  *
  * @brief The SPI SCLK Polarity can be set to either low or high.
@@ -164,7 +164,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccMicrowireCtlWord
  *
  * @brief The Microwire control word can be either 8 or 16 bit.
@@ -178,7 +178,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IxSspAccFifoThreshold
  *
  * @brief The threshold in frames (each frame is defined by IxSspAccDataSize)
@@ -209,7 +209,7 @@ typedef enum
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @enum IX_SSP_STATUS
  *
  * @brief The statuses that can be returned in a SSP Serial Port Access
@@ -289,7 +289,7 @@ typedef void (*RxFIFOOverrunHandler)(void);
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @brief SSP Rx FIFO Threshold hit or above handler
  *
  * This function is called for the client to handle Rx FIFO threshold hit or
@@ -299,7 +299,7 @@ typedef void (*RxFIFOThresholdHandler)(void);
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @brief SSP Tx FIFO Threshold hit or below handler
  *
  * This function is called for the client to handle Tx FIFO threshold hit or
@@ -316,7 +316,7 @@ typedef void (*TxFIFOThresholdHandler)(void);
  *
  * @brief contains all the variables required to initialize the SSP serial port
  *		hardware.
- * 
+ *
  * Structure to be filled and used for calling initialization
  */
 typedef struct
@@ -368,8 +368,8 @@ typedef struct
 												used in Microwire format). */
 	UINT8 SerialClkRateSelected;			/**<Select between 0 (1.8432Mbps)
 												and 255 (7.2Kbps). The
-												formula used is	Bit rate = 
-												3.6864x10^6 / 
+												formula used is	Bit rate =
+												3.6864x10^6 /
 												(2 x (SerialClkRateSelect + 1))
 												*/
 } IxSspInitVars;
@@ -378,7 +378,7 @@ typedef struct
  * @ingroup IxSspAcc
  *
  * @brief contains counters of the SSP statistics
- * 
+ *
  * Structure contains all values of counters and associated overflows.
  */
 typedef struct
@@ -395,25 +395,25 @@ typedef struct
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccInit (
 	IxSspInitVars *initVarsSelected);
  *
  * @brief Initializes the SSP Access module.
  *
  * @param "IxSspAccInitVars [in] *initVarsSelected" - struct containing required
- *			variables for initialization 
+ *			variables for initialization
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will initialize the SSP Serial Port hardware to the user specified
  * configuration. Then it will enable the SSP Serial Port.
  * *NOTE*: Once interrupt or polling mode is selected, the mode cannot be
  * changed via the interrupt enable/disable function but the init needs to be
  * called again to change it.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Successfully initialize and enable the SSP
  *									serial port.
  *		- IX_SSP_RX_FIFO_HANDLER_MISSING - interrupt mode is selected but RX FIFO
@@ -442,7 +442,7 @@ typedef struct
  *									hardware trigger
  *      - IX_SSP_NOT_SUPORTED - hardware does not support SSP
  *      - IX_SSP_NULL_POINTER - parameter passed in is NULL
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -452,7 +452,7 @@ ixSspAccInit (IxSspInitVars *initVarsSelected);
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccUninit (
 	void)
  *
@@ -462,14 +462,14 @@ ixSspAccInit (IxSspInitVars *initVarsSelected);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will disable the SSP Serial Port hardware. The client can call the
  * init function again if they wish to enable the SSP.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - successfully uninit SSP component
  *      - IX_SSP_INT_UNBIND_FAIL - interrupt handler failed to unbind SSP interrupt
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -479,7 +479,7 @@ ixSspAccUninit (void);
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccFIFODataSubmit (
 	UINT16 *data,
 	UINT32 amtOfData)
@@ -492,16 +492,16 @@ ixSspAccUninit (void);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will insert the amount of data specified by "amtOfData" from buffer
  * pointed to by "data" into the FIFO to be transmitted by the hardware.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Data inserted successfully into FIFO
  *		- IX_SSP_FAIL - FIFO insufficient space
  *		- IX_SSP_NULL_POINTER - data pointer passed by client is NULL
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -513,7 +513,7 @@ ixSspAccFIFODataSubmit (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccFIFODataReceive (
 	UINT16 *data,
 	UINT32 amtOfData)
@@ -525,16 +525,16 @@ ixSspAccFIFODataSubmit (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will extract the amount of data specified by "amtOfData" from the
  * FIFO already received by the hardware into the buffer pointed to by "data".
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Data extracted successfully from FIFO
  *		- IX_SSP_FAIL - FIFO has no data
  *		- IX_SSP_NULL_POINTER - data pointer passed by client is NULL
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -551,7 +551,7 @@ ixSspAccFIFODataReceive (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccTxFIFOHitOrBelowThresholdCheck (
 		void)
  *
@@ -561,14 +561,14 @@ ixSspAccFIFODataReceive (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return whether the Tx FIFO threshold has been exceeded or not
  *
- * @return 
+ * @return
  *      - IX_SSP_TX_FIFO_HIT_BELOW_THRESHOLD - Tx FIFO level hit or below threshold .
  *		- IX_SSP_TX_FIFO_EXCEED_THRESHOLD - Tx FIFO level exceeded threshold.
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -579,7 +579,7 @@ ixSspAccTxFIFOHitOrBelowThresholdCheck (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccRxFIFOHitOrAboveThresholdCheck (
 		void)
  *
@@ -589,14 +589,14 @@ ixSspAccTxFIFOHitOrBelowThresholdCheck (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return whether the Rx FIFO level is below threshold or not
  *
- * @return 
+ * @return
  *      - IX_SSP_RX_FIFO_HIT_ABOVE_THRESHOLD - Rx FIFO level hit or exceeded threshold
  *		- IX_SSP_RX_FIFO_BELOW_THRESHOLD - Rx FIFO level below threshold
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -615,7 +615,7 @@ ixSspAccRxFIFOHitOrAboveThresholdCheck (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccSSPPortStatusSet (
 	IxSspAccPortStatus portStatusSelected)
  *
@@ -626,16 +626,16 @@ ixSspAccRxFIFOHitOrAboveThresholdCheck (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will enable/disable the SSP Serial Port hardware.
  * NOTE: This function is called by init to enable the SSP after setting up the
  * configurations and by uninit to disable the SSP.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Port status set with valid enum value
  *		- IX_SSP_FAIL - invalid enum value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -646,7 +646,7 @@ ixSspAccSSPPortStatusSet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccFrameFormatSelect (
 	IxSspAccFrameFormat frameFormatSelected)
  *
@@ -657,16 +657,16 @@ ixSspAccSSPPortStatusSet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the format for the transfers via user input.
  * *NOTE*: The SSP hardware will be disabled to clear the FIFOs. Then its
  * previous state (enabled/disabled) restored after changing the format.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - frame format set with valid enum value
  *		- IX_SSP_INVALID_FRAME_FORMAT_ENUM_VALUE - invalid frame format value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -677,7 +677,7 @@ ixSspAccFrameFormatSelect (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccDataSizeSelect (
 	IxSspAccDataSize dataSizeSelected)
  *
@@ -688,7 +688,7 @@ ixSspAccFrameFormatSelect (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the data size for the transfers via user input. It will
  * disallow the change of the data size if either of the Rx/Tx FIFO is not
  * empty to prevent data loss.
@@ -698,7 +698,7 @@ ixSspAccFrameFormatSelect (
  * *NOTE*: The FIFOs can be cleared by disabling the SSP Port if necessary to
  *			force the data size change.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - data size set with valid enum value
  *		- IX_SSP_RX_FIFO_NOT_EMPTY - Rx FIFO not empty, data size change is not
  *							allowed.
@@ -706,7 +706,7 @@ ixSspAccFrameFormatSelect (
  *							allowed.
  *		- IX_SSP_INVALID_DATA_SIZE_ENUM_VALUE - invalid enum value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -717,7 +717,7 @@ ixSspAccDataSizeSelect (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccClockSourceSelect(
 	IxSspAccClkSource clkSourceSelected)
  *
@@ -728,14 +728,14 @@ ixSspAccDataSizeSelect (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the clock source for the transfers via user input.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - clock source set with valid enum value
  *		- IX_SSP_INVALID_CLOCK_SOURCE_ENUM_VALUE - invalid enum value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -746,7 +746,7 @@ ixSspAccClockSourceSelect (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccSerialClockRateConfigure (
 	UINT8 serialClockRateSelected)
  *
@@ -758,13 +758,13 @@ ixSspAccClockSourceSelect (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the serial clock rate for the transfers via user input.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Serial clock rate configured successfully
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -775,7 +775,7 @@ ixSspAccSerialClockRateConfigure (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccRxFIFOIntEnable (
 	RxFIFOThresholdHandler rxFIFOIntrHandler)
  *
@@ -787,16 +787,16 @@ ixSspAccSerialClockRateConfigure (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will enable the service request interrupt for the Rx FIFO
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Rx FIFO level interrupt enabled successfully
  *		- IX_SSP_RX_FIFO_HANDLER_MISSING - missing handler for Rx FIFO level interrupt
  *		- IX_SSP_POLL_MODE_BLOCKING - poll mode is selected at init, interrupt not
  *				allowed to be enabled. Use init to enable interrupt mode.
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -807,7 +807,7 @@ ixSspAccRxFIFOIntEnable (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccRxFIFOIntDisable (
 	void)
  *
@@ -817,13 +817,13 @@ ixSspAccRxFIFOIntEnable (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will disable the service request interrupt of the Rx FIFO.
  *
- * @return 
+ * @return
  *		- IX_SSP_SUCCESS - Rx FIFO Interrupt disabled successfully
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -834,7 +834,7 @@ ixSspAccRxFIFOIntDisable (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccTxFIFOIntEnable (
 	TxFIFOThresholdHandler txFIFOIntrHandler)
  *
@@ -845,16 +845,16 @@ ixSspAccRxFIFOIntDisable (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will enable the service request interrupt of the Tx FIFO.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Tx FIFO level interrupt enabled successfully
  *		- IX_SSP_TX_FIFO_HANDLER_MISSING - missing handler for Tx FIFO level interrupt
  *		- IX_SSP_POLL_MODE_BLOCKING - poll mode is selected at init, interrupt not
  *				allowed to be enabled. Use init to enable interrupt mode.
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -865,7 +865,7 @@ ixSspAccTxFIFOIntEnable (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccTxFIFOIntDisable (
 	void)
  *
@@ -875,13 +875,13 @@ ixSspAccTxFIFOIntEnable (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will disable the service request interrupt of the Tx FIFO
  *
- * @return 
+ * @return
  *		- IX_SSP_SUCCESS - Tx FIFO Interrupt disabled successfuly.
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -892,7 +892,7 @@ ixSspAccTxFIFOIntDisable (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccLoopbackEnable (
 	BOOL loopbackEnable)
  *
@@ -902,14 +902,14 @@ ixSspAccTxFIFOIntDisable (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the mode of operation to either loopback or normal mode
  * according to the user input.
  *
- * @return 
+ * @return
  *		- IX_SSP_SUCCESS - Loopback enabled successfully
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -920,7 +920,7 @@ ixSspAccLoopbackEnable (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccSpiSclkPolaritySet (
 	IxSspAccSpiSclkPolarity spiSclkPolaritySelected)
  *
@@ -931,15 +931,15 @@ ixSspAccLoopbackEnable (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API is only used for the SPI frame format and will set the SPI SCLK polarity
  * to either low or high
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - SPI Sclk polarity set with valid enum value
  *		- IX_SSP_INVALID_SPI_POLARITY_ENUM_VALUE - invalid SPI polarity value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -950,7 +950,7 @@ ixSspAccSpiSclkPolaritySet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccSpiSclkPhaseSet (
 	IxSspAccSpiSclkPhase spiSclkPhaseSelected)
  *
@@ -966,13 +966,13 @@ ixSspAccSpiSclkPolaritySet (
  *		- IX_SSP_SUCCESS - SPI Sclk phase set with valid enum value
  *		- IX_SSP_INVALID_SPI_PHASE_ENUM_VALUE - invalid SPI phase value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *                        
+ *
  * This API is only used for the SPI frame format and will set the SPI SCLK
  * phase according to user input.
  *
- * @return 
+ * @return
  *      - None
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -983,7 +983,7 @@ ixSspAccSpiSclkPhaseSet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccMicrowireControlWordSet (
 	IxSspAccMicrowireCtlWord microwireCtlWordSelected)
  *
@@ -994,17 +994,17 @@ ixSspAccSpiSclkPhaseSet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API is only used for the Microwire frame format and will set the
  * control word to 8 or 16 bit format
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Microwire Control Word set with valid enum value
  *		- IX_SSP_TX_FIFO_NOT_EMPTY - Tx FIFO not empty, data size change is not
  *							allowed.
  *		- IX_SSP_INVALID_MICROWIRE_CTL_CMD_ENUM_VALUE - invalid enum value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1015,7 +1015,7 @@ ixSspAccMicrowireControlWordSet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccTxFIFOThresholdSet (
 	IxSspAccFifoThreshold txFIFOThresholdSelected)
  *
@@ -1026,14 +1026,14 @@ ixSspAccMicrowireControlWordSet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the threshold for a Tx FIFO threshold to be triggered
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Tx FIFO Threshold set with valid enum value
  *		- IX_SSP_INVALID_TX_FIFO_THRESHOLD_ENUM_VALUE - invalid enum value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1044,7 +1044,7 @@ ixSspAccTxFIFOThresholdSet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccRxFIFOThresholdSet (
 	IxSspAccFifoThreshold rxFIFOThresholdSelected)
  *
@@ -1055,14 +1055,14 @@ ixSspAccTxFIFOThresholdSet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will will set the threshold for a Rx FIFO threshold to be triggered
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Rx FIFO Threshold set with valid enum value
  *		- IX_SSP_INVALID_RX_FIFO_THRESHOLD_ENUM_VALUE - invalid enum value
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1078,7 +1078,7 @@ ixSspAccRxFIFOThresholdSet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccStatsGet (
 	IxSspAccStatsCounters *sspStats)
  *
@@ -1089,13 +1089,13 @@ ixSspAccRxFIFOThresholdSet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return the statistics counters of the SSP transfers.
  *
- * @return 
+ * @return
  *      - IX_SSP_SUCCESS - Stats obtained into the pointer provided successfully
  *		- IX_SSP_FAIL - client provided pointer is NULL
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1106,7 +1106,7 @@ ixSspAccStatsGet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccStatsReset (
 	void)
  *
@@ -1116,12 +1116,12 @@ ixSspAccStatsGet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will reset the SSP statistics counters.
  *
- * @return 
+ * @return
  *      - None
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1132,7 +1132,7 @@ ixSspAccStatsReset (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccShow (
 		void)
  *
@@ -1142,14 +1142,14 @@ ixSspAccStatsReset (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will display the status registers of the SSP and the statistics
  * counters.
  *
- * @return 
+ * @return
  *		- IX_SSP_SUCCESS - SSP show called successfully.
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1160,7 +1160,7 @@ ixSspAccShow (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccSSPBusyCheck (
 		void)
  *
@@ -1170,15 +1170,15 @@ ixSspAccShow (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return the state of the SSP serial port hardware - busy or
  * idle
  *
- * @return 
+ * @return
  *      - IX_SSP_BUSY - SSP is busy
  *		- IX_SSP_IDLE - SSP is idle.
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1189,7 +1189,7 @@ ixSspAccSSPBusyCheck (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccTxFIFOLevelGet (
 		void)
  *
@@ -1199,12 +1199,12 @@ ixSspAccSSPBusyCheck (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return the level of the Tx FIFO
  *
- * @return 
+ * @return
  *      - 0..16; 0 can also mean SSP not initialized and will need to be init.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1215,7 +1215,7 @@ ixSspAccTxFIFOLevelGet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccRxFIFOLevelGet (
 		void)
  *
@@ -1225,12 +1225,12 @@ ixSspAccTxFIFOLevelGet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return the level of the Rx FIFO
  *
- * @return 
+ * @return
  *      - 0..16; 0 can also mean SSP not initialized and will need to be init.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -1241,7 +1241,7 @@ ixSspAccRxFIFOLevelGet (
 
 /**
  * @ingroup IxSspAcc
- * 
+ *
  * @fn ixSspAccRxFIFOOverrunCheck (
 		void)
  *
@@ -1251,10 +1251,10 @@ ixSspAccRxFIFOLevelGet (
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return whether the Rx FIFO has overrun its 16 FIFOs
  *
- * @return 
+ * @return
  *      - IX_SSP_OVERRUN_OCCURRED - Rx FIFO overrun occurred
  *		- IX_SSP_NO_OVERRUN - Rx FIFO did not overrun
  *		- IX_SSP_NOT_INIT - SSP not initialized. SSP init needs to be called.

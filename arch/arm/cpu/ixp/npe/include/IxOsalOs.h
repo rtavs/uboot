@@ -27,4 +27,3 @@ static inline unsigned long __v2p(unsigned long v)
 #define __ixp42X			/* sr: U-Boot needs this define */
 
 #endif /* IxOsalOs_H */
-

@@ -7,16 +7,16 @@
  *
  * @brief   Header file for the IXP400 ATM NPE API
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -722,7 +722,7 @@ typedef struct
     UINT32  rsvdWord0;                  /**< Reserved field */
     UINT16  currMbufLen;		/**< Mbuf Length */
     UINT8   timeLimit; 			/**< Payload Reassembly timeLimit (used for aal0_xx only) */
-    UINT8   rsvdByte0;                  /**< Reserved field */ 
+    UINT8   rsvdByte0;                  /**< Reserved field */
     UINT32  rsvdWord1;   		/**< Reserved field */
     IX_OSAL_MBUF *pCurrMbuf;		/**< Pointer to current mbuf */
     unsigned char *pCurrMbufData;	/**< Pointer to current mbuf->data */

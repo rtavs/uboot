@@ -3,22 +3,22 @@
  *
  * @author Intel Corporation
  * @date    30-Oct-2001
- * 
+ *
  * @brief   This modules provides an interface for setting up the static
  * configuration of AQM queues.This file contains the following
  * functions:
  *
- * 
- * 
+ *
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -44,7 +44,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -87,7 +87,7 @@
  * N.b. bufferSizeInWords and qEntrySizeInWords are stored in the queue
  * as these are requested by Access in the data path. sizeInEntries is
  * not required by the data path so it can be calculated dynamically.
- * 
+ *
  */
 typedef struct
 {
@@ -104,7 +104,7 @@ typedef struct
  * statics.
  */
 
-extern UINT32 * ixQMgrAqmIfQueAccRegAddr[]; 
+extern UINT32 * ixQMgrAqmIfQueAccRegAddr[];
 
 /* Store data required to inline read and write access
  */
@@ -148,7 +148,7 @@ void
 ixQMgrQCfgInit (void)
 {
     int loopIndex;
-    
+
     for (loopIndex=0; loopIndex < IX_QMGR_MAX_NUM_QUEUES;loopIndex++)
     {
 	/* info for code inlining */
@@ -168,7 +168,7 @@ ixQMgrQCfgInit (void)
 
     /* Initialise the AqmIf component */
     ixQMgrAqmIfInit ();
-   
+
     /* Reset all queues to have queue name = NULL, entry size = 0 and
      * isConfigured = false
      */
@@ -188,7 +188,7 @@ ixQMgrQCfgInit (void)
     stats.wmSetCnt = 0;
 
     ixQMgrAqmIfSramBaseAddressGet (&freeSramAddress);
-    
+
     ixOsalMutexInit(&ixQMgrQCfgMutex);
 
     cfgInitialized = TRUE;
@@ -215,17 +215,17 @@ ixQMgrQConfig (char *qName,
     {
         return IX_FAIL;
     }
-    
+
     if (!IX_QMGR_QID_IS_VALID(qId))
     {
 	return IX_QMGR_INVALID_Q_ID;
     }
-    
+
     else if (NULL == qName)
     {
 	return IX_QMGR_PARAMETER_ERROR;
     }
-    
+
     else if (strlen (qName) > IX_QMGR_MAX_QNAME_LEN)
     {
 	return IX_QMGR_PARAMETER_ERROR;
@@ -240,12 +240,12 @@ ixQMgrQConfig (char *qName,
     {
 	return IX_QMGR_INVALID_Q_ENTRY_SIZE;
     }
-    
+
     else if (cfgQueueInfo[qId].isConfigured)
     {
 	return IX_QMGR_Q_ALREADY_CONFIGURED;
     }
-   
+
     ixOsalMutexLock(&ixQMgrQCfgMutex, IX_OSAL_WAIT_FOREVER);
 
     /* Write the config register */
@@ -260,13 +260,13 @@ ixQMgrQConfig (char *qName,
     cfgQueueInfo[qId].qEntrySizeInWords = qEntrySizeInWords;
 
     /* store pre-computed information in the same cache line
-     * to facilitate inlining of QRead and QWrite functions 
+     * to facilitate inlining of QRead and QWrite functions
      * in IxQMgr.h
      */
     ixQMgrQInlinedReadWriteInfo[qId].qReadCount = 0;
     ixQMgrQInlinedReadWriteInfo[qId].qWriteCount = 0;
     ixQMgrQInlinedReadWriteInfo[qId].qEntrySizeInWords = qEntrySizeInWords;
-    ixQMgrQInlinedReadWriteInfo[qId].qSizeInEntries = 
+    ixQMgrQInlinedReadWriteInfo[qId].qSizeInEntries =
 		(UINT32)qSizeInWords / (UINT32)qEntrySizeInWords;
 
     /* Calculate the new freeSramAddress from the size of the queue
@@ -331,7 +331,7 @@ IX_STATUS
 ixQMgrWatermarkSet (IxQMgrQId qId,
 		    IxQMgrWMLevel ne,
 		    IxQMgrWMLevel nf)
-{    
+{
     IxQMgrQStatus qStatusOnEntry;/* The queue status on entry/exit */
     IxQMgrQStatus qStatusOnExit; /* to this function               */
 
@@ -364,7 +364,7 @@ ixQMgrWatermarkSet (IxQMgrQId qId,
 
     /* Get the current queue status */
     ixQMgrAqmIfQueStatRead (qId, &qStatusOnExit);
-  
+
     /* If the status has changed return a warning */
     if (qStatusOnEntry != qStatusOnExit)
     {
@@ -380,7 +380,7 @@ ixQMgrAvailableSramAddressGet (UINT32 *address,
 {
     UINT32 aqmLocalBaseAddress;
 
-    if ((NULL == address)||(NULL == sizeOfFreeRam)) 
+    if ((NULL == address)||(NULL == sizeOfFreeRam))
     {
 	return IX_QMGR_PARAMETER_ERROR;
     }
@@ -394,12 +394,12 @@ ixQMgrAvailableSramAddressGet (UINT32 *address,
     /* Get the virtual SRAM address */
     ixQMgrAqmIfBaseAddressGet (&aqmLocalBaseAddress);
 
-    /* 
-     * Calculate the size in bytes of free sram 
+    /*
+     * Calculate the size in bytes of free sram
      * i.e. current free SRAM virtual pointer from
      *      (base + total size)
      */
-    *sizeOfFreeRam = 
+    *sizeOfFreeRam =
 	(aqmLocalBaseAddress +
 	IX_QMGR_AQM_SRAM_SIZE_IN_BYTES) -
 	freeSramAddress;
@@ -440,7 +440,7 @@ ixQMgrQCfgQStatsGet (IxQMgrQId qId)
 
     stats.qStats[qId].qSizeInWords = cfgQueueInfo[qId].qSizeInWords;
     stats.qStats[qId].qEntrySizeInWords = cfgQueueInfo[qId].qEntrySizeInWords;
-    
+
     if (IX_SUCCESS != ixQMgrQNumEntriesGet (qId, &stats.qStats[qId].numEntries))
     {
         if (IX_QMGR_WARNING != ixQMgrQNumEntriesGet (qId, &stats.qStats[qId].numEntries))
@@ -456,7 +456,7 @@ ixQMgrQCfgQStatsGet (IxQMgrQId qId)
 			   &nf,
 			   &readPtr,
 			   &writePtr);
-        
+
     stats.qStats[qId].baseAddress = baseAddress;
     stats.qStats[qId].ne = ne;
     stats.qStats[qId].nf = nf;
@@ -466,7 +466,7 @@ ixQMgrQCfgQStatsGet (IxQMgrQId qId)
     return &stats;
 }
 
-/* 
+/*
  * Static function definitions
  */
 
@@ -477,11 +477,11 @@ watermarkLevelIsOk (IxQMgrQId qId, IxQMgrWMLevel level)
 
     switch (level)
     {
-	case IX_QMGR_Q_WM_LEVEL0: 
-	case IX_QMGR_Q_WM_LEVEL1: 
-	case IX_QMGR_Q_WM_LEVEL2: 
-	case IX_QMGR_Q_WM_LEVEL4: 
-	case IX_QMGR_Q_WM_LEVEL8: 
+	case IX_QMGR_Q_WM_LEVEL0:
+	case IX_QMGR_Q_WM_LEVEL1:
+	case IX_QMGR_Q_WM_LEVEL2:
+	case IX_QMGR_Q_WM_LEVEL4:
+	case IX_QMGR_Q_WM_LEVEL8:
 	case IX_QMGR_Q_WM_LEVEL16:
 	case IX_QMGR_Q_WM_LEVEL32:
 	case IX_QMGR_Q_WM_LEVEL64:
@@ -507,7 +507,7 @@ qSizeInWordsIsOk (IxQMgrQSizeInWords qSize)
     BOOL status;
 
     switch (qSize)
-    {	
+    {
 	case IX_QMGR_Q_SIZE16:
 	case IX_QMGR_Q_SIZE32:
 	case IX_QMGR_Q_SIZE64:

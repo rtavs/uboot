@@ -8,16 +8,16 @@
  *
  * Design Notes:
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -43,7 +43,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -78,7 +78,7 @@ ixEthMiiPhyScan(BOOL phyPresent[], UINT32 maxPhyCount)
     /*Search for PHYs on the MII*/
     /*Search for existant phys on the MDIO bus*/
 
-    if ((phyPresent == NULL) || 
+    if ((phyPresent == NULL) ||
 	(maxPhyCount > IXP425_ETH_ACC_MII_MAX_ADDR))
     {
 	return IX_FAIL;
@@ -128,12 +128,12 @@ ixEthMiiPhyScan(BOOL phyPresent[], UINT32 maxPhyCount)
 			/* unsupported phy */
                         ixOsalLog (IX_OSAL_LOG_LVL_ERROR,
                                    IX_OSAL_LOG_DEV_STDOUT,
-				    "ixEthMiiPhyScan : unexpected Mii PHY ID %8.8x\n", 
+				    "ixEthMiiPhyScan : unexpected Mii PHY ID %8.8x\n",
 				    ixEthMiiPhyId[i], 2, 3, 4, 5, 6);
 			ixEthMiiPhyId[i] = IX_ETH_MII_UNKNOWN_PHY_ID;
 			phyPresent[i] = TRUE;
 		    }
-		} 
+		}
 	    }
 	}
     }
@@ -175,8 +175,8 @@ ixEthMiiPhyConfig(UINT32 phyAddr,
 		regval |= IX_ETH_MII_CR_FDX;
 	    }
 	} /* end of if-else() */
-	if (ixEthAccMiiWriteRtn(phyAddr, 
-				IX_ETH_MII_CTRL_REG, 
+	if (ixEthAccMiiWriteRtn(phyAddr,
+				IX_ETH_MII_CTRL_REG,
 				regval) == IX_ETH_ACC_SUCCESS)
 	{
 	    return IX_SUCCESS;
@@ -192,19 +192,19 @@ ixEthMiiPhyConfig(UINT32 phyAddr,
 PUBLIC IX_STATUS
 ixEthMiiPhyLoopbackEnable (UINT32 phyAddr)
 {
-  UINT16 regval ;  
+  UINT16 regval ;
 
-  if ((phyAddr < IXP425_ETH_ACC_MII_MAX_ADDR) && 
+  if ((phyAddr < IXP425_ETH_ACC_MII_MAX_ADDR) &&
       (IX_ETH_MII_INVALID_PHY_ID != ixEthMiiPhyId[phyAddr]))
   {
       /* read/write the control register */
       if(ixEthAccMiiReadRtn (phyAddr,
-			     IX_ETH_MII_CTRL_REG, 
-			     &regval) 
+			     IX_ETH_MII_CTRL_REG,
+			     &regval)
 	 == IX_ETH_ACC_SUCCESS)
       {
-	  if(ixEthAccMiiWriteRtn (phyAddr, 
-				  IX_ETH_MII_CTRL_REG, 
+	  if(ixEthAccMiiWriteRtn (phyAddr,
+				  IX_ETH_MII_CTRL_REG,
 				  regval | IX_ETH_MII_CR_LOOPBACK)
 	     == IX_ETH_ACC_SUCCESS)
 	  {
@@ -222,19 +222,19 @@ ixEthMiiPhyLoopbackEnable (UINT32 phyAddr)
 PUBLIC IX_STATUS
 ixEthMiiPhyLoopbackDisable (UINT32 phyAddr)
 {
-  UINT16 regval ;  
+  UINT16 regval ;
 
-  if ((phyAddr < IXP425_ETH_ACC_MII_MAX_ADDR) && 
+  if ((phyAddr < IXP425_ETH_ACC_MII_MAX_ADDR) &&
       (IX_ETH_MII_INVALID_PHY_ID != ixEthMiiPhyId[phyAddr]))
   {
       /* read/write the control register */
       if(ixEthAccMiiReadRtn (phyAddr,
-			     IX_ETH_MII_CTRL_REG, 
-			     &regval) 
+			     IX_ETH_MII_CTRL_REG,
+			     &regval)
 	 == IX_ETH_ACC_SUCCESS)
       {
-	  if(ixEthAccMiiWriteRtn (phyAddr, 
-				  IX_ETH_MII_CTRL_REG, 
+	  if(ixEthAccMiiWriteRtn (phyAddr,
+				  IX_ETH_MII_CTRL_REG,
 				  regval & (~IX_ETH_MII_CR_LOOPBACK))
 	     == IX_ETH_ACC_SUCCESS)
 	  {
@@ -266,10 +266,10 @@ ixEthMiiPhyReset(UINT32 phyAddr)
 	    )
 	{
 	    /* use the control register to reset the phy */
-	    ixEthAccMiiWriteRtn(phyAddr, 
+	    ixEthAccMiiWriteRtn(phyAddr,
 				IX_ETH_MII_CTRL_REG,
 				IX_ETH_MII_CR_RESET);
-	 
+
 	    /* poll until the reset bit is cleared */
 	    timeout = 0;
 	    do
@@ -277,7 +277,7 @@ ixEthMiiPhyReset(UINT32 phyAddr)
 		ixOsalSleep (IX_ETH_MII_RESET_POLL_MS);
 
 		/* read the control register and check for timeout */
-		ixEthAccMiiReadRtn(phyAddr, 
+		ixEthAccMiiReadRtn(phyAddr,
 				   IX_ETH_MII_CTRL_REG,
 				   &regval);
 		if ((regval & IX_ETH_MII_CR_RESET) == 0)
@@ -313,9 +313,9 @@ ixEthMiiPhyReset(UINT32 phyAddr)
 	     */
 	    ixEthAccMiiWriteRtn(phyAddr, IX_ETH_MII_CTRL_REG,
 				IX_ETH_MII_CR_RESET);
-	    
+
 	    ixOsalSleep (IX_ETH_MII_RESET_DELAY_MS);
-	    
+
 	    ixEthAccMiiWriteRtn(phyAddr, IX_ETH_MII_CTRL_REG,
 				IX_ETH_MII_CR_NORM_EN);
 	    return IX_SUCCESS;
@@ -339,8 +339,8 @@ ixEthMiiLinkStatus(UINT32 phyAddr,
     UINT16 ctrlRegval, statRegval, regval, regval4, regval5;
 
     /* check the parameters */
-    if ((linkUp == NULL) || 
-	(speed100 == NULL) || 
+    if ((linkUp == NULL) ||
+	(speed100 == NULL) ||
 	(fullDuplex == NULL) ||
 	(autoneg == NULL))
     {
@@ -363,8 +363,8 @@ ixEthMiiLinkStatus(UINT32 phyAddr,
 	    /* --------------------------------------------------*/
 	    /* Retrieve information from PHY specific register   */
 	    /* --------------------------------------------------*/
-	    if (ixEthAccMiiReadRtn(phyAddr, 
-				   IX_ETH_MII_STAT2_REG, 
+	    if (ixEthAccMiiReadRtn(phyAddr,
+				   IX_ETH_MII_STAT2_REG,
 				   &regval) != IX_ETH_ACC_SUCCESS)
 	    {
 		return IX_FAIL;
@@ -376,25 +376,25 @@ ixEthMiiLinkStatus(UINT32 phyAddr,
 	    return IX_SUCCESS;
 	} /* end of if(ixEthMiiPhyId) */
 	else
-	{    
+	{
 	    /* ----------------------------------------------------*/
 	    /* Retrieve information from status and ctrl registers */
 	    /* ----------------------------------------------------*/
-	    if (ixEthAccMiiReadRtn(phyAddr,  
-				   IX_ETH_MII_CTRL_REG, 
+	    if (ixEthAccMiiReadRtn(phyAddr,
+				   IX_ETH_MII_CTRL_REG,
 				   &ctrlRegval) != IX_ETH_ACC_SUCCESS)
 	    {
 		return IX_FAIL;
 	    }
 	    ixEthAccMiiReadRtn(phyAddr,  IX_ETH_MII_STAT_REG, &statRegval);
-	    
+
 	    *linkUp = ((statRegval & IX_ETH_MII_SR_LINK_STATUS) != 0);
 	    if (*linkUp)
 	    {
 		*autoneg = ((ctrlRegval & IX_ETH_MII_CR_AUTO_EN) != 0) &&
 		    ((statRegval &  IX_ETH_MII_SR_AUTO_SEL) != 0) &&
 		    ((statRegval & IX_ETH_MII_SR_AUTO_NEG) != 0);
-		
+
 		if (*autoneg)
 		{
 		    /* mask the current stat values with the capabilities */
@@ -455,7 +455,7 @@ ixEthMiiPhyShow (UINT32 phyAddr)
     BOOL linkUp, speed100, fullDuplex, autoneg;
     UINT16 cregval;
     UINT16 sregval;
-    
+
 
     ixEthAccMiiReadRtn(phyAddr,  IX_ETH_MII_STAT_REG, &sregval);
     ixEthAccMiiReadRtn(phyAddr,  IX_ETH_MII_CTRL_REG, &cregval);
@@ -494,4 +494,3 @@ ixEthMiiPhyShow (UINT32 phyAddr)
 	   (autoneg ? "Enabled" : "Disabled"));
     return IX_SUCCESS;
 }
-

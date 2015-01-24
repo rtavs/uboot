@@ -9,16 +9,16 @@
  * This file contains the public API of IxAtmdAcc, related to the
  * control functions of the component.
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -44,7 +44,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -304,10 +304,10 @@ typedef void (*IxAtmdAccTxVcDemandClearCallback) (IxAtmLogicalPort port,
 *
 * @param port @ref IxAtmLogicalPort [in] - Specifies the ATM logical port on which the VC is
 *        established
-* @param vpi unsigned int [in] - For AAL0/AAL5 specifies the ATM vpi on which the 
+* @param vpi unsigned int [in] - For AAL0/AAL5 specifies the ATM vpi on which the
 *                 VC is established.
 *                 For OAM specifies the dedicated "OAM Tx channel" VPI.
-* @param vci unsigned int [in] - For AAL0/AAL5 specifies the ATM vci on which the 
+* @param vci unsigned int [in] - For AAL0/AAL5 specifies the ATM vci on which the
 *                 VC is established.
 *                 For OAM specifies the dedicated "OAM Tx channel" VCI.
 * @param connId @ref IxAtmConnId [in] - specifies the IxAtmdAcc connection Id already
@@ -438,7 +438,7 @@ PUBLIC IX_STATUS ixAtmdAccRxDispatch (IxAtmRxQueueId rxQueueId,
 /**
  *
  * @ingroup IxAtmdAccCtrlAPI
- * 
+ *
  * @fn ixAtmdAccRxLevelQuery (IxAtmRxQueueId rxQueueId,
                      unsigned int *numberOfPdusPtr)
  *
@@ -535,7 +535,7 @@ PUBLIC IX_STATUS ixAtmdAccPortTxFreeEntriesQuery (IxAtmLogicalPort port,
 /**
  *
  * @ingroup IxAtmdAccCtrlAPI
- * 
+ *
  * @fn ixAtmdAccPortTxCallbackRegister (IxAtmLogicalPort port,
                        unsigned int numberOfCells,
                        IxAtmdAccPortTxLowCallback callback)
@@ -780,7 +780,7 @@ ixAtmdAccTxDoneDispatch (unsigned int numberOfPdusToProcess,
 /**
  *
  * @ingroup IxAtmdAccCtrlAPI
- * 
+ *
  * @fn ixAtmdAccTxDoneLevelQuery (unsigned int *numberOfPdusPtr)
  *
  * @brief Query the current number of transmit pdus ready for
@@ -845,7 +845,7 @@ ixAtmdAccTxDoneQueueSizeQuery (unsigned int *numberOfPdusPtr);
 /**
  *
  * @ingroup IxAtmdAccCtrlAPI
- * 
+ *
  * @fn ixAtmdAccTxDoneDispatcherRegister (unsigned int numberOfPdus,
    IxAtmdAccTxDoneDispatcher notificationCallback)
  *
@@ -1954,5 +1954,3 @@ PUBLIC BOOL ixAtmdAccPortDisableComplete (IxAtmLogicalPort port);
 /**
  * @} defgroup IxAtmdAccCtrlAPI
  */
-
-

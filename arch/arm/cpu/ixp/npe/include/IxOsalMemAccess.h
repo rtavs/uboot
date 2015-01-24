@@ -1,20 +1,20 @@
-/** 
+/**
  * @file IxOsalMemAccess.h
- * 
+ *
  * @brief Header file for memory access
- * 
+ *
  * @par
  * @version $Revision: 1.0 $
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,7 +27,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -40,7 +40,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -50,7 +50,7 @@
 
 
 /* Global BE switch
- * 
+ *
  *  Should be set only in BE mode and only if the component uses I/O memory.
  */
 
@@ -67,10 +67,10 @@
 #define IX_OSAL_STATIC_MEMORY_MAP
 
 
-/* 
+/*
  * SDRAM coherency mode
  * Must be defined to BE, LE_DATA_COHERENT or LE_ADDRESS_COHERENT.
- * The mode changes depending on OS 
+ * The mode changes depending on OS
  */
 #if defined (IX_OSAL_LINUX_BE) || defined (IX_OSAL_VXWORKS_BE)
 
@@ -102,8 +102,8 @@
  **************************************/
 
 /*
- * Only use customized mapping for LE. 
- * 
+ * Only use customized mapping for LE.
+ *
  */
 #if defined (IX_OSAL_VXWORKS_LE) || defined (IX_OSAL_LINUX_LE) || defined (IX_OSAL_WINCE_LE) || defined (IX_OSAL_EBOOT_LE)
 
@@ -226,7 +226,7 @@
 
 #ifdef __linux
 
-/* Linux - specific cookie reads/writes. 
+/* Linux - specific cookie reads/writes.
   Redefine per OS if dynamic memory maps are used
   and I/O memory is accessed via functions instead of raw pointer access. */
 
@@ -407,27 +407,27 @@ ixOsalDataCoherentShortWriteSwap (volatile UINT16 * sAddr, UINT16 sData)
 
 #if defined (IX_OSAL_BE_MAPPING)
 
-#define IX_OSAL_READ_LONG(wAddr)            IX_OSAL_READ_LONG_BE(wAddr) 
-#define IX_OSAL_READ_SHORT(sAddr)	        IX_OSAL_READ_SHORT_BE(sAddr) 
-#define IX_OSAL_READ_BYTE(bAddr)	        IX_OSAL_READ_BYTE_BE(bAddr) 
+#define IX_OSAL_READ_LONG(wAddr)            IX_OSAL_READ_LONG_BE(wAddr)
+#define IX_OSAL_READ_SHORT(sAddr)	        IX_OSAL_READ_SHORT_BE(sAddr)
+#define IX_OSAL_READ_BYTE(bAddr)	        IX_OSAL_READ_BYTE_BE(bAddr)
 #define IX_OSAL_WRITE_LONG(wAddr, wData)	IX_OSAL_WRITE_LONG_BE(wAddr, wData)
 #define IX_OSAL_WRITE_SHORT(sAddr, sData)	IX_OSAL_WRITE_SHORT_BE(sAddr, sData)
 #define IX_OSAL_WRITE_BYTE(bAddr, bData)	IX_OSAL_WRITE_BYTE_BE(bAddr, bData)
 
 #elif defined (IX_OSAL_LE_AC_MAPPING)
 
-#define IX_OSAL_READ_LONG(wAddr)            IX_OSAL_READ_LONG_LE_AC(wAddr) 
-#define IX_OSAL_READ_SHORT(sAddr)	        IX_OSAL_READ_SHORT_LE_AC(sAddr) 
-#define IX_OSAL_READ_BYTE(bAddr)	        IX_OSAL_READ_BYTE_LE_AC(bAddr) 
+#define IX_OSAL_READ_LONG(wAddr)            IX_OSAL_READ_LONG_LE_AC(wAddr)
+#define IX_OSAL_READ_SHORT(sAddr)	        IX_OSAL_READ_SHORT_LE_AC(sAddr)
+#define IX_OSAL_READ_BYTE(bAddr)	        IX_OSAL_READ_BYTE_LE_AC(bAddr)
 #define IX_OSAL_WRITE_LONG(wAddr, wData)	IX_OSAL_WRITE_LONG_LE_AC(wAddr, wData)
 #define IX_OSAL_WRITE_SHORT(sAddr, sData)	IX_OSAL_WRITE_SHORT_LE_AC(sAddr, sData)
 #define IX_OSAL_WRITE_BYTE(bAddr, bData)	IX_OSAL_WRITE_BYTE_LE_AC(bAddr, bData)
 
 #elif defined (IX_OSAL_LE_DC_MAPPING)
 
-#define IX_OSAL_READ_LONG(wAddr)            IX_OSAL_READ_LONG_LE_DC(wAddr) 
-#define IX_OSAL_READ_SHORT(sAddr)	        IX_OSAL_READ_SHORT_LE_DC(sAddr) 
-#define IX_OSAL_READ_BYTE(bAddr)	        IX_OSAL_READ_BYTE_LE_DC(bAddr) 
+#define IX_OSAL_READ_LONG(wAddr)            IX_OSAL_READ_LONG_LE_DC(wAddr)
+#define IX_OSAL_READ_SHORT(sAddr)	        IX_OSAL_READ_SHORT_LE_DC(sAddr)
+#define IX_OSAL_READ_BYTE(bAddr)	        IX_OSAL_READ_BYTE_LE_DC(bAddr)
 #define IX_OSAL_WRITE_LONG(wAddr, wData)	IX_OSAL_WRITE_LONG_LE_DC(wAddr, wData)
 #define IX_OSAL_WRITE_SHORT(sAddr, sData)	IX_OSAL_WRITE_SHORT_LE_DC(sAddr, sData)
 #define IX_OSAL_WRITE_BYTE(bAddr, bData)	IX_OSAL_WRITE_BYTE_LE_DC(bAddr, bData)

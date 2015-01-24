@@ -2,22 +2,22 @@
  * @file IxEthMii_p.h
  *
  * @author Intel Corporation
- * @date 
+ * @date
  *
  * @brief  MII Header file
  *
  * Design Notes:
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -43,7 +43,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -158,13 +158,13 @@
 
 #define IX_ETH_MII_GO                  BIT(31)
 #define IX_ETH_MII_WRITE               BIT(26)
-#define IX_ETH_MII_TIMEOUT_10TH_SECS       (5)    
-#define IX_ETH_MII_10TH_SEC_IN_MILLIS    (100)              
+#define IX_ETH_MII_TIMEOUT_10TH_SECS       (5)
+#define IX_ETH_MII_10TH_SEC_IN_MILLIS    (100)
 #define IX_ETH_MII_READ_FAIL           BIT(31)
 
-/* When we reset the PHY we delay for 2 seconds to allow the reset to 
+/* When we reset the PHY we delay for 2 seconds to allow the reset to
    complete*/
-#define IX_ETH_MII_RESET_DELAY_MS  (2000)     
+#define IX_ETH_MII_RESET_DELAY_MS  (2000)
 #define IX_ETH_MII_RESET_POLL_MS     (50)
 
 #define IX_ETH_MII_REG_SHL    16
@@ -176,7 +176,7 @@
 #define IX_ETH_MII_LXT973_PHY_ID	0x00137A10
 #define IX_ETH_MII_LXT973A3_PHY_ID	0x00137A11
 #define IX_ETH_MII_KS8995_PHY_ID	0x00221450
-#define IX_ETH_MII_LXT9785_PHY_ID	0x001378FF	
+#define IX_ETH_MII_LXT9785_PHY_ID	0x001378FF
 
 
 #define IX_ETH_MII_INVALID_PHY_ID 0x00000000

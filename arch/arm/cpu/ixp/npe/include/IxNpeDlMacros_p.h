@@ -6,16 +6,16 @@
  *
  * @brief This file contains the macros for the IxNpeDl component.
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,7 +41,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -50,7 +50,7 @@
  * @defgroup IxNpeDlMacros_p IxNpeDlMacros_p
  *
  * @brief Macros for the IxNpeDl component.
- * 
+ *
  * @{
  */
 
@@ -66,7 +66,7 @@
 #include <stdio.h>
 #include "test/IxNpeDlTestReg.h"
 
-#else   
+#else
 #include "IxOsal.h"
 
 #endif
@@ -139,7 +139,7 @@ typedef enum
  * @param unsigned [in] LEVEL - one of IxNpeDlTraceTypes enumerated values
  * @param char* [in] STR - Trace string
  *
- * This macro simply prints the trace string passed, if the level is supported. 
+ * This macro simply prints the trace string passed, if the level is supported.
  * Intended for use with IxNpeDl unit test code.
  *
  * @return none
@@ -188,7 +188,7 @@ typedef enum
  * @param argType [in] ARG1 - Argument to trace
  * @param argType [in] ARG2 - Argument to trace
  *
- * This macro simply prints the trace string passed, if the level is supported. 
+ * This macro simply prints the trace string passed, if the level is supported.
  * Intended for use with IxNpeDl unit test code.
  *
  * @return none
@@ -321,7 +321,7 @@ typedef enum
  * @param char* [in] STR - Trace string
  * @param argType [in] ARG1 - Argument to trace
  *
- * This macro simply prints the trace string passed, if the level is supported. 
+ * This macro simply prints the trace string passed, if the level is supported.
  *
  * @return none
  */
@@ -350,7 +350,7 @@ typedef enum
  * @param argType [in] ARG1 - Argument to trace
  * @param argType [in] ARG2 - Argument to trace
  *
- * This macro simply prints the trace string passed, if the level is supported. 
+ * This macro simply prints the trace string passed, if the level is supported.
  *
  * @return none
  */
@@ -378,7 +378,7 @@ typedef enum
  * @param UINT32 [in] offset - Offset from base memory address
  * @param UINT32 [in] value  - Value to write to register
  *
- * This macro forms the address of the register from base address + offset, and 
+ * This macro forms the address of the register from base address + offset, and
  * dereferences that address to write the contents of the register.
  *
  * @return none
@@ -397,7 +397,7 @@ typedef enum
  * @param UINT32 [in] offset  - Offset from base memory address
  * @param UINT32 *[out] value  - Value read from register
  *
- * This macro forms the address of the register from base address + offset, and 
+ * This macro forms the address of the register from base address + offset, and
  * dereferences that address to read the register contents.
  *
  * @return none

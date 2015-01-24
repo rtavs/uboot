@@ -4,16 +4,16 @@
  * @date 24-MAR-2002
  *
  * @brief This file contains Atm types common to a number of Atm components.
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,7 +26,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -39,7 +39,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -163,14 +163,14 @@ typedef enum
 
 /**
  * @def IX_ATM_MAX_NUM_OAM_TX_VCS
- * @brief Maximum number of active OAM Tx VCs in the system, 
+ * @brief Maximum number of active OAM Tx VCs in the system,
  *        1 OAM VC per port
  */
 #define IX_ATM_MAX_NUM_OAM_TX_VCS IX_UTOPIA_MAX_PORTS
 
 /**
  * @def IX_ATM_MAX_NUM_OAM_RX_VCS
- * @brief Maximum number of active OAM Rx VCs in the system, 
+ * @brief Maximum number of active OAM Rx VCs in the system,
  *        1 OAM VC shared accross all ports
  */
 #define IX_ATM_MAX_NUM_OAM_RX_VCS 1
@@ -218,7 +218,7 @@ typedef enum
 /**
  * @typedef IxAtmCellHeader
  *
- * @brief ATM Cell Header, does not contain 4 byte HEC, added by NPE-A 
+ * @brief ATM Cell Header, does not contain 4 byte HEC, added by NPE-A
  */
 typedef unsigned int IxAtmCellHeader;
 
@@ -405,5 +405,3 @@ typedef struct
 /**
  * @} defgroup IxAtmTypes
  */
-
-

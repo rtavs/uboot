@@ -31,6 +31,11 @@
 #include <search.h>
 #include <errno.h>
 #include <malloc.h>
+#include <version.h>
+#include <timestamp.h>
+#ifdef CONFIG_ENV_IS_IN_AML_NAND
+#include <asm/arch/nand.h>
+#endif
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -129,7 +134,12 @@ uchar default_environment[] = {
 	"\0"
 };
 
-struct hsearch_data env_htab;
+struct hsearch_data env_htab={NULL,0,0};
+
+void env_crc_update (void)
+{
+	env_ptr->crc = crc32(0, env_ptr->data, ENV_SIZE);
+}
 
 static uchar env_get_char_init (int index)
 {
@@ -212,6 +222,11 @@ int env_import(const char *buf, int check)
 		if (crc32(0, ep->data, ENV_SIZE) != crc) {
 			set_default_env("!bad CRC");
 			return 0;
+        }else if(ep->data[0] == 0xff){
+			printf("check env data = 0xff, set default env\n");
+			set_default_env("!check env data is 0xff");
+			saveenv();
+			return 0;
 		}
 	}
 
@@ -229,6 +244,10 @@ int env_import(const char *buf, int check)
 
 void env_relocate (void)
 {
+
+#if defined (CONFIG_VLSI_EMULATOR)
+    set_default_env("!For emulator speed up");
+#else
 #if defined(CONFIG_NEEDS_MANUAL_RELOC)
 	extern void env_reloc(void);
 
@@ -244,6 +263,8 @@ void env_relocate (void)
 	} else {
 		env_relocate_spec ();
 	}
+#endif //#if !defined (CONFIG_VLSI_EMULATOR)
+
 }
 
 #ifdef CONFIG_AUTO_COMPLETE

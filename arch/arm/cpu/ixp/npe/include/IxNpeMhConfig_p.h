@@ -6,16 +6,16 @@
  *
  * @brief This file contains the private API for the Configuration module.
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,7 +41,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -50,7 +50,7 @@
  * @defgroup IxNpeMhConfig_p IxNpeMhConfig_p
  *
  * @brief The private API for the Configuration module.
- * 
+ *
  * @{
  */
 
@@ -67,13 +67,13 @@
  */
 /* enable function inlining for performances */
 #ifdef IXNPEMHSOLICITEDCBMGR_C
-/* Non-inline functions will be defined in this translation unit. 
+/* Non-inline functions will be defined in this translation unit.
 	 Reason is that in GNU Compiler, if the Optimization is turn off, all extern inline
 	 functions will not be compiled.
 */
 #		ifndef __wince
 #			ifndef IXNPEMHCONFIG_INLINE
-#				define IXNPEMHCONFIG_INLINE 
+#				define IXNPEMHCONFIG_INLINE
 #			endif
 #		else
 #			ifndef IXNPEMHCONFIG_INLINE
@@ -90,7 +90,7 @@
 /*
  * Typedefs and #defines, etc.
  */
- 
+
 typedef void (*IxNpeMhConfigIsr) (int); /**< ISR function pointer */
 
 /**
@@ -397,10 +397,10 @@ IXNPEMHCONFIG_INLINE BOOL ixNpeMhConfigOutFifoIsFull (
            IxNpeMhMessage message)
  *
  * @brief This function writes a message to a NPE's inFIFO.  The caller
- * must first check that the NPE's inFifo is not full. After writing the first 
+ * must first check that the NPE's inFifo is not full. After writing the first
  * word of the message, this function will keep polling NPE's inFIFO is not
- * full to write the second word. If inFIFO is not available after maximum 
- * retries (IX_NPE_MH_MAX_NUM_OF_RETRIES), this function will return TIMEOUT 
+ * full to write the second word. If inFIFO is not available after maximum
+ * retries (IX_NPE_MH_MAX_NUM_OF_RETRIES), this function will return TIMEOUT
  * status to indicate NPE hang / halt.
  *
  * @param IxNpeMhNpeId npeId (in) - The ID of the NPE for which the inFIFO
@@ -420,10 +420,10 @@ IX_STATUS ixNpeMhConfigInFifoWrite (
            IxNpeMhMessage *message)
  *
  * @brief This function reads a message from a NPE's outFIFO.  The caller
- * must first check that the NPE's outFifo is not empty. After reading the first 
+ * must first check that the NPE's outFifo is not empty. After reading the first
  * word of the message, this function will keep polling NPE's outFIFO is not
- * empty to read the second word. If outFIFO is empty after maximum 
- * retries (IX_NPE_MH_MAX_NUM_OF_RETRIES), this function will return TIMEOUT 
+ * empty to read the second word. If outFIFO is empty after maximum
+ * retries (IX_NPE_MH_MAX_NUM_OF_RETRIES), this function will return TIMEOUT
  * status to indicate NPE hang / halt.
  *
  * @param IxNpeMhNpeId npeId (in) - The ID of the NPE for which the outFIFO
@@ -472,7 +472,7 @@ void ixNpeMhConfigShowReset (
 /*
  * Inline functions
  */
- 
+
 /*
  * This inline function checks if a NPE's inFIFO is empty.
  */

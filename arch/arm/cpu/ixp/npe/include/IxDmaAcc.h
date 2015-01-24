@@ -1,20 +1,20 @@
 /**
  * @file IxDmaAcc.h
  *
- * @date	15 October 2002 
+ * @date	15 October 2002
  *
  * @brief   API of the IXP400 DMA Access Driver Component (IxDma)
  *
  *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,7 +27,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -40,7 +40,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -60,7 +60,7 @@
  * @{
  */
 
-/** 
+/**
  * @ingroup IxDmaTypes
  * @enum IxDmaReturnStatus
  * @brief Dma return status definitions
@@ -76,7 +76,7 @@ typedef enum
     IX_DMA_REQUEST_FIFO_FULL  /**< DMA request queue is full */
 } IxDmaReturnStatus;
 
-/** 
+/**
  * @ingroup IxDmaTypes
  * @enum IxDmaTransferMode
  * @brief Dma transfer mode definitions
@@ -91,7 +91,7 @@ typedef enum
     IX_DMA_TRANSFER_MODE_INVALID /**< Invalid transfer mode */
 } IxDmaTransferMode;
 
-/** 
+/**
  * @ingroup IxDmaTypes
  * @enum IxDmaAddressingMode
  * @brief Dma addressing mode definitions
@@ -106,7 +106,7 @@ typedef enum
     IX_DMA_ADDRESSING_MODE_INVALID /**< Invalid Addressing Mode */
 } IxDmaAddressingMode;
 
-/** 
+/**
  * @ingroup IxDmaTypes
  * @enum IxDmaTransferWidth
  * @brief Dma transfer width definitions
@@ -134,7 +134,7 @@ typedef enum
     IX_DMA_TRANSFER_WIDTH_INVALID /**< Invalid transfer width */
 } IxDmaTransferWidth;
 
-/** 
+/**
  * @ingroup IxDmaTypes
  * @enum IxDmaNpeId
  * @brief NpeId numbers to identify NPE A, B or C
@@ -182,9 +182,9 @@ typedef void (*IxDmaAccDmaCompleteCallback) (IxDmaReturnStatus status);
 
 /**
  * @ingroup	IxDmaAcc
- * 
+ *
  * @fn ixDmaAccInit(IxNpeDlNpeId npeId)
- * 
+ *
  * @brief	Initialise the DMA Access component
  * This function will initialise the DMA Access component internals
  * @param npeId @ref IxNpeDlNpeId [in] - NPE to use for Dma Transfer
@@ -197,7 +197,7 @@ ixDmaAccInit(IxNpeDlNpeId npeId);
 
 /**
  * @ingroup	IxDmaAcc
- * 
+ *
  * @fn ixDmaAccDmaTransfer(
     IxDmaAccDmaCompleteCallback callback,
     UINT32 SourceAddr,
@@ -257,4 +257,3 @@ PUBLIC IX_STATUS
 ixDmaAccShow(void);
 
 #endif /* IXDMAACC_H */
-

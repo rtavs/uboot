@@ -1044,6 +1044,3 @@ void ixEthAccStatsShow(IxEthAccPortId portId)
 
     ixEthAccDataPlaneShow();
 }
-
-
-

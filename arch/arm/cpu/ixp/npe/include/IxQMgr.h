@@ -20,16 +20,16 @@
  * including this header file, these funtions are defined as "inline
  * extern".
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -42,7 +42,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -55,7 +55,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -82,8 +82,8 @@
 
 #include "IxOsal.h"
 
-/* 
- * Define QMgr's IoMem macros, in DC mode if in LE 
+/*
+ * Define QMgr's IoMem macros, in DC mode if in LE
  * regular if in BE. (Note: For Linux LSP gold release
  * may need to adjust mode.
  */
@@ -421,7 +421,7 @@
  *
  * @def ixQMgrDispatcherLoopRun
  *
- * @brief  Map old function name ixQMgrDispatcherLoopRun () 
+ * @brief  Map old function name ixQMgrDispatcherLoopRun ()
  *         to @ref ixQMgrDispatcherLoopRunA0 ().
  *
  */
@@ -530,13 +530,13 @@ typedef int IxQMgrQId;
  * Underflow and Overflow status flags. Queues 32-63 have just Nearly Empty and
  * Full status flags.
  * The flags bit positions are outlined below:
- *        
- *        OF - bit-5<br> 
- *        UF - bit-4<br> 
- *         F - bit-3<br> 
- *        NF - bit-2<br> 
+ *
+ *        OF - bit-5<br>
+ *        UF - bit-4<br>
+ *         F - bit-3<br>
+ *        NF - bit-2<br>
  *        NE - bit-1<br>
- *         E - bit-0<br> 
+ *         E - bit-0<br>
  *
  */
 typedef UINT32 IxQMgrQStatus;
@@ -657,14 +657,14 @@ typedef enum
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @enum IxQMgrDispatchGroup
  *
  * @brief QMgr dispatch group select identifiers.
  *
  * This enum defines the groups over which the  dispatcher will process when
  * called. One of the enum values must be used as a input to
- * @a ixQMgrDispatcherLoopRunA0, @a ixQMgrDispatcherLoopRunB0 
+ * @a ixQMgrDispatcherLoopRunA0, @a ixQMgrDispatcherLoopRunB0
  * or @a ixQMgrDispatcherLoopRunB0LLP.
  *
  */
@@ -676,7 +676,7 @@ typedef enum
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @enum IxQMgrPriority
  *
  * @brief Dispatcher priority levels.
@@ -700,9 +700,9 @@ typedef enum
  *
  * @brief Callback types as used with livelock prevention
  *
- * This enum defines the different callback types. 
+ * This enum defines the different callback types.
  * These types are only used when Livelock prevention is enabled.
- * The default is IX_QMGR_TYPE_REALTIME_OTHER. 
+ * The default is IX_QMGR_TYPE_REALTIME_OTHER.
  *
  */
 
@@ -717,7 +717,7 @@ typedef enum
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @typedef IxQMgrCallbackId
  *
  * @brief Uniquely identifies a callback function.
@@ -750,8 +750,8 @@ typedef void (*IxQMgrCallback)(IxQMgrQId qId,
  *
  * This defines the interface for QMgr Dispather functions.
  *
- * @param group @ref IxQMgrDispatchGroup [in] - the group of the 
- *                  queue of which the dispatcher will run   
+ * @param group @ref IxQMgrDispatchGroup [in] - the group of the
+ *                  queue of which the dispatcher will run
  */
 typedef void (*IxQMgrDispatcherFuncPtr)(IxQMgrDispatchGroup group);
 
@@ -847,7 +847,7 @@ ixQMgrQShow (IxQMgrQId qId);
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQConfig (char *qName,
 	       IxQMgrQId qId,
 	       IxQMgrQSizeInWords qSizeInWords,
@@ -886,7 +886,7 @@ ixQMgrQConfig (char *qName,
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQSizeInEntriesGet (IxQMgrQId qId,
 			 unsigned *qSizeInEntries)
  *
@@ -909,7 +909,7 @@ ixQMgrQSizeInEntriesGet (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrWatermarkSet (IxQMgrQId qId,
 		    IxQMgrWMLevel ne,
 		    IxQMgrWMLevel nf)
@@ -947,7 +947,7 @@ ixQMgrWatermarkSet (IxQMgrQId qId,
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrAvailableSramAddressGet (UINT32 *address,
 			       unsigned *sizeOfFreeSram)
  *
@@ -985,7 +985,7 @@ ixQMgrAvailableSramAddressGet (UINT32 *address,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQReadWithChecks (IxQMgrQId qId,
                        UINT32 *entry)
  *
@@ -1015,7 +1015,7 @@ ixQMgrQReadWithChecks (IxQMgrQId qId,
 
 
 
-/** 
+/**
  * @brief Internal structure to facilitate inlining functions in IxQMgr.h
  */
 typedef struct
@@ -1046,7 +1046,7 @@ typedef struct
  *
  * @brief This function reads the remaining of the q entry
  *        for queues configured with many words.
- *        (the first word of the entry is already read 
+ *        (the first word of the entry is already read
  *        in the inlined function and the entry pointer already
  *        incremented
  *
@@ -1066,7 +1066,7 @@ ixQMgrQReadMWordsMinus1 (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQRead (IxQMgrQId qId,
 	     UINT32 *entry)
  *
@@ -1097,7 +1097,7 @@ ixQMgrQReadMWordsMinus1 (IxQMgrQId qId,
 PUBLIC IX_STATUS
 ixQMgrQRead (IxQMgrQId qId,
              UINT32 *entryPtr);
-#else 
+#else
 extern IxQMgrQInlinedReadWriteInfo ixQMgrQInlinedReadWriteInfo[];
 extern IX_STATUS ixQMgrQReadMWordsMinus1 (IxQMgrQId qId, UINT32 *entryPtr);
 
@@ -1121,7 +1121,7 @@ ixQMgrQRead (IxQMgrQId qId,
     entry = IX_QMGR_INLINE_READ_LONG(infoPtr->qAccRegAddr);
 
     if (entrySize != IX_QMGR_Q_ENTRY_SIZE1)
-    {	
+    {
 	*entryPtr = entry;
 	/* process the remaining part of the entry */
 	return ixQMgrQReadMWordsMinus1(qId, entryPtr);
@@ -1130,7 +1130,7 @@ ixQMgrQRead (IxQMgrQId qId,
     /* underflow is available for lower queues only */
     if (qId < IX_QMGR_MIN_QUEUPP_QID)
     {
-	/* the counter of queue entries is decremented. In happy 
+	/* the counter of queue entries is decremented. In happy
 	 * day scenario there are many entries in the queue
 	 * and the counter does not reach zero.
 	 */
@@ -1142,7 +1142,7 @@ ixQMgrQRead (IxQMgrQId qId,
 	     */
 	    UINT32 qPtrs; /* queue internal pointers */
 
-	    /* when a queue is empty, the hw guarantees to return 
+	    /* when a queue is empty, the hw guarantees to return
 	     * a null value. If the value is not null, the queue is
 	     * not empty.
 	     */
@@ -1150,12 +1150,12 @@ ixQMgrQRead (IxQMgrQId qId,
 	    {
 		/* get the queue status */
 		UINT32 status = IX_QMGR_INLINE_READ_LONG(infoPtr->qUOStatRegAddr);
-	
+
 		/* check the underflow status */
 		if (status & infoPtr->qUflowStatBitMask)
 		{
-		    /* the queue is empty 
-		    *  clear the underflow status bit if it was set 
+		    /* the queue is empty
+		    *  clear the underflow status bit if it was set
 		    */
 		    IX_QMGR_INLINE_WRITE_LONG(infoPtr->qUOStatRegAddr,
 					 status & ~infoPtr->qUflowStatBitMask);
@@ -1177,8 +1177,8 @@ ixQMgrQRead (IxQMgrQId qId,
 	    qPtrs = IX_QMGR_INLINE_READ_LONG(infoPtr->qConfigRegAddr);
 
 	    /* Mod subtraction of pointers to get number of words in Q. */
-	    qPtrs = (qPtrs - (qPtrs >> 7)) & 0x7f; 
-  
+	    qPtrs = (qPtrs - (qPtrs >> 7)) & 0x7f;
+
 	    if (qPtrs == 0)
 	    {
 		/* no entry in the queue */
@@ -1187,7 +1187,7 @@ ixQMgrQRead (IxQMgrQId qId,
 	    else
 	    {
 		/* convert the number of words inside the queue
-		 * to a number of entries 
+		 * to a number of entries
 		 */
 		infoPtr->qReadCount = qPtrs & (infoPtr->qSizeInEntries - 1);
 	    }
@@ -1202,7 +1202,7 @@ ixQMgrQRead (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQBurstRead (IxQMgrQId qId,
 		  UINT32 numEntries,
 		  UINT32 *entries)
@@ -1237,15 +1237,15 @@ ixQMgrQRead (IxQMgrQId qId,
  * checks for UNDERFLOW after each entry read.
  *
  * @param qId @ref IxQMgrQId [in]   - the queue identifier.
- * @param numEntries unsigned [in] - the number of entries to read. 
+ * @param numEntries unsigned [in] - the number of entries to read.
  *                     This number should be greater than 0
  * @param *entries UINT32 [out] - the word(s) read.
  *
  * @return @li IX_SUCCESS, entries were successfully read.
- * @return @li IX_QMGR_Q_UNDERFLOW, attempt to read from an empty queue 
+ * @return @li IX_QMGR_Q_UNDERFLOW, attempt to read from an empty queue
  *
  */
-#ifdef NO_INLINE_APIS  
+#ifdef NO_INLINE_APIS
 PUBLIC IX_STATUS
 ixQMgrQBurstRead (IxQMgrQId qId,
                   UINT32 numEntries,
@@ -1273,16 +1273,16 @@ ixQMgrQBurstRead (IxQMgrQId qId,
 	volatile UINT32 *qAccRegAddr = infoPtr->qAccRegAddr;
 
 	/* the code is optimized to take care of data dependencies:
-	 * Durig a read, there are a few cycles needed to get the 
+	 * Durig a read, there are a few cycles needed to get the
 	 * read complete. During these cycles, it is poossible to
-	 * do some CPU, e.g. increment pointers and decrement 
+	 * do some CPU, e.g. increment pointers and decrement
 	 * counters.
 	 */
 
 	/* fetch a queue entry */
 	nullCheckEntry = IX_QMGR_INLINE_READ_LONG(infoPtr->qAccRegAddr);
 
-	/* iterate the specified number of queue entries */ 
+	/* iterate the specified number of queue entries */
 	while (--numEntries)
 	{
 	    /* check the result of the previous read */
@@ -1328,8 +1328,8 @@ ixQMgrQBurstRead (IxQMgrQId qId,
 	}
     }
 
-    /* reset the current read count : next access to the read function 
-     * will force a underflow status check 
+    /* reset the current read count : next access to the read function
+     * will force a underflow status check
      */
     infoPtr->qReadCount = 0;
 
@@ -1354,7 +1354,7 @@ ixQMgrQBurstRead (IxQMgrQId qId,
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQPeek (IxQMgrQId qId,
 	     unsigned int entryIndex,
 	     UINT32 *entry)
@@ -1386,7 +1386,7 @@ ixQMgrQPeek (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQWriteWithChecks (IxQMgrQId qId,
                         UINT32 *entry)
  *
@@ -1416,7 +1416,7 @@ ixQMgrQWriteWithChecks (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQWrite (IxQMgrQId qId,
 	      UINT32 *entry)
  *
@@ -1467,7 +1467,7 @@ ixQMgrQWrite (IxQMgrQId qId,
     entrySize = infoPtr->qEntrySizeInWords;
 
     if (entrySize != IX_QMGR_Q_ENTRY_SIZE1)
-    {	
+    {
 	/* process the remaining part of the entry */
 	volatile UINT32 *qAccRegAddr = infoPtr->qAccRegAddr;
 	while (--entrySize)
@@ -1480,20 +1480,20 @@ ixQMgrQWrite (IxQMgrQId qId,
 
     /* overflow is available for lower queues only */
     if (qId < IX_QMGR_MIN_QUEUPP_QID)
-    {   
+    {
 	UINT32 qSize = infoPtr->qSizeInEntries;
 	/* increment the current number of entries in the queue
-	 * and check for overflow 
+	 * and check for overflow
 	 */
 	if (infoPtr->qWriteCount++ == qSize)
 	{
 	    /* the queue may have overflow */
 	    UINT32 qPtrs; /* queue internal pointers */
-  
+
 	    /* get the queue status */
 	    UINT32 status = IX_QMGR_INLINE_READ_LONG(infoPtr->qUOStatRegAddr);
 
-	    /* read the status twice because the status may 
+	    /* read the status twice because the status may
 	     * not be immediately ready after the write operation
 	     */
 	    if ((status & infoPtr->qOflowStatBitMask) ||
@@ -1501,7 +1501,7 @@ ixQMgrQWrite (IxQMgrQId qId,
 		 & infoPtr->qOflowStatBitMask))
 	    {
 		/* the queue is full, clear the overflow status
-		 *  bit if it was set 
+		 *  bit if it was set
 		 */
 		IX_QMGR_INLINE_WRITE_LONG(infoPtr->qUOStatRegAddr,
 				     status & ~infoPtr->qOflowStatBitMask);
@@ -1517,17 +1517,17 @@ ixQMgrQWrite (IxQMgrQId qId,
 	    qPtrs = IX_QMGR_INLINE_READ_LONG(infoPtr->qConfigRegAddr);
 
 	    /* Mod subtraction of pointers to get number of words in Q. */
-	    qPtrs = (qPtrs - (qPtrs >> 7)) & 0x7f; 
+	    qPtrs = (qPtrs - (qPtrs >> 7)) & 0x7f;
 
 	    if (qPtrs == 0)
 	    {
-		/* the queue may be full at the time of the 
-		 * snapshot. Next access will check 
+		/* the queue may be full at the time of the
+		 * snapshot. Next access will check
 		 * the overflow status again.
 		 */
 		infoPtr->qWriteCount = qSize;
 	    }
-	    else 
+	    else
 	    {
 		/* convert the number of words to a number of entries */
 		if (entrySize == IX_QMGR_Q_ENTRY_SIZE1)
@@ -1548,7 +1548,7 @@ ixQMgrQWrite (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQBurstWrite (IxQMgrQId qId,
 		   unsigned numEntries,
 		   UINT32 *entries)
@@ -1652,7 +1652,7 @@ ixQMgrQBurstWrite (IxQMgrQId qId,
 	/* get the queue status */
 	status = IX_QMGR_INLINE_READ_LONG(infoPtr->qUOStatRegAddr);
 
-	/* read the status twice because the status may 
+	/* read the status twice because the status may
 	 * not be ready at the time of the write
 	 */
 	if ((status & infoPtr->qOflowStatBitMask) ||
@@ -1672,7 +1672,7 @@ ixQMgrQBurstWrite (IxQMgrQId qId,
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQPoke (IxQMgrQId qId,
 	     unsigned int entryIndex,
 	     UINT32 *entry)
@@ -1704,7 +1704,7 @@ ixQMgrQPoke (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQNumEntriesGet (IxQMgrQId qId,
 		      unsigned *numEntries)
  *
@@ -1753,7 +1753,7 @@ ixQMgrQStatusGetWithChecks (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrQStatusGet (IxQMgrQId qId,
 		  IxQMgrQStatus *qStatus)
  *
@@ -1780,7 +1780,7 @@ ixQMgrQStatusGetWithChecks (IxQMgrQId qId,
 PUBLIC IX_STATUS
 ixQMgrQStatusGet (IxQMgrQId qId,
 		  IxQMgrQStatus *qStatus);
-#else  
+#else
 extern UINT32 ixQMgrAqmIfQueLowStatRegAddr[];
 extern UINT32 ixQMgrAqmIfQueLowStatBitsOffset[];
 extern UINT32 ixQMgrAqmIfQueLowStatBitsMask;
@@ -1851,7 +1851,7 @@ ixQMgrQStatusGet (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrDispatcherPrioritySet (IxQMgrQId qId,
 			     IxQMgrPriority priority)
  *
@@ -1859,7 +1859,7 @@ ixQMgrQStatusGet (IxQMgrQId qId,
  *
  * This function is called to set the dispatch priority of queue. The effect of
  * this function is to add a priority change request to a queue. This queue is
- * serviced by @a ixQMgrDispatcherLoopRunA0, @a ixQMgrDispatcherLoopRunB0 or 
+ * serviced by @a ixQMgrDispatcherLoopRunA0, @a ixQMgrDispatcherLoopRunB0 or
  * @a ixQMgrDispatcherLoopRunB0LLP.
  *
  * This function is re-entrant. and can be used from an interrupt context
@@ -1878,7 +1878,7 @@ ixQMgrDispatcherPrioritySet (IxQMgrQId qId,
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrNotificationEnable (IxQMgrQId qId,
 			  IxQMgrSourceId sourceId)
  *
@@ -1912,7 +1912,7 @@ ixQMgrNotificationEnable (IxQMgrQId qId,
 
 /**
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrNotificationDisable (IxQMgrQId qId)
  *
  * @brief Disable notifications on a queue.
@@ -1933,7 +1933,7 @@ ixQMgrNotificationDisable (IxQMgrQId qId);
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
  *
  * @brief Run the callback dispatcher.
@@ -1944,7 +1944,7 @@ ixQMgrNotificationDisable (IxQMgrQId qId);
  * serviced depends on the queue priorities set by the client.
  * This function may be called from interrupt or task context.
  * For optimisations that were introduced in IXP42X B0 and supported IXP46X
- * the @a ixQMgrDispatcherLoopRunB0, or @a ixQMgrDispatcherLoopRunB0LLP 
+ * the @a ixQMgrDispatcherLoopRunB0, or @a ixQMgrDispatcherLoopRunB0LLP
  * should be used.
  *
  * This function is not re-entrant.
@@ -1965,14 +1965,14 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group);
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrDispatcherLoopRunB0 (IxQMgrDispatchGroup group)
  *
  * @brief Run the callback dispatcher.
  *
  * The enhanced version of @a ixQMgrDispatcherLoopRunA0 that is optimised for
- * features introduced in IXP42X B0 silicon and supported on IXP46X. 
- * This is the default dispatcher for IXP42X B0 and IXP46X silicon. 
+ * features introduced in IXP42X B0 silicon and supported on IXP46X.
+ * This is the default dispatcher for IXP42X B0 and IXP46X silicon.
  * The function runs the dispatcher for a group of queues.
  * Callbacks are made for interrupts that have occurred on queues within
  * the group that have registered callbacks. The order in which queues are
@@ -1998,32 +1998,32 @@ ixQMgrDispatcherLoopRunB0 (IxQMgrDispatchGroup group);
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group)
  *
  * @brief Run the callback dispatcher.
  *
- * This is a version of the optimised dispatcher for IXP42X B0 and IXP46X, 
- * @a ixQMgrDispatcherLoopRunB0, with added support for livelock prevention. 
- * This dispatcher will only be used for the IXP42X B0 or IXP46X silicon if 
- * feature control indicates that IX_FEATURECTRL_ORIGB0_DISPATCHER is set to   
- * IX_FEATURE_CTRL_SWCONFIG_DISABLED. Otherwise the @a ixQMgrDispatcherLoopRunB0 
- * dispatcher will be used (Default). 
+ * This is a version of the optimised dispatcher for IXP42X B0 and IXP46X,
+ * @a ixQMgrDispatcherLoopRunB0, with added support for livelock prevention.
+ * This dispatcher will only be used for the IXP42X B0 or IXP46X silicon if
+ * feature control indicates that IX_FEATURECTRL_ORIGB0_DISPATCHER is set to
+ * IX_FEATURE_CTRL_SWCONFIG_DISABLED. Otherwise the @a ixQMgrDispatcherLoopRunB0
+ * dispatcher will be used (Default).
  *
  * When this dispatcher notifies for a queue that is type
  * IX_QMGR_TYPE_REALTIME_PERIODIC, notifications for queues that are set
  * as type IX_QMGR_REALTIME_SPORADIC are not processed and disabled.
- * This helps prevent any tasks resulting from the notification of the 
+ * This helps prevent any tasks resulting from the notification of the
  * IX_QMGR_TYPE_REALTIME_PERIODIC type queue to being subject to livelock.
  * The function runs the dispatcher for a group of queues.
  * Callbacks are made for interrupts that have occurred on queues within
  * the group that have registered callbacks. The order in which queues are
- * serviced depends on their type along with the  queue priorities set by the 
+ * serviced depends on their type along with the  queue priorities set by the
  * client. This function may be called from interrupt or task context.
  *
  * This function is not re-entrant.
  *
- * @param group @ref IxQMgrDispatchGroup [in] - the group of queues over which 
+ * @param group @ref IxQMgrDispatchGroup [in] - the group of queues over which
  *                                        the dispatcher will run
  *
  * @return @li void
@@ -2039,7 +2039,7 @@ ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group);
 /**
  *
  * @ingroup IxQMgrAPI
- * 
+ *
  * @fn ixQMgrNotificationCallbackSet (IxQMgrQId qId,
 			       IxQMgrCallback callback,
 			       IxQMgrCallbackId callbackId)
@@ -2077,7 +2077,7 @@ ixQMgrNotificationCallbackSet (IxQMgrQId qId,
  * function, however if live lock prevention is enabled a function pointer to
  * ixQMgrDispatcherLoopRunB0LLP() is given.
  *
- * @param *qDispatchFuncPtr @ref IxQMgrDispatcherFuncPtr [out]  - 
+ * @param *qDispatchFuncPtr @ref IxQMgrDispatcherFuncPtr [out]  -
  *              the function pointer of QMgr Dispatcher
  *
  */
@@ -2091,15 +2091,15 @@ ixQMgrDispatcherLoopGet (IxQMgrDispatcherFuncPtr *qDispatcherFuncPtr);
  * @fn ixQMgrStickyInterruptRegEnable(void)
  *
  * @brief Enable AQM's sticky interrupt register behaviour only available
- *        on B0 Silicon. 
- * 
+ *        on B0 Silicon.
+ *
  * When AQM's sticky interrupt register is enabled, interrupt register bit will
  * only be cleared when a '1' is written to interrupt register bit and the
  * interrupting condition is satisfied, i.e.queue condition does not exist.
- * 
+ *
  * @note This function must be called before any queue is enabled.
  *       Calling this function after queue is enabled will cause
- *       undefined results. 
+ *       undefined results.
  *
  * @return none
  *
@@ -2119,12 +2119,12 @@ ixQMgrStickyInterruptRegEnable(void);
  * This function is only used for live lock prevention.
  * This function allows the callback type of a queue to be set. The default for
  * all queues is IX_QMGR_TYPE_REALTIME_OTHER. Setting the type to
- * IX_QMGR_TYPE_REALTIME_SPORADIC means that this queue will have it's 
- * notifications disabled while there is a task associated with a 
+ * IX_QMGR_TYPE_REALTIME_SPORADIC means that this queue will have it's
+ * notifications disabled while there is a task associated with a
  * queue of type IX_QMGR_TYPE_REALTIME_PERIODIC running. As live lock
  * prevention operates on lower queues, this function should
  * be called for lower queues only.
- * This function is not re-entrant.  
+ * This function is not re-entrant.
  *
  * @param qId @ref IxQMgrQId [in] - the queue identifier
  * @param type @ref IxQMgrType [in] - the type of callback
@@ -2170,9 +2170,9 @@ ixQMgrCallbackTypeGet(IxQMgrQId qId,
  *
  * @brief Indicate that the Periodic task is completed for LLP
  *
- * This function is used as part of live lock prevention. 
- * A periodic task is a task that results from a queue that 
- * is set as type IX_QMGR_TYPE_REALTIME_PERIODIC. This function 
+ * This function is used as part of live lock prevention.
+ * A periodic task is a task that results from a queue that
+ * is set as type IX_QMGR_TYPE_REALTIME_PERIODIC. This function
  * should be called to indicate to the dispatcher that the
  * the periodic task is completed. This ensures that the notifications
  * for queues set as type sporadic queues are re-enabled.
@@ -2206,5 +2206,3 @@ ixQMgrLLPShow(int resetStats);
 /**
  * @} defgroup IxQMgrAPI
  */
-
-

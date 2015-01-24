@@ -2,16 +2,16 @@
  * @file IxEthDBAPI.c
  *
  * @brief Implementation of the public API
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -53,23 +53,23 @@ IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBFilteringStaticEntryProvision(IxEthDBPortId portID, IxEthDBMacAddr *macAddr)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_LEARNING);
 
     return ixEthDBTriggerAddPortUpdate(macAddr, portID, TRUE);
 }
-    
+
 IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBFilteringDynamicEntryProvision(IxEthDBPortId portID, IxEthDBMacAddr *macAddr)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-        
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
 
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_LEARNING);
@@ -90,13 +90,13 @@ IxEthDBStatus ixEthDBFilteringEntryDelete(IxEthDBMacAddr *macAddr)
     {
         return IX_ETH_DB_NO_SUCH_ADDR; /* not found */
     }
-    
+
     ixEthDBReleaseHashNode(searchResult);
-    
+
     /* build a remove event and place it on the event queue */
     return ixEthDBTriggerRemovePortUpdate(macAddr, ((MacDescriptor *) searchResult->data)->portID);
 }
-       
+
 IX_ETH_DB_PUBLIC
 void ixEthDBDatabaseMaintenance()
 {
@@ -135,10 +135,10 @@ void ixEthDBDatabaseMaintenance()
             {
                 IxNpeMhMessage message;
                 IX_STATUS result;
-                
+
                 /* send EDB_GetMACAddressDatabase message */
-                FILL_GETMACADDRESSDATABASE(message, 
-                    0 /* unused */, 
+                FILL_GETMACADDRESSDATABASE(message,
+                    0 /* unused */,
                     IX_OSAL_MMU_VIRT_TO_PHYS(ixEthDBPortInfo[portIndex].updateMethod.npeUpdateZone));
 
                 IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portIndex), message, result);
@@ -157,7 +157,7 @@ void ixEthDBDatabaseMaintenance()
                     ixEthDBPortInfo[portIndex].updateMethod.userControlled = TRUE;
 
                     ixOsalLog(IX_OSAL_LOG_LVL_FATAL,
-                        IX_OSAL_LOG_DEV_STDOUT, 
+                        IX_OSAL_LOG_DEV_STDOUT,
                         "EthDB: (Maintenance) warning, disabling aging and updates for port %d (assumed dead)\n",
                         portIndex, 0, 0, 0, 0, 0);
 
@@ -243,7 +243,7 @@ IxEthDBStatus ixEthDBDatabaseClear(IxEthDBPortId portID, IxEthDBRecordType recor
     }
 
     SET_EMPTY_DEPENDENCY_MAP(triggerPorts);
-    
+
     /* browse database and age entries */
     BUSY_RETRY(ixEthDBInitHashIterator(&dbHashtable, &iterator));
 
@@ -273,7 +273,7 @@ IxEthDBStatus ixEthDBDatabaseClear(IxEthDBPortId portID, IxEthDBRecordType recor
 
     /* update ports which lost records */
     ixEthDBUpdatePortLearningTrees(triggerPorts);
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -284,9 +284,9 @@ IxEthDBStatus ixEthDBFilteringPortSearch(IxEthDBPortId portID, IxEthDBMacAddr *m
     IxEthDBStatus result = IX_ETH_DB_NO_SUCH_ADDR;
 
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
 
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_LEARNING);
@@ -314,7 +314,7 @@ IxEthDBStatus ixEthDBFilteringDatabaseSearch(IxEthDBPortId *portID, IxEthDBMacAd
     HashNode *searchResult;
 
     IX_ETH_DB_CHECK_REFERENCE(portID);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
 
     searchResult = ixEthDBSearch(macAddr, IX_ETH_DB_ALL_FILTERING_RECORDS);
@@ -367,7 +367,7 @@ IxEthDBStatus ixEthDBFilteringPortUpdatingSearch(IxEthDBPortId *portID, IxEthDBM
     MacDescriptor *descriptor;
 
     IX_ETH_DB_CHECK_REFERENCE(portID);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(macAddr);
 
     searchResult = ixEthDBSearch(macAddr, IX_ETH_DB_ALL_FILTERING_RECORDS);
@@ -376,7 +376,7 @@ IxEthDBStatus ixEthDBFilteringPortUpdatingSearch(IxEthDBPortId *portID, IxEthDBM
     {
         return IX_ETH_DB_NO_SUCH_ADDR; /* not found */
     }
-    
+
     descriptor = (MacDescriptor *) searchResult->data;
 
     /* return the port ID */
@@ -401,11 +401,11 @@ IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortDependencyMapSet(IxEthDBPortId portID, IxEthDBPortMap dependencyPortMap)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(dependencyPortMap);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_FILTERING);
 
     /* force bit at offset 255 to 0 (reserved) */
@@ -420,11 +420,11 @@ IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBPortDependencyMapGet(IxEthDBPortId portID, IxEthDBPortMap dependencyPortMap)
 {
     IX_ETH_DB_CHECK_PORT(portID);
-    
+
     IX_ETH_DB_CHECK_SINGLE_NPE(portID);
-    
+
     IX_ETH_DB_CHECK_REFERENCE(dependencyPortMap);
-    
+
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_FILTERING);
 
     COPY_DEPENDENCY_MAP(dependencyPortMap, ixEthDBPortInfo[portID].dependencyPortMap);
@@ -437,7 +437,7 @@ IxEthDBStatus ixEthDBPortUpdateEnableSet(IxEthDBPortId portID, BOOL enableUpdate
 {
     IX_ETH_DB_CHECK_PORT(portID);
 
-    IX_ETH_DB_CHECK_SINGLE_NPE(portID);    
+    IX_ETH_DB_CHECK_SINGLE_NPE(portID);
 
     IX_ETH_DB_CHECK_FEATURE(portID, IX_ETH_DB_FILTERING);
 

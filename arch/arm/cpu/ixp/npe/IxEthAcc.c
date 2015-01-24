@@ -257,5 +257,3 @@ PUBLIC IxEthAccStatus ixEthAccPortInit( IxEthAccPortId portId)
 
     return(ret);
 }
-
-

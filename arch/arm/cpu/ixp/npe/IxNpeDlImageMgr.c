@@ -4,19 +4,19 @@
  * @author Intel Corporation
  * @date 09 January 2002
  *
- * @brief This file contains the implementation of the private API for the 
+ * @brief This file contains the implementation of the private API for the
  *        IXP425 NPE Downloader ImageMgr module
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -149,13 +149,13 @@ static UINT32* getIxNpeMicroCodeImageLibrary(void)
 PRIVATE BOOL
 ixNpeDlImageMgrSignatureCheck (UINT32 *microCodeImageLibrary);
 
-PRIVATE void  
+PRIVATE void
 ixNpeDlImageMgrImageIdFormat (UINT32 rawImageId, IxNpeDlImageId *imageId);
 
 PRIVATE BOOL
-ixNpeDlImageMgrImageIdCompare (IxNpeDlImageId *imageIdA, 
+ixNpeDlImageMgrImageIdCompare (IxNpeDlImageId *imageIdA,
 				 IxNpeDlImageId *imageIdB);
-				 
+
 PRIVATE BOOL
 ixNpeDlImageMgrNpeFunctionIdCompare (IxNpeDlImageId *imageIdA,
 				       IxNpeDlImageId *imageIdB);
@@ -179,7 +179,7 @@ ixNpeDlImageMgrMicrocodeImageLibraryOverride (
 {
     IX_STATUS status = IX_SUCCESS;
 
-    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT, 
+    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlImageMgrMicrocodeImageLibraryOverride\n");
 
     if (ixNpeDlImageMgrSignatureCheck (clientImageLibrary))
@@ -193,7 +193,7 @@ ixNpeDlImageMgrMicrocodeImageLibraryOverride (
 	status = IX_FAIL;
     }
 
-    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT, 
+    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlImageMgrMicrocodeImageLibraryOverride: status = %d\n",
 		     status);
     return status;
@@ -217,7 +217,7 @@ ixNpeDlImageMgrImageListExtract (
     UINT32 imageCount = 0;
     IxNpeDlImageMgrImageLibraryHeader *header;
 
-    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT, 
+    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlImageMgrImageListExtract\n");
 
     header = (IxNpeDlImageMgrImageLibraryHeader *) getIxNpeMicroCodeImageLibrary();
@@ -230,7 +230,7 @@ ixNpeDlImageMgrImageListExtract (
 	{
 	    /*
 	     * if the image list container from calling function has capacity,
-	     * add the image id to the list 
+	     * add the image id to the list
 	     */
 	    if ((imageListPtr != NULL) && (imageCount < *numImages))
 	    {
@@ -239,9 +239,9 @@ ixNpeDlImageMgrImageListExtract (
 		imageListPtr[imageCount] = formattedImageId;
 	    }
 	    /* imageCount reflects no. of image entries in image library header */
-	    imageCount++;  
+	    imageCount++;
 	}
-	
+
 	/*
 	 * if image list container from calling function was too small to
 	 * contain all image ids in the header, set return status to FAIL
@@ -254,7 +254,7 @@ ixNpeDlImageMgrImageListExtract (
 	    ixNpeDlImageMgrStats.imageIdListOverflow++;
 	}
 	/* return number of image ids found in image library header */
-	*numImages = imageCount;  
+	*numImages = imageCount;
     }
     else
     {
@@ -262,8 +262,8 @@ ixNpeDlImageMgrImageListExtract (
 	IX_NPEDL_ERROR_REPORT ("ixNpeDlImageMgrImageListExtract: "
 			       "invalid signature in image\n");
     }
-    
-    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT, 
+
+    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlImageMgrImageListExtract: status = %d\n",
 		     status);
     return status;
@@ -286,7 +286,7 @@ ixNpeDlImageMgrImageLocate (
     UINT32 rawImageId;
     IxNpeDlImageId formattedImageId;
     /* used to index image entries in image library header */
-    UINT32 imageCount = 0;   
+    UINT32 imageCount = 0;
     IX_STATUS status = IX_FAIL;
     IxNpeDlImageMgrImageLibraryHeader *header;
 
@@ -347,18 +347,18 @@ ixNpeDlImageMgrImageLocate (
 IX_STATUS
 ixNpeDlImageMgrLatestImageExtract (IxNpeDlImageId *imageId)
 {
-    UINT32 imageCount = 0; 
+    UINT32 imageCount = 0;
     UINT32 rawImageId;
     IxNpeDlImageId formattedImageId;
     IX_STATUS status = IX_FAIL;
     IxNpeDlImageMgrImageLibraryHeader *header;
-    
-    
+
+
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlImageMgrLatestImageExtract\n");
-		     
+
     header = (IxNpeDlImageMgrImageLibraryHeader *) getIxNpeMicroCodeImageLibrary();
-    
+
     if (ixNpeDlImageMgrSignatureCheck (getIxNpeMicroCodeImageLibrary()))
     {
 	/* for each image entry in the image library header ... */
@@ -367,9 +367,9 @@ ixNpeDlImageMgrLatestImageExtract (IxNpeDlImageId *imageId)
 	{
 	    rawImageId = header->entry[imageCount].image.id;
 	    ixNpeDlImageMgrImageIdFormat (rawImageId, &formattedImageId);
-	    /* 
+	    /*
 	     * if a match for the npe Id and functionality Id of the imageId is
-	     *  found in the image library header... 
+	     *  found in the image library header...
 	     */
             if(ixNpeDlImageMgrNpeFunctionIdCompare(imageId, &formattedImageId))
             {
@@ -434,13 +434,13 @@ ixNpeDlImageMgrSignatureCheck (UINT32 *microCodeImageLibrary)
  */
 PRIVATE void
 ixNpeDlImageMgrImageIdFormat (
-    UINT32 rawImageId, 
+    UINT32 rawImageId,
     IxNpeDlImageId *imageId)
-{  
+{
     imageId->npeId = (rawImageId >>
 				IX_NPEDL_IMAGEID_NPEID_OFFSET) &
 	IX_NPEDL_NPEIMAGE_FIELD_MASK;
-    imageId->functionalityId = (rawImageId >> 
+    imageId->functionalityId = (rawImageId >>
 				  IX_NPEDL_IMAGEID_FUNCTIONID_OFFSET) &
 	IX_NPEDL_NPEIMAGE_FIELD_MASK;
     imageId->major = (rawImageId >>
@@ -547,7 +547,7 @@ ixNpeDlImageMgrImageFind_legacy (
 {
     UINT32 imageOffset;
     /* used to index image entries in image library header */
-    UINT32 imageCount = 0;   
+    UINT32 imageCount = 0;
     IX_STATUS status = IX_FAIL;
     IxNpeDlImageMgrImageLibraryHeader *header;
     BOOL imageFound = FALSE;
@@ -563,11 +563,11 @@ ixNpeDlImageMgrImageFind_legacy (
     {
 	imageLibrary = IxNpeMicroCodeImageLibrary;
     }
-    
+
     if (ixNpeDlImageMgrSignatureCheck (imageLibrary))
     {
 	header = (IxNpeDlImageMgrImageLibraryHeader *) imageLibrary;
-    
+
 	/* for each image entry in the image library header ... */
 	while ((header->entry[imageCount].eohMarker !=
                IX_NPEDL_IMAGEMGR_END_OF_HEADER) && !(imageFound))
@@ -660,7 +660,7 @@ ixNpeDlImageMgrImageFind (
     {
         image = (IxNpeDlImageMgrImageHeader *)(imageLibrary+offset);
         offset += sizeof(IxNpeDlImageMgrImageHeader)/sizeof(UINT32);
-        
+
         if (image->id == imageId)
         {
             *imagePtr = imageLibrary + offset;
@@ -684,4 +684,3 @@ ixNpeDlImageMgrImageFind (
                            "image library format may be invalid or corrupted\n");
     return IX_FAIL;
 }
-

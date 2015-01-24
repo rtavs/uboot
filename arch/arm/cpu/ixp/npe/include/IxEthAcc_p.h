@@ -8,16 +8,16 @@
  *
  * Design Notes:
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -43,7 +43,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -69,7 +69,7 @@
 
 #include "IxEthNpe.h"
 
-/* 
+/*
  * Intra module dependancies
  */
 
@@ -143,7 +143,7 @@ IX_ETH_ACC_PUBLIC IxEthAccStatus ixEthAccRxSchedulingDisciplineSetPriv(IxEthAccS
  *
  */
 typedef struct
-{ 
+{
     UINT32 rxFrameClientCallback;
     UINT32 rxFreeRepOK;
     UINT32 rxFreeRepDelayed;
@@ -167,7 +167,7 @@ typedef struct
  *
  */
 typedef struct
-{   
+{
     UINT32 txQOK;
     UINT32 txQDelayed;
     UINT32 txFromSwQOK;
@@ -234,7 +234,7 @@ typedef struct
 {
   IxQMgrQId higherPriorityQueue[IX_QMGR_MAX_NUM_QUEUES]; /**< higher priority queue list */
   IxEthAccSchedulerDiscipline schDiscipline; /**< Receive Xscale QoS type */
-} IxEthAccInfo; 
+} IxEthAccInfo;
 
 /**
  * @struct  IxEthAccRxDataInfo
@@ -251,7 +251,7 @@ typedef struct
   UINT32  rxMultiBufferCallbackTag;
   BOOL rxMultiBufferCallbackInUse;
   IxEthAccRxDataStats stats; /**< Receive s/w stats */
-} IxEthAccRxDataInfo; 
+} IxEthAccRxDataInfo;
 
 /**
  * @struct  IxEthAccTxDataInfo
@@ -266,7 +266,7 @@ typedef struct
   IxEthAccSchedulerDiscipline schDiscipline; /**< Transmit Xscale QoS */
   IxQMgrQId txQueue; /**< txQueue for this port */
   IxEthAccTxDataStats stats; /**< Transmit s/w stats */
-} IxEthAccTxDataInfo; 
+} IxEthAccTxDataInfo;
 
 
 /**
@@ -280,7 +280,7 @@ typedef struct
     UINT32 npeId; /**< NpeId for this port */
     IxEthAccTxDataInfo ixEthAccTxData; /**< Transmit data control structures */
     IxEthAccRxDataInfo ixEthAccRxData; /**< Recieve data control structures */
-} IxEthAccPortDataInfo; 
+} IxEthAccPortDataInfo;
 
 extern IxEthAccPortDataInfo  ixEthAccPortData[];
 #define IX_ETH_IS_PORT_INITIALIZED(port) (ixEthAccPortData[port].portInitialized)
@@ -288,14 +288,14 @@ extern IxEthAccPortDataInfo  ixEthAccPortData[];
 extern BOOL ixEthAccServiceInit;
 #define IX_ETH_ACC_IS_SERVICE_INITIALIZED() (ixEthAccServiceInit == TRUE )
 
-/* 
+/*
  * Maximum number of frames to consume from the Rx Frame Q.
  */
 
 #define IX_ETH_ACC_MAX_RX_FRAME_CONSUME_PER_CALLBACK (128)
 
 /*
- * Max number of times to load the Rx Free Q from callback.  
+ * Max number of times to load the Rx Free Q from callback.
  */
 #define IX_ETH_ACC_MAX_RX_FREE_BUFFERS_LOAD (256)  /* Set greater than depth of h/w Q + drain time at line rate */
 
@@ -307,7 +307,7 @@ extern BOOL ixEthAccServiceInit;
 
 /*
  *  Max number of times to take buffers from S/w queues and write them to the H/w Tx
- *  queues on receipt of a Tx low threshold callback 
+ *  queues on receipt of a Tx low threshold callback
  */
 
 #define IX_ETH_ACC_MAX_TX_FRAME_TX_CONSUME_PER_CALLBACK (16)
@@ -320,6 +320,3 @@ extern BOOL ixEthAccServiceInit;
 #define IX_ETH_ACC_MEMSET(start,value,size) memset(start,value,size)
 
 #endif /* ndef IxEthAcc_p_H */
-
-
-

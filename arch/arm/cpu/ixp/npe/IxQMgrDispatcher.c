@@ -3,19 +3,19 @@
  *
  * @author Intel Corporation
  * @date    20-Dec-2001
- *    
+ *
  * @brief   This file contains the implementation of the Dispatcher sub component
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,7 +41,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -70,7 +70,7 @@
  */
 #define IX_QMGR_NUM_PRIORITY_LEVELS 3
 
-/* 
+/*
  * This constant is used to set the size of the array of status words
  */
 #define MAX_Q_STATUS_WORDS      4
@@ -100,7 +100,7 @@
 #define IX_QMGR_MIN_UPP_QUE_PRIORITY_TABLE_INDEX (32)
 #define IX_QMGR_MID_UPP_QUE_PRIORITY_TABLE_INDEX (48)
 #define IX_QMGR_MAX_UPP_QUE_PRIORITY_TABLE_INDEX (63)
- 
+
 /*
  * This macro is used to check if a given callback type is valid
  */
@@ -108,8 +108,8 @@
             (((type) >= IX_QMGR_TYPE_REALTIME_OTHER) && \
             ((type) <= IX_QMGR_TYPE_REALTIME_SPORADIC))
 
-/* 
- * define max index in lower queue to use in loops 
+/*
+ * define max index in lower queue to use in loops
  */
 #define IX_QMGR_MAX_LOW_QUE_TABLE_INDEX (31)
 
@@ -120,14 +120,14 @@
 /*
  * Information on a queue needed by the Dispatcher
  */
-typedef struct 
+typedef struct
 {
     IxQMgrCallback callback;       /* Notification callback                  */
     IxQMgrCallbackId callbackId;   /* Notification callback identifier       */
     unsigned dummyCallbackCount;   /* Number of times runs of dummy callback */
     IxQMgrPriority priority;       /* Dispatch priority                      */
     unsigned int statusWordOffset; /* Offset to the status word to check     */
-    UINT32 statusMask;             /* Status mask                            */    
+    UINT32 statusMask;             /* Status mask                            */
     UINT32 statusCheckValue;       /* Status check value                     */
     UINT32 intRegCheckMask;	   /* Interrupt register check mask          */
 } IxQMgrQInfo;
@@ -137,15 +137,15 @@ typedef struct
  * statics.
  */
 
-/* 
+/*
  * Flag to keep record of what dispatcher set in featureCtrl when ixQMgrInit()
  * is called. This is needed because it is possible that a client might
  * change whether the live lock prevention dispatcher is used between
- * calls to ixQMgrInit() and ixQMgrDispatcherLoopGet(). 
+ * calls to ixQMgrInit() and ixQMgrDispatcherLoopGet().
  */
 PRIVATE IX_STATUS ixQMgrOrigB0Dispatcher = IX_FEATURE_CTRL_COMPONENT_ENABLED;
 
-/* 
+/*
  * keep record of Q types - not in IxQMgrQInfo for performance as
  * it is only used with ixQMgrDispatcherLoopRunB0LLP()
  */
@@ -168,7 +168,7 @@ static IxQMgrDispatcherStats dispatcherStats;
 /* Table of queue information */
 static IxQMgrQInfo dispatchQInfo[IX_QMGR_MAX_NUM_QUEUES];
 
-/* Masks use to identify the first queues in the priority tables 
+/* Masks use to identify the first queues in the priority tables
 *  when comparing with the interrupt register
 */
 static unsigned int lowPriorityTableFirstHalfMask;
@@ -182,7 +182,7 @@ static unsigned int uppPriorityTableFirstHalfMask;
  * This function is the default callback for all queues
  */
 PRIVATE void
-dummyCallback (IxQMgrQId qId,	      
+dummyCallback (IxQMgrQId qId,
 	       IxQMgrCallbackId cbId);
 
 PRIVATE void
@@ -197,7 +197,7 @@ ixQMgrDispatcherInit (void)
     int i;
     IxFeatureCtrlProductId productId = 0;
     IxFeatureCtrlDeviceId deviceId = 0;
-    BOOL stickyIntSilicon = TRUE; 
+    BOOL stickyIntSilicon = TRUE;
 
     /* Set default priorities */
     for (i=0; i< IX_QMGR_MAX_NUM_QUEUES; i++)
@@ -208,16 +208,16 @@ ixQMgrDispatcherInit (void)
 	dispatchQInfo[i].priority = IX_QMGR_Q_PRIORITY_2;
 	dispatchQInfo[i].statusWordOffset = 0;
 	dispatchQInfo[i].statusCheckValue = 0;
-	dispatchQInfo[i].statusMask = 0;  
-        /* 
+	dispatchQInfo[i].statusMask = 0;
+        /*
 	 * There are two interrupt registers, 32 bits each. One for the lower
 	 * queues(0-31) and one for the upper queues(32-63). Therefore need to
 	 * mod by 32 i.e the min upper queue identifier.
 	 */
 	dispatchQInfo[i].intRegCheckMask = (1<<(i%(IX_QMGR_MIN_QUEUPP_QID)));
 
-        /* 
-         * Set the Q types - will only be used with livelock 
+        /*
+         * Set the Q types - will only be used with livelock
          */
         ixQMgrQTypes[i] = IX_QMGR_TYPE_REALTIME_OTHER;
 
@@ -239,34 +239,34 @@ ixQMgrDispatcherInit (void)
 
     /* Get the device ID for the underlying silicon */
     deviceId = ixFeatureCtrlDeviceRead();
-    
+
     /* Get the product ID for the underlying silicon */
     productId = ixFeatureCtrlProductIdRead();
 
-    /* 
-     * Check featureCtrl to see if Livelock prevention is required 
+    /*
+     * Check featureCtrl to see if Livelock prevention is required
      */
-    ixQMgrOrigB0Dispatcher = ixFeatureCtrlSwConfigurationCheck( 
+    ixQMgrOrigB0Dispatcher = ixFeatureCtrlSwConfigurationCheck(
                                  IX_FEATURECTRL_ORIGB0_DISPATCHER);
 
     /*
      * Check if the silicon supports the sticky interrupt feature.
-     * IF (IXP42X AND A0) -> No sticky interrupt feature supported 
+     * IF (IXP42X AND A0) -> No sticky interrupt feature supported
      */
-    if ((IX_FEATURE_CTRL_DEVICE_TYPE_IXP42X == 
+    if ((IX_FEATURE_CTRL_DEVICE_TYPE_IXP42X ==
         (IX_FEATURE_CTRL_DEVICE_TYPE_MASK & deviceId)) &&
-        (IX_FEATURE_CTRL_SILICON_TYPE_A0 == 
-        (IX_FEATURE_CTRL_SILICON_STEPPING_MASK & productId))) 
+        (IX_FEATURE_CTRL_SILICON_TYPE_A0 ==
+        (IX_FEATURE_CTRL_SILICON_STEPPING_MASK & productId)))
     {
        stickyIntSilicon = FALSE;
     }
 
     /*
-     * IF user wants livelock prev option AND silicon supports sticky interrupt 
+     * IF user wants livelock prev option AND silicon supports sticky interrupt
      * feature -> enable the sticky interrupt bit
      */
     if ((IX_FEATURE_CTRL_SWCONFIG_DISABLED == ixQMgrOrigB0Dispatcher) &&
-         stickyIntSilicon)  
+         stickyIntSilicon)
     {
         ixQMgrStickyInterruptRegEnable();
     }
@@ -275,21 +275,21 @@ ixQMgrDispatcherInit (void)
 IX_STATUS
 ixQMgrDispatcherPrioritySet (IxQMgrQId qId,
 			     IxQMgrPriority priority)
-{   
+{
     int ixQMgrLockKey;
 
     if (!ixQMgrQIsConfigured(qId))
     {
 	return IX_QMGR_Q_NOT_CONFIGURED;
     }
-    
+
     if (!IX_QMGR_DISPATCHER_PRIORITY_CHECK(priority))
     {
 	return IX_QMGR_Q_INVALID_PRIORITY;
     }
 
     ixQMgrLockKey = ixOsalIrqLock();
-    
+
     /* Change priority */
     dispatchQInfo[qId].priority = priority;
     /* Set flag */
@@ -322,7 +322,7 @@ ixQMgrNotificationCallbackSet (IxQMgrQId qId,
 	dispatchQInfo[qId].dummyCallbackCount = 0;
 	dispatchQInfo[qId].callbackId = 0;
     }
-    else 
+    else
     {
 	dispatchQInfo[qId].callback = callback;
 	dispatchQInfo[qId].callbackId = callbackId;
@@ -332,7 +332,7 @@ ixQMgrNotificationCallbackSet (IxQMgrQId qId,
 }
 
 IX_STATUS
-ixQMgrNotificationEnable (IxQMgrQId qId, 
+ixQMgrNotificationEnable (IxQMgrQId qId,
 			  IxQMgrSourceId srcSel)
 {
     IxQMgrQStatus qStatusOnEntry;/* The queue status on entry/exit */
@@ -370,8 +370,8 @@ ixQMgrNotificationEnable (IxQMgrQId qId,
 
     /* Get the current queue status */
     ixQMgrAqmIfQueStatRead (qId, &qStatusOnEntry);
-  
-    /* 
+
+    /*
      * Enabling interrupts results in Read-Modify-Write
      * so need critical section
      */
@@ -396,16 +396,16 @@ ixQMgrNotificationEnable (IxQMgrQId qId,
     ixQMgrAqmIfQInterruptEnable (qId);
 
     ixOsalIrqUnlock(ixQMgrLockKey);
-    
+
     /* Get the current queue status */
     ixQMgrAqmIfQueStatRead (qId, &qStatusOnExit);
-  
+
     /* If the status has changed return a warning */
     if (qStatusOnEntry != qStatusOnExit)
     {
 	return IX_QMGR_WARNING;
     }
-    
+
     return IX_SUCCESS;
 }
 
@@ -422,8 +422,8 @@ ixQMgrNotificationDisable (IxQMgrQId qId)
 	return IX_QMGR_Q_NOT_CONFIGURED;
     }
 #endif
-  
-    /* 
+
+    /*
      * Enabling interrupts results in Read-Modify-Write
      * so need critical section
      */
@@ -434,17 +434,17 @@ ixQMgrNotificationDisable (IxQMgrQId qId)
     ixQMgrLockKey = ixOsalIrqLock();
 
     ixQMgrAqmIfQInterruptDisable (qId);
-    
+
     ixOsalIrqUnlock(ixQMgrLockKey);
 
-    return IX_SUCCESS;    
+    return IX_SUCCESS;
 }
 
-void 
+void
 ixQMgrStickyInterruptRegEnable(void)
 {
- /* Use Aqm If function to set Interrupt Register0 Bit-3 */ 
- ixQMgrAqmIfIntSrcSelReg0Bit3Set ();   
+ /* Use Aqm If function to set Interrupt Register0 Bit-3 */
+ ixQMgrAqmIfIntSrcSelReg0Bit3Set ();
 }
 
 #if !defined __XSCALE__ || defined __linux
@@ -460,8 +460,8 @@ ixQMgrStickyInterruptRegEnable(void)
  * 0x00000001   31
  * 0x00000000   32
  *
- * The C version of this function is used as a replacement 
- * for system not providing the equivalent of the CLZ 
+ * The C version of this function is used as a replacement
+ * for system not providing the equivalent of the CLZ
  * assembly language instruction.
  *
  * Note that this version is big-endian
@@ -490,7 +490,7 @@ ixQMgrDispatcherLoopGet (IxQMgrDispatcherFuncPtr *qDispatcherFuncPtr)
 {
   IxFeatureCtrlProductId productId = 0;
   IxFeatureCtrlDeviceId deviceId = 0;
-  
+
   /* Get the device ID for the underlying silicon */
   deviceId = ixFeatureCtrlDeviceRead();
 
@@ -500,20 +500,20 @@ ixQMgrDispatcherLoopGet (IxQMgrDispatcherFuncPtr *qDispatcherFuncPtr)
   /* IF (IXP42X AND A0 silicon) -> use ixQMgrDispatcherLoopRunA0 */
   if ((IX_FEATURE_CTRL_DEVICE_TYPE_IXP42X ==
       (IX_FEATURE_CTRL_DEVICE_TYPE_MASK & deviceId)) &&
-      (IX_FEATURE_CTRL_SILICON_TYPE_A0 ==  
-      (IX_FEATURE_CTRL_SILICON_STEPPING_MASK & productId)))  
+      (IX_FEATURE_CTRL_SILICON_TYPE_A0 ==
+      (IX_FEATURE_CTRL_SILICON_STEPPING_MASK & productId)))
   {
     /*For IXP42X A0 silicon */
     *qDispatcherFuncPtr = &ixQMgrDispatcherLoopRunA0 ;
-  } 
-  else /*For IXP42X B0 or IXP46X silicon*/ 
-  { 
+  }
+  else /*For IXP42X B0 or IXP46X silicon*/
+  {
     if (IX_FEATURE_CTRL_SWCONFIG_ENABLED == ixQMgrOrigB0Dispatcher)
     {
         /* Default for IXP42X B0 and IXP46X silicon */
         *qDispatcherFuncPtr = &ixQMgrDispatcherLoopRunB0;
     }
-    else 
+    else
     {
         /* FeatureCtrl indicated that livelock dispatcher be used */
         *qDispatcherFuncPtr = &ixQMgrDispatcherLoopRunB0LLP;
@@ -537,7 +537,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
     int endIndex;          /* Index of last queue to process */
 
 #ifndef NDEBUG
-    IX_OSAL_ASSERT((group == IX_QMGR_QUEUPP_GROUP) || 
+    IX_OSAL_ASSERT((group == IX_QMGR_QUEUPP_GROUP) ||
 	      (group == IX_QMGR_QUELOW_GROUP));
 #endif
 
@@ -551,7 +551,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
     * based on the fact that the interrupt register value contains at
     * least one bit set
     */
-    if (intRegVal == 0) 
+    if (intRegVal == 0)
     {
 #ifndef NDEBUG
 	/* Update statistics */
@@ -566,20 +566,20 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 
 	return;
     }
-   
+
     /* Write it back to clear the interrupt */
     ixQMgrAqmIfQInterruptRegWrite (group, intRegVal);
 
     /* Read Q status registers after interrupt status read/write */
     ixQMgrAqmIfQStatusRegsRead (group, qStatusWordsAfterWrite);
- 
+
     /* get the first queue Id from the interrupt register value */
     qIndex = (BITS_PER_WORD - 1) - ixQMgrCountLeadingZeros(intRegVal);
 
-    /* check if any change occured during hw register modifications */ 
+    /* check if any change occured during hw register modifications */
     if (IX_QMGR_QUELOW_GROUP == group)
     {
-	statusChangeFlag = 
+	statusChangeFlag =
 	    (qStatusWordsB4Write[0] != qStatusWordsAfterWrite[0]) ||
 	    (qStatusWordsB4Write[1] != qStatusWordsAfterWrite[1]) ||
 	    (qStatusWordsB4Write[2] != qStatusWordsAfterWrite[2]) ||
@@ -587,7 +587,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
     }
     else
     {
-	statusChangeFlag = 
+	statusChangeFlag =
 	    (qStatusWordsB4Write[0] != qStatusWordsAfterWrite[0]);
 	/* Set the queue range based on the queue group to proccess */
 	qIndex += IX_QMGR_MIN_QUEUPP_QID;
@@ -595,25 +595,25 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 
     if (statusChangeFlag == FALSE)
     {
-	/* check if the interrupt register contains 
+	/* check if the interrupt register contains
 	 * only 1 bit set (happy day scenario)
 	 */
 	currDispatchQInfo = &dispatchQInfo[qIndex];
 	if (intRegVal == currDispatchQInfo->intRegCheckMask)
 	{
 	    /* only 1 queue event triggered a notification *
-	     * Call the callback function for this queue 
+	     * Call the callback function for this queue
 	     */
 	    currDispatchQInfo->callback (qIndex,
-					 currDispatchQInfo->callbackId);  
+					 currDispatchQInfo->callbackId);
 #ifndef NDEBUG
 	    /* Update statistics */
 	    dispatcherStats.queueStats[qIndex].callbackCnt++;
 #endif
 	}
-	else 
+	else
 	{
-	    /* the event is triggered by more than 1 queue, 
+	    /* the event is triggered by more than 1 queue,
 	     * the queue search will be starting from the beginning
 	     * or the middle of the priority table
 	     *
@@ -635,7 +635,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 		    priorityTableIndex = IX_QMGR_MID_LOW_QUE_PRIORITY_TABLE_INDEX;
 		}
 	    }
-	    else 
+	    else
 	    {
 		/* check if any bit related to queues in the first
 		 * half of the priority table is set
@@ -649,8 +649,8 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 		    priorityTableIndex = IX_QMGR_MID_UPP_QUE_PRIORITY_TABLE_INDEX;
 		}
 	    }
-	    
-	    /* iterate following the priority table until all the bits 
+
+	    /* iterate following the priority table until all the bits
 	     * of the interrupt register are cleared.
 	     */
 	    do
@@ -658,7 +658,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 		qIndex = priorityTable[priorityTableIndex++];
 		currDispatchQInfo = &dispatchQInfo[qIndex];
 		intRegCheckMask = currDispatchQInfo->intRegCheckMask;
-		
+
 		/* If this queue caused this interrupt to be raised */
 		if (intRegVal & intRegCheckMask)
 		{
@@ -669,7 +669,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 		    /* Update statistics */
 		    dispatcherStats.queueStats[qIndex].callbackCnt++;
 #endif
-		    
+
 		    /* Clear the interrupt register bit */
 		    intRegVal &= ~intRegCheckMask;
 		}
@@ -706,7 +706,7 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 
 	/* If this queue caused this interrupt to be raised */
 	if (intRegVal & intRegCheckMask)
-	{  
+	{
 	    /* Call the callback function for this queue */
 	    currDispatchQInfo->callback (qIndex,
 					 currDispatchQInfo->callbackId);
@@ -714,10 +714,10 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 	    /* Update statistics */
 	    dispatcherStats.queueStats[qIndex].callbackCnt++;
 #endif
-	    
+
 	} /* if (intRegVal .. */
 
-	/* 
+	/*
 	 * If interrupt bit is set in intRegValAfterWrite don't
 	 * proceed as this will be caught in next interrupt
 	 */
@@ -731,8 +731,8 @@ ixQMgrDispatcherLoopRunA0 (IxQMgrDispatchGroup group)
 					currDispatchQInfo->statusMask))
 	    {
 		/* Call the callback function for this queue */
-		currDispatchQInfo->callback (qIndex, 
-					     dispatchQInfo[qIndex].callbackId);                 
+		currDispatchQInfo->callback (qIndex,
+					     dispatchQInfo[qIndex].callbackId);
 #ifndef NDEBUG
 		/* Update statistics */
 		dispatcherStats.queueStats[qIndex].callbackCnt++;
@@ -771,7 +771,7 @@ ixQMgrDispatcherLoopRunB0 (IxQMgrDispatchGroup group)
 #ifndef NDEBUG
     IX_OSAL_ASSERT((group == IX_QMGR_QUEUPP_GROUP) ||
               (group == IX_QMGR_QUELOW_GROUP));
-    IX_OSAL_ASSERT((group == IX_QMGR_QUEUPP_GROUP) || 
+    IX_OSAL_ASSERT((group == IX_QMGR_QUEUPP_GROUP) ||
 	      (group == IX_QMGR_QUELOW_GROUP));
 #endif
 
@@ -916,8 +916,8 @@ ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group)
     /* Read the interrupt register */
     ixQMgrAqmIfQInterruptRegRead (group, &intRegVal);
 
-    /* 
-     * mask any interrupts that are not enabled 
+    /*
+     * mask any interrupts that are not enabled
      */
     ixQMgrAqmIfQInterruptEnableRegRead (group, &intEnableRegVal);
     intRegVal &= intEnableRegVal;
@@ -928,7 +928,7 @@ ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group)
         if (IX_QMGR_QUELOW_GROUP == group)
         {
             /*
-             * As the sticky bit is set, the interrupt register will 
+             * As the sticky bit is set, the interrupt register will
              * not clear if write back at this point because the condition
              * has not been cleared. Take a copy and write back later after
              * the condition has been cleared
@@ -961,14 +961,14 @@ ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group)
         if (intRegVal == currDispatchQInfo->intRegCheckMask)
         {
 
-            /* 
+            /*
              * check if Q type periodic -  only lower queues can
-             * have there type set to periodic 
+             * have there type set to periodic
              */
             if (IX_QMGR_TYPE_REALTIME_PERIODIC == ixQMgrQTypes[qIndex])
             {
-                /* 
-                 * Disable the notifications on any sporadics 
+                /*
+                 * Disable the notifications on any sporadics
                  */
                 for (i=0; i <= IX_QMGR_MAX_LOW_QUE_TABLE_INDEX; i++)
                 {
@@ -1045,24 +1045,24 @@ ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group)
                 /* If this queue caused this interrupt to be raised */
                 if (intRegVal & intRegCheckMask)
                 {
-                    /* 
+                    /*
                      * check if Q type periodic - only lower queues can
                      * have there type set to periodic. There can only be one
                      * periodic queue, so the sporadics are only disabled once.
                      */
                     if (IX_QMGR_TYPE_REALTIME_PERIODIC == ixQMgrQTypes[qIndex])
                     {
-                        /* 
-                         * Disable the notifications on any sporadics 
+                        /*
+                         * Disable the notifications on any sporadics
                          */
                         for (i=0; i <= IX_QMGR_MAX_LOW_QUE_TABLE_INDEX; i++)
                         {
-                            if (IX_QMGR_TYPE_REALTIME_SPORADIC == 
+                            if (IX_QMGR_TYPE_REALTIME_SPORADIC ==
                                     ixQMgrQTypes[i])
                             {
                                 ixQMgrNotificationDisable(i);
-                                /* 
-                                 * remove from intRegVal as we don't want 
+                                /*
+                                 * remove from intRegVal as we don't want
                                  * to service any sporadics now
                                  */
                                 intRegVal &= ~dispatchQInfo[i].intRegCheckMask;
@@ -1095,9 +1095,9 @@ ixQMgrDispatcherLoopRunB0LLP (IxQMgrDispatchGroup group)
 
     if ((intRegValCopy != 0) && (IX_QMGR_QUELOW_GROUP == group))
     {
-        /* 
+        /*
          * lower groups (therefore sticky) AND at least one enabled interrupt
-         * Write back to clear the interrupt 
+         * Write back to clear the interrupt
          */
         ixQMgrAqmIfQInterruptRegWrite (IX_QMGR_QUELOW_GROUP, intRegValCopy);
     }
@@ -1125,7 +1125,7 @@ ixQMgrDispatcherReBuildPriorityTable (void)
      */
     lowPriorityTableFirstHalfMask = 0;
     uppPriorityTableFirstHalfMask = 0;
-    
+
     /* For each priority level */
     for(priority=0; priority<IX_QMGR_NUM_PRIORITY_LEVELS; priority++)
     {
@@ -1133,11 +1133,11 @@ ixQMgrDispatcherReBuildPriorityTable (void)
 	for(qIndex=0; qIndex<IX_QMGR_MIN_QUEUPP_QID; qIndex++)
 	{
 	    if (dispatchQInfo[qIndex].priority == priority)
-	    { 
+	    {
 		/* build the priority table bitmask which match the
-		 * queues of the first half of the priority table 
+		 * queues of the first half of the priority table
 		 */
-		if (lowQuePriorityTableIndex < IX_QMGR_MID_LOW_QUE_PRIORITY_TABLE_INDEX) 
+		if (lowQuePriorityTableIndex < IX_QMGR_MID_LOW_QUE_PRIORITY_TABLE_INDEX)
 		{
 		    lowPriorityTableFirstHalfMask |= dispatchQInfo[qIndex].intRegCheckMask;
 		}
@@ -1151,9 +1151,9 @@ ixQMgrDispatcherReBuildPriorityTable (void)
 	    if (dispatchQInfo[qIndex].priority == priority)
 	    {
 		/* build the priority table bitmask which match the
-		 * queues of the first half of the priority table 
+		 * queues of the first half of the priority table
 		 */
-		if (uppQuePriorityTableIndex < IX_QMGR_MID_UPP_QUE_PRIORITY_TABLE_INDEX) 
+		if (uppQuePriorityTableIndex < IX_QMGR_MID_UPP_QUE_PRIORITY_TABLE_INDEX)
 		{
 		    uppPriorityTableFirstHalfMask |= dispatchQInfo[qIndex].intRegCheckMask;
 		}
@@ -1215,10 +1215,10 @@ ixQMgrLLPShow (int resetStats)
                 printf ("Periodic");
             }
 
-           
-            ixQMgrAqmIfQInterruptEnableRegRead (IX_QMGR_QUELOW_GROUP, 
+
+            ixQMgrAqmIfQInterruptEnableRegRead (IX_QMGR_QUELOW_GROUP,
                                                     &intEnableRegVal);
-            	
+
 
 	    intEnableRegVal &= dispatchQInfo[i].intRegCheckMask;
             intEnableRegVal = intEnableRegVal >> i;
@@ -1232,7 +1232,7 @@ ixQMgrLLPShow (int resetStats)
             if (resetStats)
             {
                 dispatcherStats.queueStats[i].enableCount =
-                dispatcherStats.queueStats[i].disableCount = 
+                dispatcherStats.queueStats[i].disableCount =
                 dispatcherStats.queueStats[i].callbackCnt = 0;
             }
         }
@@ -1248,25 +1248,25 @@ ixQMgrPeriodicDone (void)
     UINT32 i = 0;
     UINT32 ixQMgrLockKey = 0;
 
-    /* 
+    /*
      * for the lower queues
      */
     for (i=0; i <= IX_QMGR_MAX_LOW_QUE_TABLE_INDEX; i++)
     {
         /*
-         * check for sporadics 
+         * check for sporadics
          */
         if (IX_QMGR_TYPE_REALTIME_SPORADIC == ixQMgrQTypes[i])
         {
-             /* 
-              * enable any sporadics 
+             /*
+              * enable any sporadics
               */
              ixQMgrLockKey = ixOsalIrqLock();
              ixQMgrAqmIfQInterruptEnable(i);
              ixOsalIrqUnlock(ixQMgrLockKey);
 #ifndef NDEBUG
-             /* 
-              * Update statistics 
+             /*
+              * Update statistics
               */
              dispatcherStats.queueStats[i].enableCount++;
              dispatcherStats.queueStats[i].notificationEnabled = TRUE;
@@ -1275,7 +1275,7 @@ ixQMgrPeriodicDone (void)
     }
 }
 IX_STATUS
-ixQMgrCallbackTypeSet (IxQMgrQId qId, 
+ixQMgrCallbackTypeSet (IxQMgrQId qId,
                        IxQMgrType type)
 {
     UINT32 ixQMgrLockKey = 0;
@@ -1304,7 +1304,7 @@ ixQMgrCallbackTypeSet (IxQMgrQId qId,
      */
     if (IX_QMGR_TYPE_REALTIME_SPORADIC == ixQMgrOldType)
     {
-       /* 
+       /*
         * previously Q was a SPORADIC, this means that LLP
         * might have had it disabled. enable it now.
         */
@@ -1313,8 +1313,8 @@ ixQMgrCallbackTypeSet (IxQMgrQId qId,
        ixOsalIrqUnlock(ixQMgrLockKey);
 
 #ifndef NDEBUG
-       /* 
-        * Update statistics 
+       /*
+        * Update statistics
         */
        dispatcherStats.queueStats[qId].enableCount++;
 #endif
@@ -1324,7 +1324,7 @@ ixQMgrCallbackTypeSet (IxQMgrQId qId,
 }
 
 IX_STATUS
-ixQMgrCallbackTypeGet (IxQMgrQId qId, 
+ixQMgrCallbackTypeGet (IxQMgrQId qId,
                        IxQMgrType *type)
 {
 #ifndef NDEBUG

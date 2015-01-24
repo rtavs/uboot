@@ -1,12 +1,12 @@
-/** 
+/**
  * @file IxUART.h
  *
  * @date 12-OCT-01
  *
  * @brief Public header for the Intel IXP400 internal UART, generic driver.
- * 
+ *
  * Design Notes:
- * This driver allows you to perform the following functions: 
+ * This driver allows you to perform the following functions:
  *	Device Initialization,
  *	send/receive characters.
  *
@@ -18,17 +18,17 @@
  *	enable/disable Hardware flow control.
  *
  * Only Polled mode is supported for now.
- *    
- * 
+ *
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -41,7 +41,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -54,7 +54,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -63,7 +63,7 @@
  * @defgroup IxUARTAccAPI IXP400 UART Access (IxUARTAcc) API
  *
  * @brief IXP400 UARTAcc Driver Public API
- * 
+ *
  * @{
  */
 
@@ -82,7 +82,7 @@
  * @def IX_UART_DEF_OPTS
  *
  * @brief The default hardware options to set the UART to -
- * no flow control, 8 bit word, 1 stop bit, no parity 
+ * no flow control, 8 bit word, 1 stop bit, no parity
  *
  * @ingroup DefaultDefines
  */
@@ -354,7 +354,7 @@ typedef enum
 typedef struct
 {
     UINT32  rxCount;
-    UINT32  txCount;	
+    UINT32  txCount;
     UINT32  overrunErr;
     UINT32  parityErr;
     UINT32  framingErr;
@@ -370,7 +370,7 @@ typedef struct
     UINT8 *addr;	/**< device base address */
     ixUARTMode mode;	/**< interrupt, polled or loopback */
     int baudRate;	/**< baud rate */
-    int freq;		/**< UART clock frequency */     
+    int freq;		/**< UART clock frequency */
     int options;	/**< hardware options */
     int fifoSize;	/**< FIFO xmit size */
 
@@ -381,11 +381,11 @@ typedef struct
  * @ingroup IxUARTAccAPI
  *
  * @fn IX_STATUS ixUARTInit(ixUARTDev* pUART)
- * 
+ *
  * @param pUART	@ref ixUARTDev [in] - pointer to UART structure describing our device.
- * 
+ *
  * @brief Initialise the UART. This puts the chip in a quiescent state.
- * 
+ *
  * @pre The base address for the UART must contain a valid value.
  *      Also the baud rate and hardware options must contain sensible values
  *      otherwise the defaults will be used as defined in ixUART.h
@@ -450,7 +450,7 @@ PUBLIC IX_STATUS ixUARTPollInput(ixUARTDev* pUART, char *inChar);
  *
  * @sa IoctlCommandDefines
  * @sa IoctlArgDefines
- ***************************************************************************/    
+ ***************************************************************************/
 PUBLIC IX_STATUS ixUARTIoctl(ixUARTDev* pUART, int cmd, void* arg);
 
 /**

@@ -7,16 +7,16 @@
  * @brief This file contains the implementation of the private API for the
  *        IXP425 NPE Downloader NpeMgr module
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -72,7 +72,7 @@
 
 /*
  * masks used to extract address info from State information context
- * register addresses as read from microcode image 
+ * register addresses as read from microcode image
  */
 #define IX_NPEDL_MASK_STATE_ADDR_CTXT_REG         0x0000000F
 #define IX_NPEDL_MASK_STATE_ADDR_CTXT_NUM         0x000000F0
@@ -133,7 +133,7 @@ typedef struct
     UINT32 size;
     IxNpeDlNpeMgrStateInfoCtxtRegEntry ctxtRegEntry[1];
 } IxNpeDlNpeMgrStateInfoBlock;
- 
+
 /* used to store some useful NPE information for easy access */
 typedef struct
 {
@@ -143,7 +143,7 @@ typedef struct
 } IxNpeDlNpeInfo;
 
 /* used to distinguish instruction and data memory operations */
-typedef enum 
+typedef enum
 {
   IX_NPEDL_MEM_TYPE_INSTRUCTION = 0,
   IX_NPEDL_MEM_TYPE_DATA
@@ -274,19 +274,19 @@ ixNpeDlNpeMgrInit (void)
 
 	/* map the register memory for NPE-A */
 	virtAddr = (UINT32) IX_OSAL_MEM_MAP (IX_NPEDL_NPEBASEADDRESS_NPEA,
-					    IX_OSAL_IXP400_NPEA_MAP_SIZE); 
+					    IX_OSAL_IXP400_NPEA_MAP_SIZE);
 	IX_OSAL_ASSERT(virtAddr);
 	ixNpeDlNpeInfo[IX_NPEDL_NPEID_NPEA].baseAddress = virtAddr;
 
 	/* map the register memory for NPE-B */
 	virtAddr = (UINT32) IX_OSAL_MEM_MAP (IX_NPEDL_NPEBASEADDRESS_NPEB,
-					    IX_OSAL_IXP400_NPEB_MAP_SIZE); 
+					    IX_OSAL_IXP400_NPEB_MAP_SIZE);
 	IX_OSAL_ASSERT(virtAddr);
 	ixNpeDlNpeInfo[IX_NPEDL_NPEID_NPEB].baseAddress = virtAddr;
 
 	/* map the register memory for NPE-C */
 	virtAddr = (UINT32) IX_OSAL_MEM_MAP (IX_NPEDL_NPEBASEADDRESS_NPEC,
-					    IX_OSAL_IXP400_NPEC_MAP_SIZE); 
+					    IX_OSAL_IXP400_NPEC_MAP_SIZE);
 	IX_OSAL_ASSERT(virtAddr);
 	ixNpeDlNpeInfo[IX_NPEDL_NPEID_NPEC].baseAddress = virtAddr;
 
@@ -333,7 +333,7 @@ ixNpeDlNpeMgrImageLoad (
     UINT32 *blockPtr;
     UINT32 mapIndex = 0;
     IX_STATUS status = IX_SUCCESS;
-    
+
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrImageLoad\n");
 
@@ -352,10 +352,10 @@ ixNpeDlNpeMgrImageLoad (
     {
 	/*
 	 * Read Download Map, checking each block type and calling
-	 * appropriate function to perform download 
+	 * appropriate function to perform download
 	 */
 	downloadMap = (IxNpeDlNpeMgrDownloadMap *) imageCodePtr;
-	while ((downloadMap->entry[mapIndex].eodmMarker != 
+	while ((downloadMap->entry[mapIndex].eodmMarker !=
 		IX_NPEDL_END_OF_DOWNLOAD_MAP)
 	       && (status == IX_SUCCESS))
 	{
@@ -366,7 +366,7 @@ ixNpeDlNpeMgrImageLoad (
 	    switch (downloadMap->entry[mapIndex].block.type)
 	    {
 	    case IX_NPEDL_BLOCK_TYPE_INSTRUCTION:
-		status = ixNpeDlNpeMgrMemLoad (npeId, npeBaseAddress, 
+		status = ixNpeDlNpeMgrMemLoad (npeId, npeBaseAddress,
 					     (IxNpeDlNpeMgrCodeBlock *)blockPtr,
 					       verify,
 					       IX_NPEDL_MEM_TYPE_INSTRUCTION);
@@ -391,8 +391,8 @@ ixNpeDlNpeMgrImageLoad (
 	    mapIndex++;
 	}/* loop: for each entry in download map, while status == SUCCESS */
     }/* condition: NPE stopped before attempting download */
-    
-    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT, 
+
+    IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrImageLoad : status = %d\n",
 		     status);
     return status;
@@ -419,7 +419,7 @@ ixNpeDlNpeMgrMemLoad (
 
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrMemLoad\n");
-    
+
     /*
      * select NPE EXCTL reg read/write commands depending on memory
      * type (instruction/data) to be accessed
@@ -465,7 +465,7 @@ ixNpeDlNpeMgrMemLoad (
 		break;   /* abort download */
 	    }
 	    /* increment target (word)address in NPE memory */
-	    npeMemAddress++;   
+	    npeMemAddress++;
 	}
     }/* condition: block size will fit in NPE memory */
 
@@ -497,7 +497,7 @@ ixNpeDlNpeMgrStateInfoLoad (
     BOOL verify)
 {
     UINT32 blockSize;
-    UINT32 ctxtRegAddrInfo; 
+    UINT32 ctxtRegAddrInfo;
     UINT32 ctxtRegVal;
     IxNpeDlCtxtRegNum ctxtReg; /* identifies Context Store reg (0-3) */
     UINT32 ctxtNum;            /* identifies Context number (0-16)   */
@@ -509,7 +509,7 @@ ixNpeDlNpeMgrStateInfoLoad (
 
     /* block size contains number of words of state-info in block */
     blockSize = blockPtr->size;
-    
+
     ixNpeDlNpeMgrDebugInstructionPreExec (npeBaseAddress);
 
     /* for each state-info context register entry in block */
@@ -518,11 +518,11 @@ ixNpeDlNpeMgrStateInfoLoad (
 	/* each state-info entry is 2 words (address, value) in length */
 	ctxtRegAddrInfo = (blockPtr->ctxtRegEntry[i]).addressInfo;
 	ctxtRegVal      = (blockPtr->ctxtRegEntry[i]).value;
-	
+
 	ctxtReg = (ctxtRegAddrInfo & IX_NPEDL_MASK_STATE_ADDR_CTXT_REG);
-	ctxtNum = (ctxtRegAddrInfo & IX_NPEDL_MASK_STATE_ADDR_CTXT_NUM) >> 
+	ctxtNum = (ctxtRegAddrInfo & IX_NPEDL_MASK_STATE_ADDR_CTXT_NUM) >>
 	    IX_NPEDL_OFFSET_STATE_ADDR_CTXT_NUM;
-	
+
 	/* error-check Context Register No. and Context Number values  */
 	/* NOTE that there is no STEVT register for Context 0 */
 	if ((ctxtReg < 0) ||
@@ -535,8 +535,8 @@ ixNpeDlNpeMgrStateInfoLoad (
 	    status = IX_NPEDL_CRITICAL_MICROCODE_ERR;
 	    ixNpeDlNpeMgrStats.criticalMicrocodeErrors++;
 	    break;   /* abort download */
-	}    
-	
+	}
+
 	status = ixNpeDlNpeMgrCtxtRegWrite (npeBaseAddress, ctxtNum, ctxtReg,
 					    ctxtRegVal, verify);
 	if (status != IX_SUCCESS)
@@ -548,7 +548,7 @@ ixNpeDlNpeMgrStateInfoLoad (
 	    break;   /* abort download */
 	}
     }/* loop: for each context reg entry in State Info block */
-    
+
     ixNpeDlNpeMgrDebugInstructionPostExec (npeBaseAddress);
 
     if (status == IX_SUCCESS)
@@ -580,21 +580,21 @@ ixNpeDlNpeMgrNpeReset (
     IX_STATUS status = IX_SUCCESS;
     IxFeatureCtrlReg unitFuseReg;
     UINT32 ixNpeConfigCtrlRegVal;
-    
-    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT, 
+
+    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrNpeReset\n");
-    
+
     /* get base memory address of NPE from npeId */
     npeBaseAddress = ixNpeDlNpeMgrBaseAddressGet (npeId);
 
     /* pre-store the NPE Config Control Register Value */
     IX_NPEDL_REG_READ (npeBaseAddress, IX_NPEDL_REG_OFFSET_CTL, &ixNpeConfigCtrlRegVal);
-    
+
     ixNpeConfigCtrlRegVal |= 0x3F000000;
-    
+
     /* disable the parity interrupt */
     IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_CTL, (ixNpeConfigCtrlRegVal & IX_NPEDL_PARITY_BIT_MASK));
-    
+
     ixNpeDlNpeMgrDebugInstructionPreExec (npeBaseAddress);
 
     /*
@@ -608,7 +608,7 @@ ixNpeDlNpeMgrNpeReset (
 	IX_NPEDL_REG_READ (npeBaseAddress, IX_NPEDL_REG_OFFSET_WFIFO,
 			   &regVal);
     }
-    
+
     while (ixNpeDlNpeMgrBitsSetCheck (npeBaseAddress,
 					  IX_NPEDL_REG_OFFSET_STAT,
 				      IX_NPEDL_MASK_STAT_OFNE))
@@ -617,7 +617,7 @@ ixNpeDlNpeMgrNpeReset (
 	IX_NPEDL_REG_READ (npeBaseAddress, IX_NPEDL_REG_OFFSET_FIFO,
 			   &regVal);
     }
-    
+
     while (ixNpeDlNpeMgrBitsSetCheck (npeBaseAddress,
 				      IX_NPEDL_REG_OFFSET_STAT,
 				      IX_NPEDL_MASK_STAT_IFNE))
@@ -631,11 +631,11 @@ ixNpeDlNpeMgrNpeReset (
 
     if (IX_SUCCESS != status)
     {
-        return status;   
+        return status;
     }
-    
+
     }
-    
+
     /*
      * Reset the mailbox reg
      */
@@ -648,10 +648,10 @@ ixNpeDlNpeMgrNpeReset (
 
     if (IX_SUCCESS != status)
     {
-        return status;   
+        return status;
     }
 
-    /* 
+    /*
      *   Reset the physical registers in the NPE register file:
      *   Note: no need to save/restore REGMAP for Context 0 here
      *   since all Context Store regs are reset in subsequent code
@@ -668,20 +668,20 @@ ixNpeDlNpeMgrNpeReset (
 	    return status;  /* abort reset */
 	}
     }
-    
+
 
     /*
      * Reset the context store:
      */
     for (ctxtNum = IX_NPEDL_CTXT_NUM_MIN;
 	 ctxtNum <= IX_NPEDL_CTXT_NUM_MAX; ctxtNum++)
-    {	
+    {
 	/* set each context's Context Store registers to reset values: */
 	for (ctxtReg = 0; ctxtReg < IX_NPEDL_CTXT_REG_MAX; ctxtReg++)
 	{
 	    /* NOTE that there is no STEVT register for Context 0 */
 	    if (!((ctxtNum == 0) && (ctxtReg == IX_NPEDL_CTXT_REG_STEVT)))
-	    { 
+	    {
 		regVal = ixNpeDlCtxtRegResetValues[ctxtReg];
 		status = ixNpeDlNpeMgrCtxtRegWrite (npeBaseAddress, ctxtNum,
 						    ctxtReg, regVal, TRUE);
@@ -704,11 +704,11 @@ ixNpeDlNpeMgrNpeReset (
 	regVal = ixNpeDlEcsRegResetValues[localIndex].regResetVal;
 	ixNpeDlNpeMgrExecAccRegWrite (npeBaseAddress, regAddr, regVal);
     }
-    
+
     /* clear the profile counter */
-    ixNpeDlNpeMgrCommandIssue (npeBaseAddress, 
+    ixNpeDlNpeMgrCommandIssue (npeBaseAddress,
 			       IX_NPEDL_EXCTL_CMD_CLR_PROFILE_CNT);
-    
+
     /* clear registers EXCT, AP0, AP1, AP2 and AP3 */
     for (regAddr = IX_NPEDL_REG_OFFSET_EXCT;
 	     regAddr <= IX_NPEDL_REG_OFFSET_AP3;
@@ -716,10 +716,10 @@ ixNpeDlNpeMgrNpeReset (
     {
 	IX_NPEDL_REG_WRITE (npeBaseAddress, regAddr, 0);
     }
-    
+
     /* Reset the Watch-count register */
     IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_WC, 0);
-    
+
     /*
      * WR IXA00055043 - Remove IMEM Parity Introduced by NPE Reset Operation
      */
@@ -743,7 +743,7 @@ ixNpeDlNpeMgrNpeReset (
     status = ixNpeDlNpeMgrNpeStop (npeId);
 
     /* restore NPE configuration bus Control Register - Parity Settings  */
-    IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_CTL, 
+    IX_NPEDL_REG_WRITE (npeBaseAddress, IX_NPEDL_REG_OFFSET_CTL,
         (ixNpeConfigCtrlRegVal & IX_NPEDL_CONFIG_CTRL_REG_MASK));
 
     ixNpeDlNpeMgrStats.npeResets++;
@@ -766,7 +766,7 @@ ixNpeDlNpeMgrNpeStart (
     BOOL      npeRunning;
     IX_STATUS status = IX_SUCCESS;
 
-    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT, 
+    IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrNpeStart\n");
 
     /* get base memory address of NPE from npeId */
@@ -793,10 +793,10 @@ ixNpeDlNpeMgrNpeStart (
     ecsRegVal &= ~IX_NPEDL_MASK_ECS_REG_0_ACTIVE;
     ixNpeDlNpeMgrExecAccRegWrite (npeBaseAddress, IX_NPEDL_ECS_DBG_CTXT_REG_0,
 				  ecsRegVal);
-    
+
     /* clear the pipeline */
     ixNpeDlNpeMgrCommandIssue (npeBaseAddress, IX_NPEDL_EXCTL_CMD_NPE_CLR_PIPE);
-    
+
     /* start NPE execution by issuing command through EXCTL register on NPE */
     ixNpeDlNpeMgrCommandIssue (npeBaseAddress, IX_NPEDL_EXCTL_CMD_NPE_START);
 
@@ -818,7 +818,7 @@ ixNpeDlNpeMgrNpeStart (
 	status = IX_FAIL;
     }
 
-    
+
     IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrNpeStart : status = %d\n", status);
     return status;
@@ -834,10 +834,10 @@ ixNpeDlNpeMgrNpeStop (
 {
     UINT32    npeBaseAddress;
     IX_STATUS status = IX_SUCCESS;
-    
+
     IX_NPEDL_TRACE0 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Entering ixNpeDlNpeMgrNpeStop\n");
-    
+
     /* get base memory address of NPE from npeId */
     npeBaseAddress = ixNpeDlNpeMgrBaseAddressGet (npeId);
 
@@ -854,7 +854,7 @@ ixNpeDlNpeMgrNpeStop (
     }
 
     ixNpeDlNpeMgrStats.npeStops++;
-    
+
     IX_NPEDL_TRACE1 (IX_NPEDL_FN_ENTRY_EXIT,
 		     "Exiting ixNpeDlNpeMgrNpeStop : status = %d\n", status);
     return status;

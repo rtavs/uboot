@@ -2,16 +2,16 @@
  * @file IxEthDBDBNPEAdaptor.c
  *
  * @brief Routines that read and write learning/search trees in NPE-specific format
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -57,7 +57,7 @@ UINT32 dumpEltSize;
 IX_ETH_DB_PRIVATE IxEthDBNoteWriteFn ixEthDBNPENodeWrite[IX_ETH_DB_MAX_RECORD_TYPE_INDEX + 1];
 
 #define IX_ETH_DB_MAX_DELTA_ZONES (6) /* at most 6 EP Delta zones, according to NPE FS */
-IX_ETH_DB_PRIVATE UINT32 ixEthDBEPDeltaOffset[IX_ETH_DB_MAX_RECORD_TYPE_INDEX + 1][IX_ETH_DB_MAX_DELTA_ZONES]; 
+IX_ETH_DB_PRIVATE UINT32 ixEthDBEPDeltaOffset[IX_ETH_DB_MAX_RECORD_TYPE_INDEX + 1][IX_ETH_DB_MAX_DELTA_ZONES];
 IX_ETH_DB_PRIVATE UINT32 ixEthDBEPDelta[IX_ETH_DB_MAX_RECORD_TYPE_INDEX + 1][IX_ETH_DB_MAX_DELTA_ZONES];
 
 /**
@@ -167,7 +167,7 @@ void ixEthDBNpeMsgAck(IxNpeMhNpeId npeID, IxNpeMhMessage msg)
     }
 
     portInfo = &ixEthDBPortInfo[portID];
-    
+
     ixOsalMutexUnlock(&portInfo->npeAckLock);
 }
 
@@ -280,7 +280,7 @@ void ixEthDBNPETreeWrite(IxEthDBRecordType type, UINT32 totalSize, void *baseAdd
     UINT32 emptyOffset;
 
     stack = ixOsalCacheDmaMalloc(sizeof (MacTreeNodeStack));
-    
+
     if (stack == NULL)
     {
         ERROR_LOG("DB: (NPEAdaptor) failed to allocate the node stack for learning tree linearization, out of memory?\n");
@@ -341,11 +341,11 @@ void ixEthDBNPETreeWrite(IxEthDBRecordType type, UINT32 totalSize, void *baseAdd
             memset((void *) ((UINT32) baseAddress + RIGHT_CHILD_OFFSET(offset) * ELT_ENTRY_SIZE), 0, ELT_ENTRY_SIZE);
         }
     }
-    
+
     emptyOffset = maxOffset + 1;
 
     /* zero out rest of the tree */
-    IX_ETH_DB_NPE_TRACE("DB: (NPEAdaptor) Emptying tree from offset %d, address 0x%08X, %d bytes\n", 
+    IX_ETH_DB_NPE_TRACE("DB: (NPEAdaptor) Emptying tree from offset %d, address 0x%08X, %d bytes\n",
         emptyOffset, ((UINT32) baseAddress) + emptyOffset * ELT_ENTRY_SIZE, totalSize - (emptyOffset * ELT_ENTRY_SIZE));
 
     if (emptyOffset < MAX_ELT_SIZE - 1)
@@ -361,7 +361,7 @@ void ixEthDBNPETreeWrite(IxEthDBRecordType type, UINT32 totalSize, void *baseAdd
         (UINT32) baseAddress, FULL_ELT_BYTE_SIZE);
 
     IX_ETH_DB_NPE_DUMP_ELT(baseAddress, FULL_ELT_BYTE_SIZE);
-    
+
     /* compute number of 64-byte blocks */
     if (blocks != NULL)
     {
@@ -369,14 +369,14 @@ void ixEthDBNPETreeWrite(IxEthDBRecordType type, UINT32 totalSize, void *baseAdd
 
         IX_ETH_DB_NPE_TRACE("DB: (NPEAdaptor) Wrote %d 64-byte blocks\n", *blocks);
     }
-    
+
     /* compute epDelta - start index for binary search */
     if (epDelta != NULL)
     {
         UINT32 deltaIndex = 0;
 
         *epDelta = 0;
-        
+
         for (; deltaIndex < IX_ETH_DB_MAX_DELTA_ZONES ; deltaIndex ++)
         {
             if (ixEthDBEPDeltaOffset[type][deltaIndex] >= maxOffset)
@@ -533,63 +533,63 @@ IX_ETH_DB_PUBLIC
 UINT32 ixEthDBRecordSerializeMethodsRegister()
 {
     int i;
-    
+
     /* safety - register a blank method for everybody first */
     for ( i = 0 ; i < IX_ETH_DB_MAX_RECORD_TYPE_INDEX + 1 ; i++)
     {
         ixEthDBNPENodeWrite[i] = ixEthDBNullSerialize;
     }
-    
+
     /* register real methods */
     ixEthDBNPENodeWrite[IX_ETH_DB_FILTERING_RECORD]      = ixEthDBNPELearningNodeWrite;
     ixEthDBNPENodeWrite[IX_ETH_DB_FILTERING_VLAN_RECORD] = ixEthDBNPELearningNodeWrite;
     ixEthDBNPENodeWrite[IX_ETH_DB_WIFI_RECORD]           = ixEthDBNPEWiFiNodeWrite;
     ixEthDBNPENodeWrite[IX_ETH_DB_FIREWALL_RECORD]       = ixEthDBNPEFirewallNodeWrite;
     ixEthDBNPENodeWrite[IX_ETH_DB_GATEWAY_RECORD]        = ixEthDBNPEGatewayNodeWrite;
-    
+
     /* EP Delta arrays */
     memset(ixEthDBEPDeltaOffset, 0, sizeof (ixEthDBEPDeltaOffset));
     memset(ixEthDBEPDelta, 0, sizeof (ixEthDBEPDelta));
-    
+
     /* filtering records */
     ixEthDBEPDeltaOffset[IX_ETH_DB_FILTERING_RECORD][0] = 1;
     ixEthDBEPDelta[IX_ETH_DB_FILTERING_RECORD][0]       = 0;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FILTERING_RECORD][1] = 3;
     ixEthDBEPDelta[IX_ETH_DB_FILTERING_RECORD][1]       = 7;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FILTERING_RECORD][2] = 511;
     ixEthDBEPDelta[IX_ETH_DB_FILTERING_RECORD][2]       = 14;
-    
+
     /* wifi records */
     ixEthDBEPDeltaOffset[IX_ETH_DB_WIFI_RECORD][0] = 1;
     ixEthDBEPDelta[IX_ETH_DB_WIFI_RECORD][0]       = 0;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_WIFI_RECORD][1] = 3;
     ixEthDBEPDelta[IX_ETH_DB_WIFI_RECORD][1]       = 7;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_WIFI_RECORD][2] = 511;
     ixEthDBEPDelta[IX_ETH_DB_WIFI_RECORD][2]       = 14;
 
     /* firewall records */
     ixEthDBEPDeltaOffset[IX_ETH_DB_FIREWALL_RECORD][0] = 0;
     ixEthDBEPDelta[IX_ETH_DB_FIREWALL_RECORD][0]       = 0;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FIREWALL_RECORD][1] = 1;
     ixEthDBEPDelta[IX_ETH_DB_FIREWALL_RECORD][1]       = 5;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FIREWALL_RECORD][2] = 3;
     ixEthDBEPDelta[IX_ETH_DB_FIREWALL_RECORD][2]       = 13;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FIREWALL_RECORD][3] = 7;
     ixEthDBEPDelta[IX_ETH_DB_FIREWALL_RECORD][3]       = 21;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FIREWALL_RECORD][4] = 15;
     ixEthDBEPDelta[IX_ETH_DB_FIREWALL_RECORD][4]       = 29;
-    
+
     ixEthDBEPDeltaOffset[IX_ETH_DB_FIREWALL_RECORD][5] = 31;
     ixEthDBEPDelta[IX_ETH_DB_FIREWALL_RECORD][5]       = 37;
-    
+
     return 5; /* 5 methods registered */
 }
 
@@ -633,10 +633,10 @@ void ixEthDBELTShow(IxEthDBPortId portID)
 {
     IxNpeMhMessage message;
     IX_STATUS result;
-    
+
     /* send EDB_GetMACAddressDatabase message */
-    FILL_GETMACADDRESSDATABASE(message, 
-        0 /* reserved */, 
+    FILL_GETMACADDRESSDATABASE(message,
+        0 /* reserved */,
         IX_OSAL_MMU_VIRT_TO_PHYS(ixEthDBPortInfo[portID].updateMethod.npeUpdateZone));
 
     IX_ETHDB_SEND_NPE_MSG(IX_ETH_DB_PORT_ID_TO_NPE(portID), message, result);
@@ -673,7 +673,7 @@ void ixEthDBELTShow(IxEthDBPortId portID)
                 /* search record */
                 node = ixEthDBSearch((IxEthDBMacAddr *) eltNodeAddress, IX_ETH_DB_ALL_RECORD_TYPES);
 
-                printf("%s - port %d - %s ", mac2string((unsigned char *) eltNodeAddress), entryPortID, 
+                printf("%s - port %d - %s ", mac2string((unsigned char *) eltNodeAddress), entryPortID,
                     IX_EDB_NPE_NODE_ACTIVE(eltNodeAddress) ? "active" : "inactive");
 
                 /* safety check, maybe user deleted record right before sync? */
@@ -687,7 +687,7 @@ void ixEthDBELTShow(IxEthDBPortId portID)
                         descriptor->type == IX_ETH_DB_FILTERING_VLAN_RECORD ? "vlan" :
                         descriptor->type == IX_ETH_DB_WIFI_RECORD ? "wifi" : "other (check main DB)");
 
-                    if (descriptor->type == IX_ETH_DB_FILTERING_RECORD) printf("- age %d - %s ", 
+                    if (descriptor->type == IX_ETH_DB_FILTERING_RECORD) printf("- age %d - %s ",
                         descriptor->recordData.filteringData.age,
                         descriptor->recordData.filteringData.staticEntry ? "static" : "dynamic");
 
@@ -710,7 +710,7 @@ void ixEthDBELTShow(IxEthDBPortId portID)
     }
     else
     {
-        ixOsalLog(IX_OSAL_LOG_LVL_FATAL, IX_OSAL_LOG_DEV_STDOUT, 
+        ixOsalLog(IX_OSAL_LOG_LVL_FATAL, IX_OSAL_LOG_DEV_STDOUT,
             "EthDB: (ShowELT) Could not complete action (communication failure)\n",
             portID, 0, 0, 0, 0, 0);
     }

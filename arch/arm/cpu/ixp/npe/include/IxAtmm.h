@@ -5,16 +5,16 @@
  *
  * @brief   Header file for the IXP400 ATM Manager component (IxAtmm)
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -27,7 +27,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -40,7 +40,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -67,62 +67,62 @@
  * #defines and macros used in this file.
  */
 
-/** 
+/**
  * @def IX_ATMM_RET_ALREADY_INITIALIZED
- * 
- * @brief Component has already been initialized 
+ *
+ * @brief Component has already been initialized
  */
 #define IX_ATMM_RET_ALREADY_INITIALIZED 2
 
-/** 
+/**
  * @def IX_ATMM_RET_INVALID_PORT
- * 
+ *
  * @brief Specified port does not exist or is out of range */
 #define IX_ATMM_RET_INVALID_PORT 3
 
-/** 
+/**
  * @def IX_ATMM_RET_INVALID_VC_DESCRIPTOR
- * 
+ *
  * @brief The VC description does not adhere to ATM standards */
 #define IX_ATMM_RET_INVALID_VC_DESCRIPTOR 4
 
-/** 
+/**
  * @def IX_ATMM_RET_VC_CONFLICT
- * 
+ *
  * @brief The VPI/VCI values supplied are either reserved, or they
  *         conflict with a previously registered VC on this port */
 #define IX_ATMM_RET_VC_CONFLICT 5
 
-/** 
+/**
  * @def IX_ATMM_RET_PORT_CAPACITY_IS_FULL
- * 
+ *
  * @brief The virtual connection cannot be established on the port
  *         because the remaining port capacity is not sufficient to
  *         support it */
 #define IX_ATMM_RET_PORT_CAPACITY_IS_FULL 6
 
-/** 
+/**
  * @def IX_ATMM_RET_NO_SUCH_VC
- * 
+ *
  * @brief No registered VC, as described by the supplied VCI/VPI or
  *         VC identifier values, exists on this port */
 #define IX_ATMM_RET_NO_SUCH_VC 7
 
-/** 
+/**
  * @def IX_ATMM_RET_INVALID_VC_ID
- * 
+ *
  * @brief The specified VC identifier is out of range. */
 #define IX_ATMM_RET_INVALID_VC_ID 8
 
-/** 
+/**
  * @def IX_ATMM_RET_INVALID_PARAM_PTR
- * 
+ *
  * @brief A pointer parameter was NULL. */
 #define IX_ATMM_RET_INVALID_PARAM_PTR 9
 
-/** 
- * @def IX_ATMM_UTOPIA_SPHY_ADDR  
- * 
+/**
+ * @def IX_ATMM_UTOPIA_SPHY_ADDR
+ *
  * @brief The phy address when in SPHY mode */
 #define IX_ATMM_UTOPIA_SPHY_ADDR 31
 
@@ -239,7 +239,7 @@ typedef void (*IxAtmmVcChangeCallback) (IxAtmmVcChangeEvent eventType,
  */
 
 
-/** 
+/**
  * @ingroup IxAtmm
  *
  * @fn ixAtmmInit (void)
@@ -258,9 +258,9 @@ typedef void (*IxAtmmVcChangeCallback) (IxAtmmVcChangeEvent eventType,
 PUBLIC IX_STATUS
 ixAtmmInit (void);
 
-/**  
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmUtopiaInit (unsigned numPorts,
 		  IxAtmmPhyMode phyMode,
 		  IxAtmmPortCfg portCfgs[],
@@ -301,7 +301,7 @@ ixAtmmInit (void);
  *
  * @warning
  * This interface may only be called once.
- * Port identifiers are assumed to range from 0 to (numPorts - 1) in all 
+ * Port identifiers are assumed to range from 0 to (numPorts - 1) in all
  * instances.
  * In all subsequent calls to interfaces supplied by IxAtmm, the specified
  * port value is expected to represent the offset in the portCfgs array
@@ -315,9 +315,9 @@ ixAtmmUtopiaInit (unsigned numPorts,
 		  IxAtmmUtopiaLoopbackMode loopbackMode);
 
 
-/**   
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmPortInitialize (IxAtmLogicalPort port,
 		      unsigned txPortRate,
 		      unsigned rxPortRate)
@@ -379,9 +379,9 @@ ixAtmmPortInitialize (IxAtmLogicalPort port,
 		      unsigned txPortRate,
 		      unsigned rxPortRate);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmPortModify (IxAtmLogicalPort port,
 		  unsigned txPortRate,
 		  unsigned rxPortRate)
@@ -416,9 +416,9 @@ ixAtmmPortModify (IxAtmLogicalPort port,
 		  unsigned txPortRate,
 		  unsigned rxPortRate);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmPortQuery (IxAtmLogicalPort port,
 		 unsigned *txPortRate,
 		 unsigned *rxPortRate);
@@ -456,9 +456,9 @@ ixAtmmPortQuery (IxAtmLogicalPort port,
 		 unsigned *txPortRate,
 		 unsigned *rxPortRate);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmPortEnable(IxAtmLogicalPort port)
  *
  * @brief The client call this interface to enable transmit for an ATM
@@ -480,9 +480,9 @@ ixAtmmPortQuery (IxAtmLogicalPort port,
 PUBLIC IX_STATUS
 ixAtmmPortEnable(IxAtmLogicalPort port);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmPortDisable(IxAtmLogicalPort port)
  *
  * @brief The client call this interface to disable transmit for an ATM
@@ -512,9 +512,9 @@ ixAtmmPortEnable(IxAtmLogicalPort port);
 PUBLIC IX_STATUS
 ixAtmmPortDisable(IxAtmLogicalPort port);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmVcRegister (IxAtmLogicalPort port,
 		  IxAtmmVc *vcToAdd,
 		  IxAtmSchedulerVcId *vcId)
@@ -584,9 +584,9 @@ ixAtmmVcRegister (IxAtmLogicalPort port,
 		  IxAtmmVc *vcToAdd,
 		  IxAtmSchedulerVcId *vcId);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmVcDeregister (IxAtmLogicalPort port, IxAtmSchedulerVcId vcId)
  *
  * @brief Function called by a client to deregister a VC from the
@@ -618,9 +618,9 @@ ixAtmmVcRegister (IxAtmLogicalPort port,
 PUBLIC IX_STATUS
 ixAtmmVcDeregister (IxAtmLogicalPort port, IxAtmSchedulerVcId vcId);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmVcQuery (IxAtmLogicalPort port,
 	       unsigned vpi,
 	       unsigned vci,
@@ -673,9 +673,9 @@ ixAtmmVcQuery (IxAtmLogicalPort port,
 	       IxAtmmVc *vcDesc);
 
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmVcIdQuery (IxAtmLogicalPort port, IxAtmSchedulerVcId vcId, IxAtmmVc *vcDesc)
  *
  * @brief This interface supplies information about an active VC on a
@@ -705,9 +705,9 @@ ixAtmmVcQuery (IxAtmLogicalPort port,
 PUBLIC IX_STATUS
 ixAtmmVcIdQuery (IxAtmLogicalPort port, IxAtmSchedulerVcId vcId, IxAtmmVc *vcDesc);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmVcChangeCallbackRegister (IxAtmmVcChangeCallback callback)
  *
  * @brief This interface is invoked to supply a function to IxAtmm
@@ -739,9 +739,9 @@ ixAtmmVcIdQuery (IxAtmLogicalPort port, IxAtmSchedulerVcId vcId, IxAtmmVc *vcDes
 PUBLIC IX_STATUS ixAtmmVcChangeCallbackRegister (IxAtmmVcChangeCallback callback);
 
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmVcChangeCallbackDeregister (IxAtmmVcChangeCallback callback)
  *
  * @brief This interface is invoked to deregister a previously supplied
@@ -759,11 +759,11 @@ PUBLIC IX_STATUS ixAtmmVcChangeCallbackRegister (IxAtmmVcChangeCallback callback
 PUBLIC IX_STATUS
 ixAtmmVcChangeCallbackDeregister (IxAtmmVcChangeCallback callback);
 
-/**    
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmUtopiaStatusShow (void)
- * 
+ *
  *  @brief Display utopia status counters
  *
  * @param "none"
@@ -774,9 +774,9 @@ ixAtmmVcChangeCallbackDeregister (IxAtmmVcChangeCallback callback);
 PUBLIC IX_STATUS
 ixAtmmUtopiaStatusShow (void);
 
-/**     
+/**
  * @ingroup IxAtmm
- * 
+ *
  * @fn ixAtmmUtopiaCfgShow (void)
  *
  * @brief Display utopia information(config registers and status registers)

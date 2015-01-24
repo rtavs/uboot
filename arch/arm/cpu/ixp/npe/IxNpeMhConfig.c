@@ -7,16 +7,16 @@
  * @brief This file contains the implementation of the private API for the
  * Configuration module.
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -68,7 +68,7 @@
 #define IX_NPE_MH_MAX_NUM_OF_RETRIES 1000000 /**< Maximum number of
                                               * retries before
                                               * timeout
-					                          */  
+					                          */
 
 /*
  * Typedefs whose scope is limited to this file.
@@ -207,7 +207,7 @@ void ixNpeMhConfigInitialize (
 	(UINT32) IX_OSAL_MEM_MAP (IX_NPEMH_NPEB_BASE,
 				     IX_OSAL_IXP400_NPEB_MAP_SIZE);
     IX_OSAL_ASSERT (virtualAddr[IX_NPEMH_NPEID_NPEB]);
-    
+
     /* Request a mapping for the NPE-C config register address space */
     virtualAddr[IX_NPEMH_NPEID_NPEC] =
 	(UINT32) IX_OSAL_MEM_MAP (IX_NPEMH_NPEC_BASE,
@@ -219,7 +219,7 @@ void ixNpeMhConfigInitialize (
     {
         /* declare a convenience pointer */
         IxNpeMhConfigNpeInfo *npeInfo = &ixNpeMhConfigNpeInfo[npeId];
-	
+
 	/* store the virtual addresses of the NPE registers for later use */
 	npeInfo->virtualRegisterBase  = virtualAddr[npeId];
 	npeInfo->statusRegister  = virtualAddr[npeId] + IX_NPEMH_NPESTAT_OFFSET;
@@ -277,13 +277,13 @@ void ixNpeMhConfigUninit (void)
     {
         /* declare a convenience pointer */
         IxNpeMhConfigNpeInfo *npeInfo = &ixNpeMhConfigNpeInfo[npeId];
-        
+
         /* disconnect ISR */
         ixOsalIrqUnbind(npeInfo->interruptId);
 
         /* destroy mutex associated with this NPE */
         ixOsalMutexDestroy(&npeInfo->mutex);
-	
+
 	IX_OSAL_MEM_UNMAP (npeInfo->virtualRegisterBase);
 
 	npeInfo->virtualRegisterBase  = 0;
@@ -417,7 +417,7 @@ void ixNpeMhConfigLockGet (
                      "ixNpeMhConfigLockGet\n");
 
     /* lock the mutex for this NPE */
-    (void) ixOsalMutexLock (&ixNpeMhConfigNpeInfo[npeId].mutex, 
+    (void) ixOsalMutexLock (&ixNpeMhConfigNpeInfo[npeId].mutex,
 			    IX_OSAL_WAIT_FOREVER);
 
     /* disable the NPE's "outFIFO not empty" interrupt */
@@ -480,9 +480,9 @@ IX_STATUS ixNpeMhConfigInFifoWrite (
     /* Return TIMEOUT status to caller, indicate that NPE Hang / Halt */
     if (IX_NPE_MH_MAX_NUM_OF_RETRIES == retriesCount)
     {
-        return IX_NPEMH_CRITICAL_NPE_ERR;   
-    }    
-    
+        return IX_NPEMH_CRITICAL_NPE_ERR;
+    }
+
     /* write the second word of the message to the NPE's inFIFO */
     IX_NPEMH_REGISTER_WRITE (npeInFifo, message.data[1]);
 
@@ -494,7 +494,7 @@ IX_STATUS ixNpeMhConfigInFifoWrite (
 
     /* update statistical info */
     ixNpeMhConfigStats[npeId].inFifoWrites++;
-    
+
     return IX_SUCCESS;
 }
 
@@ -513,7 +513,7 @@ IX_STATUS ixNpeMhConfigOutFifoRead (
     /* read the first word of the message from the NPE's outFIFO */
     IX_NPEMH_REGISTER_READ (npeOutFifo, &message->data[0]);
 
-    /* need to wait for NPE to write second word - see SCR #493 
+    /* need to wait for NPE to write second word - see SCR #493
        poll for maximum number of retries, if exceed maximum
        retries, exit from while loop */
     while ((IX_NPE_MH_MAX_NUM_OF_RETRIES > retriesCount)
@@ -525,9 +525,9 @@ IX_STATUS ixNpeMhConfigOutFifoRead (
     /* Return TIMEOUT status to caller, indicate that NPE Hang / Halt */
     if (IX_NPE_MH_MAX_NUM_OF_RETRIES == retriesCount)
     {
-        return IX_NPEMH_CRITICAL_NPE_ERR;   
-    } 
-    
+        return IX_NPEMH_CRITICAL_NPE_ERR;
+    }
+
     /* read the second word of the message from the NPE's outFIFO */
     IX_NPEMH_REGISTER_READ (npeOutFifo, &message->data[1]);
 
@@ -539,7 +539,7 @@ IX_STATUS ixNpeMhConfigOutFifoRead (
 
     /* update statistical info */
     ixNpeMhConfigStats[npeId].outFifoReads++;
-    
+
     return IX_SUCCESS;
 }
 
@@ -569,18 +569,18 @@ void ixNpeMhConfigShow (
     /* show the current status of the inFifo */
     ixOsalLog (IX_OSAL_LOG_LVL_USER, IX_OSAL_LOG_DEV_STDOUT,
 	       "InFifo is %s and %s\n",
-	       (ixNpeMhConfigInFifoIsEmpty (npeId) ? 
+	       (ixNpeMhConfigInFifoIsEmpty (npeId) ?
 		(int) "EMPTY" : (int) "NOT EMPTY"),
-	       (ixNpeMhConfigInFifoIsFull (npeId) ? 
+	       (ixNpeMhConfigInFifoIsFull (npeId) ?
 		(int) "FULL" : (int) "NOT FULL"),
 	       0, 0, 0, 0);
 
     /* show the current status of the outFifo */
     ixOsalLog (IX_OSAL_LOG_LVL_USER, IX_OSAL_LOG_DEV_STDOUT,
 	       "OutFifo is %s and %s\n",
-	       (ixNpeMhConfigOutFifoIsEmpty (npeId) ? 
+	       (ixNpeMhConfigOutFifoIsEmpty (npeId) ?
 		(int) "EMPTY" : (int) "NOT EMPTY"),
-	       (ixNpeMhConfigOutFifoIsFull (npeId) ? 
+	       (ixNpeMhConfigOutFifoIsFull (npeId) ?
 		(int) "FULL" : (int) "NOT FULL"),
 	       0, 0, 0, 0);
 }
@@ -604,5 +604,3 @@ void ixNpeMhConfigShowReset (
     /* reset the max outFIFO empty retries counter */
     ixNpeMhConfigStats[npeId].maxOutFifoEmptyRetries = 0;
 }
-
-

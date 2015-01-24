@@ -4,16 +4,16 @@
  * @brief  Header file for the IXP400 I2C Driver (IxI2cDrv)
  *
  * @version $Revision: 0.1 $
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,7 +26,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -39,13 +39,13 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
 
 /**
- * @defgroup IxI2cDrv IXP400 I2C Driver(IxI2cDrv) API 
+ * @defgroup IxI2cDrv IXP400 I2C Driver(IxI2cDrv) API
  *
  * @brief IXP400 I2C Driver Public API
  *
@@ -99,7 +99,7 @@
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @enum IxI2cMasterStatus
  *
  * @brief The master status - transfer complete, bus error or arbitration loss
@@ -114,7 +114,7 @@ typedef enum
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @enum IX_I2C_STATUS
  *
  * @brief The status that can be returned in a I2C driver initialization
@@ -153,7 +153,7 @@ typedef enum
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @enum IxI2cSpeedMode
  *
  * @brief Type of speed modes supported by the I2C hardware.
@@ -166,7 +166,7 @@ typedef enum
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @enum IxI2cXferMode
  *
  * @brief Used for indicating it is a repeated start or normal transfer
@@ -179,7 +179,7 @@ typedef enum
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @enum IxI2cFlowMode
  *
  * @brief Used for indicating it is a poll or interrupt mode
@@ -192,7 +192,7 @@ typedef enum
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @enum IxI2cDelayMode
  *
  * @brief Used for selecting looping delay or OS scheduler delay
@@ -205,7 +205,7 @@ typedef enum
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @brief The pointer to the function that will be called when the master
  *			has completed its receive. The parameter that is passed will
  *			provide the status of the read (success, arb loss, or bus
@@ -216,7 +216,7 @@ typedef void (*IxI2cMasterReadCallbackP)(IxI2cMasterStatus, IxI2cXferMode, char*
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @brief The pointer to the function that will	be called when the master
  *			has completed its transmit. The parameter that is passed will
  *			provide the status of the write (success, arb loss, or buss
@@ -227,7 +227,7 @@ typedef void (*IxI2cMasterWriteCallbackP)(IxI2cMasterStatus, IxI2cXferMode, char
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @brief The pointer to the function that will be called when a slave
  *			address detected in interrupt mode for a read. The parameters
  *			that is passed will provide the read status, buffer pointer,
@@ -244,7 +244,7 @@ typedef void (*IxI2cSlaveReadCallbackP)(IX_I2C_STATUS, char*, UINT32, UINT32);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @brief The pointer to the function that will be called when a slave
  *			address detected in interrupt mode for a write. The parameters
  *			that is passed will provide the write status, buffer pointer,
@@ -261,7 +261,7 @@ typedef void (*IxI2cSlaveWriteCallbackP)(IX_I2C_STATUS, char*, UINT32, UINT32);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @brief The pointer to the function that will be called when a general
  *			call detected in interrupt mode for a read. The parameters that
  *			is passed will provide the read status, buffer pointer, buffer
@@ -282,14 +282,14 @@ typedef void (*IxI2cGenCallCallbackP)(IX_I2C_STATUS, char*, UINT32, UINT32);
 
 /**
  * @brief contains all the variables required to initialize the I2C unit
- * 
+ *
  * Structure to be filled and used for calling initialization
  */
 typedef struct
 {
 	IxI2cSpeedMode I2cSpeedSelect;	/**<Select either normal (100kbps)
 									or fast mode (400kbps)*/
-	IxI2cFlowMode I2cFlowSelect;	/**<Select interrupt or poll mode*/	
+	IxI2cFlowMode I2cFlowSelect;	/**<Select interrupt or poll mode*/
 	IxI2cMasterReadCallbackP MasterReadCBP;
 									/**<The master read callback pointer */
 	IxI2cMasterWriteCallbackP MasterWriteCBP;
@@ -314,7 +314,7 @@ typedef struct
 
 /**
  * @brief contains results of counters and their overflow
- * 
+ *
  * Structure contains all values of counters and associated overflows.
  */
 typedef struct
@@ -350,14 +350,14 @@ typedef struct
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvInit(
 	IxI2cInitVars *InitVarsSelected)
  *
  * @brief Initializes the I2C Driver.
  *
  * @param "IxI2cInitVars [in] *InitVarsSelected" - struct containing required
- *			variables for initialization 
+ *			variables for initialization
  *
  * Global Data	:
  *		- None.
@@ -370,7 +370,7 @@ typedef struct
  * to Slave Address and SCL line driving. If it is interrupt mode, then it will
  * register the callback routines for master, slavetransfer and general call receive.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - Successfully initialize and enable the I2C
  *							hardware.
  *		- IX_I2C_NOT_SUPPORTED - The hardware does not support or have a
@@ -398,7 +398,7 @@ ixI2cDrvInit(IxI2cInitVars *InitVarsSelected);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvUninit(
 	void)
  *
@@ -408,14 +408,14 @@ ixI2cDrvInit(IxI2cInitVars *InitVarsSelected);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will disable the I2C hardware, unbind interrupt, and unmap memory.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - successfully un-initialized I2C
  *		- IX_I2C_INT_UNBIND_FAIL - failed to unbind the I2C interrupt
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -425,7 +425,7 @@ ixI2cDrvUninit(void);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvSlaveAddrSet(
 	UINT8 SlaveAddrSet)
  *
@@ -435,14 +435,14 @@ ixI2cDrvUninit(void);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will insert the SlaveAddrSet into the ISAR.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - successfuly set the slave addr
  *		- IX_I2C_INVALID_SLAVE_ADDR - invalid slave address (zero) specified
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -452,7 +452,7 @@ ixI2cDrvSlaveAddrSet(UINT8 SlaveAddrSet);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvBusScan(
 	void)
  *
@@ -462,16 +462,16 @@ ixI2cDrvSlaveAddrSet(UINT8 SlaveAddrSet);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will prompt all slave addresses for a reply except its own
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - found at least one slave device
  *		- IX_I2C_FAIL - Fail to find even one slave device
  *		- IX_I2C_BUS_BUSY - The I2C bus is busy (held by another I2C master)
  *		- IX_I2C_ARB_LOSS - The I2C bus was loss to another I2C master
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : yes
  *
@@ -481,7 +481,7 @@ ixI2cDrvBusScan(void);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvWriteTransfer(
 	UINT8 SlaveAddr,
 	char *bufP,
@@ -496,11 +496,11 @@ ixI2cDrvBusScan(void);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will try to obtain master control of the I2C bus and transmit the
  * number of bytes, specified by dataSize, to the user specified slave
  * address from the buffer pointer. It will use either interrupt or poll mode
- * depending on the method selected. 
+ * depending on the method selected.
  *
  * If in interrupt mode and IxI2cMasterWriteCallbackP is not NULL, the driver
  * will initiate the transfer and return immediately. The function pointed to
@@ -516,7 +516,7 @@ ixI2cDrvBusScan(void);
  *			normal mode transfer mode else the bus will continue to be held
  *			by the IXP.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - Successfuuly wrote data to slave.
  *		- IX_I2C_MASTER_BUS_BUSY - The I2C bus is busy (held by another I2C master)
  *		- IX_I2C_MASTER_ARB_LOSS - The I2C bus was loss to another I2C master
@@ -526,7 +526,7 @@ ixI2cDrvBusScan(void);
  *      - IX_I2C_MASTER_INVALID_XFER_MODE - Xfer mode selected is invalid
  *      - IX_I2C_DATA_SIZE_ZERO - dataSize passed in is zero, which is invalid
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : no
  * @li   ISR Callable : no
  *
@@ -540,7 +540,7 @@ ixI2cDrvWriteTransfer(
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvReadTransfer(
 	UINT8 SlaveAddr,
 	char *bufP,
@@ -559,7 +559,7 @@ ixI2cDrvWriteTransfer(
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will try to obtain master control of the I2C bus and receive the
  * number of bytes, specified by dataSize, from the user specified address
  * into the receive buffer. It will use either interrupt or poll mode depending
@@ -579,7 +579,7 @@ ixI2cDrvWriteTransfer(
  *			normal mode transfer mode else the bus will continue to be held
  *			by the IXP.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - Successfuuly read slave data
  *		- IX_I2C_MASTER_BUS_BUSY - The I2C bus is busy (held by another I2C master)
  *		- IX_I2C_MASTER_ARB_LOSS - The I2C bus was loss to another I2C master
@@ -590,7 +590,7 @@ ixI2cDrvWriteTransfer(
  *      - IX_I2C_INVALID_SLAVE_ADDR - invalid slave address (zero) specified
  *      - IX_I2C_DATA_SIZE_ZERO - dataSize passed in is zero, which is invalid
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : no
  * @li   ISR Callable : no
  *
@@ -604,7 +604,7 @@ ixI2cDrvReadTransfer(
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvSlaveAddrAndGenCallDetectedCheck(
 	void)
  *
@@ -615,13 +615,13 @@ ixI2cDrvReadTransfer(
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API is used in polled mode to determine if the I2C unit is requested
  * for a slave or general call transfer. If it is requested for a slave
  * transfer then it will determine if it is a general call (read only), read,
  * or write transfer requested.
  *
- * @return 
+ * @return
  *      - IX_I2C_SLAVE_ADDR_NOT_DETECTED - The I2C unit is not requested for slave
  *										transfer
  *		- IX_I2C_GEN_CALL_ADDR_DETECTED - The I2C unit is not requested for slave
@@ -629,7 +629,7 @@ ixI2cDrvReadTransfer(
  *      - IX_I2C_SLAVE_READ_DETECTED - The I2C unit is requested for a read
  *      - IX_I2C_SLAVE_WRITE_DETECTED - The I2C unit is requested for a write
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : no
  * @li   ISR Callable : no
  *
@@ -639,7 +639,7 @@ ixI2cDrvSlaveAddrAndGenCallDetectedCheck(void);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvSlaveOrGenDataReceive(
 	char *bufP,
 	UINT32 bufSize,
@@ -653,14 +653,14 @@ ixI2cDrvSlaveAddrAndGenCallDetectedCheck(void);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API is only used in polled mode to perform the slave read or general call
  * receive data. It will continuously store the data received into bufP until
  * complete or until bufP is full in which it will return
  * IX_I2C_SLAVE_OR_GEN_READ_BUFFER_FULL. If in interrupt mode, the callback will be
  * used.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - The I2C driver transferred the data successfully.
  *		- IX_I2C_SLAVE_OR_GEN_READ_BUFFER_FULL - The I2C driver has ran out of
  *			space to store the received data.
@@ -670,7 +670,7 @@ ixI2cDrvSlaveAddrAndGenCallDetectedCheck(void);
  *		- IX_I2C_SLAVE_NO_BUFFER - buffer pointer is NULL
  *      - IX_I2C_NULL_POINTER - dataSizeRcvd is NULL
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : no
  * @li   ISR Callable : no
  *
@@ -683,7 +683,7 @@ ixI2cDrvSlaveOrGenDataReceive(
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvSlaveDataTransmit(
 	char *bufP,
 	UINT32 dataSize,
@@ -699,13 +699,13 @@ ixI2cDrvSlaveOrGenDataReceive(
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API is only used in polled mode to perform the slave transmit data. It
  * will continuously transmit the data from bufP until complete or until bufP
  * is empty in which it will return IX_I2C_SLAVE_WRITE_BUFFER_EMPTY. If in
  * interrupt mode, the callback will be used.
  *
- * @return 
+ * @return
  *      - IX_I2C_SUCCESS - The I2C driver transferred the data successfully.
  *      - IX_I2C_SLAVE_WRITE_BUFFER_EMPTY - The I2C driver needs more data to
  *			transmit.
@@ -715,7 +715,7 @@ ixI2cDrvSlaveOrGenDataReceive(
  *		- IX_I2C_SLAVE_NO_BUFFER - buffer pointer is NULL
  *      - IX_I2C_NULL_POINTER - dataSizeXmtd is NULL
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : no
  * @li   ISR Callable : no
  *
@@ -728,7 +728,7 @@ ixI2cDrvSlaveDataTransmit(
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvSlaveOrGenCallBufReplenish(
 	char *bufP,
 	UINT32 bufSize)
@@ -741,14 +741,14 @@ ixI2cDrvSlaveDataTransmit(
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API is only used in interrupt mode for replenishing the same buffer
  * that is used by both slave and generall call by updating the buffer info
  * with new info and clearing previous offsets set by previous transfers.
  *
- * @return 
+ * @return
  *      - None
- *              
+ *
  * @li   Reentrant    : no
  * @li   ISR Callable : no
  *
@@ -760,7 +760,7 @@ ixI2cDrvSlaveOrGenCallBufReplenish(
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvStatsGet(IxI2cStatsCounters *I2cStats)
  *
  * @brief Returns the I2C Statistics through the pointer passed in
@@ -770,13 +770,13 @@ ixI2cDrvSlaveOrGenCallBufReplenish(
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will return the statistics counters of the I2C driver.
  *
- * @return 
+ * @return
  *      - IX_I2C_NULL_POINTER - pointer passed in is NULL
  *		- IX_I2C_SUCCESS - successfully obtained I2C statistics
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : no
  *
@@ -786,7 +786,7 @@ ixI2cDrvStatsGet(IxI2cStatsCounters *I2cStats);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvStatsReset(void)
  *
  * @brief Reset I2C statistics counters.
@@ -795,12 +795,12 @@ ixI2cDrvStatsGet(IxI2cStatsCounters *I2cStats);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will reset the statistics counters of the I2C driver.
  *
- * @return 
+ * @return
  *      - None
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : no
  *
@@ -810,7 +810,7 @@ ixI2cDrvStatsReset(void);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvShow(void)
  *
  * @brief Displays the I2C status register and the statistics counter.
@@ -819,17 +819,17 @@ ixI2cDrvStatsReset(void);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will display the I2C Status register and is useful if any error
  * occurs. It displays the detection of bus error, slave address, general call,
  * address, IDBR receive full, IDBR transmit empty, arbitration loss, slave
  * STOP signal, I2C bus busy, unit busy, ack/nack, and read/write mode. It will
  * also call the ixI2cDrvGetStats and then display the statistics counter.
  *
- * @return 
+ * @return
  *		- IX_I2C_SUCCESS - successfully displayed statistics and status register
  *		- IX_I2C_NOT_INIT - I2C not init yet.
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : no
  *
@@ -839,7 +839,7 @@ ixI2cDrvShow(void);
 
 /**
  * @ingroup IxI2cDrv
- * 
+ *
  * @fn ixI2cDrvDelayTypeSelect (IxI2cDelayMode delayMechanismSelect)
  *
  * @brief Sets the delay type of either looping delay or OS scheduler delay
@@ -849,13 +849,13 @@ ixI2cDrvShow(void);
  *
  * Global Data	:
  *		- None.
- *                        
+ *
  * This API will set the delay type used by the I2C Driver to either looping
  * delay or OS scheduler delay.
  *
- * @return 
+ * @return
  *		- None
- *              
+ *
  * @li   Reentrant    : yes
  * @li   ISR Callable : no
  *

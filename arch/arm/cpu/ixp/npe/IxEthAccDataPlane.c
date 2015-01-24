@@ -2476,8 +2476,3 @@ void ixEthAccDataPlaneShow(void)
     }
     printf("\n");
 }
-
-
-
-
-

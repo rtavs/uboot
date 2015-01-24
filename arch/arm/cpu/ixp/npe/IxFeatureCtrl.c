@@ -6,16 +6,16 @@
  *
  * @brief Feature Control Public API Implementation
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,7 +41,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -145,7 +145,7 @@ UINT32 componentMask[IX_FEATURECTRL_MAX_COMPONENTS] = {
 PRIVATE
 void ixFeatureCtrlExpMap(void);
 
-PRIVATE 
+PRIVATE
 void ixFeatureCtrlSwConfigurationInit(void);
 
 /**
@@ -195,13 +195,13 @@ PRIVATE void ixFeatureCtrlSwConfigurationInit(void)
     }
     /*Make sure this function only initializes swConfiguration[] once*/
     swConfigurationFlag = TRUE ;
-  }  
+  }
 }
 
 /**
  * Function definition: ixFeatureCtrlRead
  */
-IxFeatureCtrlReg 
+IxFeatureCtrlReg
 ixFeatureCtrlRead (void)
 {
     IxFeatureCtrlReg result;
@@ -235,34 +235,34 @@ ixFeatureCtrlWrite (IxFeatureCtrlReg expUnitReg)
  */
 IxFeatureCtrlReg
 ixFeatureCtrlHwCapabilityRead (void)
-{ 
+{
   IxFeatureCtrlReg currentReg, hwCapability;
-  
-  /* Capture a copy of feature control register */
-  currentReg = ixFeatureCtrlRead(); 
 
-  /* Try to enable all hardware components. 
+  /* Capture a copy of feature control register */
+  currentReg = ixFeatureCtrlRead();
+
+  /* Try to enable all hardware components.
    * Only software disable hardware can be enabled again */
   ixFeatureCtrlWrite(0);
-  
-  /* Read feature control register to know the hardware capability. */ 
+
+  /* Read feature control register to know the hardware capability. */
   hwCapability = ixFeatureCtrlRead();
-     
+
   /* Restore initial feature control value */
   ixFeatureCtrlWrite(currentReg);
 
   /* return Hardware Capability */
-  return hwCapability;  
+  return hwCapability;
 }
 
 
 /**
  * Function definition: ixFeatureCtrlComponentCheck
  */
-IX_STATUS 
+IX_STATUS
 ixFeatureCtrlComponentCheck (IxFeatureCtrlComponentType componentType)
 {
-  IxFeatureCtrlReg expUnitReg; 
+  IxFeatureCtrlReg expUnitReg;
   UINT32 mask = 0;
 
   /* Lookup mask of component */
@@ -279,29 +279,29 @@ ixFeatureCtrlComponentCheck (IxFeatureCtrlComponentType componentType)
       return IX_FEATURE_CTRL_COMPONENT_ENABLED;
   }
 
-  /* Read feature control register to know current hardware capability. */ 
+  /* Read feature control register to know current hardware capability. */
   expUnitReg = ixFeatureCtrlRead();
 
-  /* For example: To check for Hashing Coprocessor (bit-2) 
+  /* For example: To check for Hashing Coprocessor (bit-2)
    *                   expUniteg    = 0x0010
-   *                  ~expUnitReg   = 0x1101 
+   *                  ~expUnitReg   = 0x1101
    *                  componentType = 0x0100
-   *    ~expUnitReg & componentType = 0x0100 (Not zero)                      
+   *    ~expUnitReg & componentType = 0x0100 (Not zero)
    */
- 
-  /* 
-   * Inverse the bit value because available component is 0 in value 
+
+  /*
+   * Inverse the bit value because available component is 0 in value
    */
   expUnitReg = ~expUnitReg ;
 
   if (expUnitReg & mask)
   {
      return (IX_FEATURE_CTRL_COMPONENT_ENABLED);
-  }   
+  }
   else
-  {  
+  {
      return (IX_FEATURE_CTRL_COMPONENT_DISABLED);
-  } 
+  }
 }
 
 
@@ -313,18 +313,18 @@ ixFeatureCtrlProductIdRead ()
 {
 #if CPU!=SIMSPARCSOLARIS
   IxFeatureCtrlProductId  pdId = 0 ;
-   
-  /* Use ARM instruction to move register0 from coprocessor to ARM register */ 
-    
+
+  /* Use ARM instruction to move register0 from coprocessor to ARM register */
+
 #ifndef __wince
     __asm__("mrc p15, 0, %0, cr0, cr0, 0;" : "=r"(pdId) :);
 #else
-      
+
 #ifndef IN_KERNEL
         BOOL  mode;
 #endif
     extern  IxFeatureCtrlProductId AsmixFeatureCtrlProductIdRead();
-    
+
 #ifndef IN_KERNEL
     mode = SetKMode(TRUE);
 #endif
@@ -347,7 +347,7 @@ ixFeatureCtrlProductIdRead ()
 IxFeatureCtrlDeviceId
 ixFeatureCtrlDeviceRead ()
 {
-  return ((ixFeatureCtrlProductIdRead() >> IX_FEATURE_CTRL_DEVICE_TYPE_OFFSET) 
+  return ((ixFeatureCtrlProductIdRead() >> IX_FEATURE_CTRL_DEVICE_TYPE_OFFSET)
              & IX_FEATURE_CTRL_DEVICE_TYPE_MASK);
 } /* End function ixFeatureCtrlDeviceRead */
 
@@ -358,19 +358,19 @@ ixFeatureCtrlDeviceRead ()
 IX_STATUS
 ixFeatureCtrlSwConfigurationCheck (IxFeatureCtrlSwConfig swConfigType)
 {
-  if (swConfigType >= IX_FEATURECTRL_SWCONFIG_MAX)  
+  if (swConfigType >= IX_FEATURECTRL_SWCONFIG_MAX)
   {
-     ixOsalLog(IX_OSAL_LOG_LVL_WARNING, 
+     ixOsalLog(IX_OSAL_LOG_LVL_WARNING,
                IX_OSAL_LOG_DEV_STDOUT,
                "FeatureCtrl: Invalid software configuraiton input.\n",
-               0, 0, 0, 0, 0, 0);  
+               0, 0, 0, 0, 0, 0);
 
      return IX_FEATURE_CTRL_SWCONFIG_DISABLED;
   }
 
   /* The function will only initialize once. */
   ixFeatureCtrlSwConfigurationInit();
-  
+
   /* Check and return software configuration */
   return  ((swConfiguration[(UINT32)swConfigType] == TRUE) ? IX_FEATURE_CTRL_SWCONFIG_ENABLED: IX_FEATURE_CTRL_SWCONFIG_DISABLED);
 }
@@ -381,19 +381,19 @@ ixFeatureCtrlSwConfigurationCheck (IxFeatureCtrlSwConfig swConfigType)
 void
 ixFeatureCtrlSwConfigurationWrite (IxFeatureCtrlSwConfig swConfigType, BOOL enabled)
 {
-  if (swConfigType >= IX_FEATURECTRL_SWCONFIG_MAX)  
+  if (swConfigType >= IX_FEATURECTRL_SWCONFIG_MAX)
   {
-     ixOsalLog(IX_OSAL_LOG_LVL_WARNING, 
+     ixOsalLog(IX_OSAL_LOG_LVL_WARNING,
                IX_OSAL_LOG_DEV_STDOUT,
                "FeatureCtrl: Invalid software configuraiton input.\n",
-               0, 0, 0, 0, 0, 0);  
+               0, 0, 0, 0, 0, 0);
 
      return;
   }
 
   /* The function will only initialize once. */
   ixFeatureCtrlSwConfigurationInit();
-  
+
   /* Write software configuration */
   swConfiguration[(UINT32)swConfigType]=enabled ;
 }

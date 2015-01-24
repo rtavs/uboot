@@ -76,4 +76,3 @@ ixOsalMessageQueueReceive (IxOsalMessageQueue * queue, UINT8 * message)
     diag_printf("%s called\n", __FUNCTION__);
     return IX_FAIL;
 }
-

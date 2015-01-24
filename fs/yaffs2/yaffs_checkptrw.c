@@ -307,7 +307,7 @@ int yaffs_CheckpointRead(yaffs_Device *dev, void *data, int nBytes)
 		if(dev->checkpointByteOffset < 0 ||
 		   dev->checkpointByteOffset >= dev->nDataBytesPerChunk) {
 
-		   	if(dev->checkpointCurrentBlock < 0){
+			if(dev->checkpointCurrentBlock < 0){
 				yaffs_CheckpointFindNextCheckpointBlock(dev);
 				dev->checkpointCurrentChunk = 0;
 			}
@@ -321,8 +321,8 @@ int yaffs_CheckpointRead(yaffs_Device *dev, void *data, int nBytes)
 
 				realignedChunk = chunk - dev->chunkOffset;
 
-	   			/* read in the next chunk */
-	   			/* printf("read checkpoint page %d\n",dev->checkpointPage); */
+				/* read in the next chunk */
+				/* printf("read checkpoint page %d\n",dev->checkpointPage); */
 				dev->readChunkWithTagsFromNAND(dev, realignedChunk,
 							       dev->checkpointBuffer,
 							      &tags);

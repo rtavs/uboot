@@ -2,20 +2,20 @@
  * @file IxEthAccMii.c
  *
  * @author Intel Corporation
- * @date 
+ * @date
  *
  * @brief  MII control functions
  *
  * Design Notes:
  *
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,7 +41,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -149,9 +149,9 @@ ixEthAccMdioStatusRead(UINT32 *data)
     REG_READ(miiBaseAddressVirt,
 	     IX_ETH_ACC_MAC_MDIO_STS_4,
 	     regval);
-    
+
     *data |= (regval & 0xff) << 24;
-    
+
 }
 
 
@@ -167,17 +167,17 @@ ixEthAccMiiInit()
     }
 
     miiBaseAddressVirt = (UINT32) IX_OSAL_MEM_MAP(IX_ETH_ACC_MAC_0_BASE, IX_OSAL_IXP400_ETHA_MAP_SIZE);
-    
+
     if (miiBaseAddressVirt == 0)
     {
-      ixOsalLog(IX_OSAL_LOG_LVL_FATAL, 
-		IX_OSAL_LOG_DEV_STDOUT, 
-		"EthAcc: Could not map MII I/O mapped memory\n", 
+      ixOsalLog(IX_OSAL_LOG_LVL_FATAL,
+		IX_OSAL_LOG_DEV_STDOUT,
+		"EthAcc: Could not map MII I/O mapped memory\n",
 		0, 0, 0, 0, 0, 0);
-      
+
       return IX_ETH_ACC_FAIL;
     }
-    
+
     return IX_ETH_ACC_SUCCESS;
 }
 
@@ -185,7 +185,7 @@ void
 ixEthAccMiiUnload(void)
 {
     IX_OSAL_MEM_UNMAP(miiBaseAddressVirt);
-  
+
     miiBaseAddressVirt = 0;
 }
 
@@ -203,9 +203,9 @@ ixEthAccMiiAccessTimeoutSet(UINT32 timeout, UINT32 retryCount)
 /*********************************************************************
  * ixEthAccMiiReadRtn - read a 16 bit value from a PHY
  */
-IxEthAccStatus      
-ixEthAccMiiReadRtn (UINT8 phyAddr, 
-		    UINT8 phyReg, 
+IxEthAccStatus
+ixEthAccMiiReadRtn (UINT8 phyAddr,
+		    UINT8 phyReg,
 		    UINT16 *value)
 {
     UINT32 mdioCommand;
@@ -217,7 +217,7 @@ ixEthAccMiiReadRtn (UINT8 phyAddr,
 	return (IX_ETH_ACC_FAIL);
     }
 
-    if ((phyAddr >= IXP425_ETH_ACC_MII_MAX_ADDR) 
+    if ((phyAddr >= IXP425_ETH_ACC_MII_MAX_ADDR)
 	|| (phyReg >= IXP425_ETH_ACC_MII_MAX_REG))
     {
 	return (IX_ETH_ACC_FAIL);
@@ -229,38 +229,38 @@ ixEthAccMiiReadRtn (UINT8 phyAddr,
     }
 
     ixOsalMutexLock(&miiAccessLock, IX_OSAL_WAIT_FOREVER);
-    mdioCommand = phyReg <<  IX_ETH_ACC_MII_REG_SHL 
+    mdioCommand = phyReg <<  IX_ETH_ACC_MII_REG_SHL
 	| phyAddr << IX_ETH_ACC_MII_ADDR_SHL;
     mdioCommand |= IX_ETH_ACC_MII_GO;
 
     ixEthAccMdioCmdWrite(mdioCommand);
-    
+
     miiTimeout = ixEthAccMiiRetryCount;
 
     while(miiTimeout)
     {
-	
+
 	ixEthAccMdioCmdRead(&regval);
-     
+
 	if((regval & IX_ETH_ACC_MII_GO) == 0x0)
-	{	    
+	{
 	    break;
 	}
 	/* Sleep for a while */
 	ixOsalSleep(ixEthAccMiiAccessTimeout);
 	miiTimeout--;
     }
-    
 
-    
+
+
     if(miiTimeout == 0)
-    {	
+    {
 	ixOsalMutexUnlock(&miiAccessLock);
 	*value = 0xffff;
 	return IX_ETH_ACC_FAIL;
     }
-    
-    
+
+
     ixEthAccMdioStatusRead(&regval);
     if(regval & IX_ETH_ACC_MII_READ_FAIL)
     {
@@ -272,7 +272,7 @@ ixEthAccMiiReadRtn (UINT8 phyAddr,
     *value = regval & 0xffff;
     ixOsalMutexUnlock(&miiAccessLock);
     return IX_ETH_ACC_SUCCESS;
-    
+
 }
 
 
@@ -280,8 +280,8 @@ ixEthAccMiiReadRtn (UINT8 phyAddr,
  * ixEthAccMiiWriteRtn - write a 16 bit value to a PHY
  */
 IxEthAccStatus
-ixEthAccMiiWriteRtn (UINT8 phyAddr, 
-		     UINT8 phyReg, 
+ixEthAccMiiWriteRtn (UINT8 phyAddr,
+		     UINT8 phyReg,
 		     UINT16 value)
 {
     UINT32 mdioCommand;
@@ -294,12 +294,12 @@ ixEthAccMiiWriteRtn (UINT8 phyAddr,
 	return (IX_ETH_ACC_FAIL);
     }
 
-    if ((phyAddr >= IXP425_ETH_ACC_MII_MAX_ADDR) 
+    if ((phyAddr >= IXP425_ETH_ACC_MII_MAX_ADDR)
 	|| (phyReg >= IXP425_ETH_ACC_MII_MAX_REG))
     {
 	return (IX_ETH_ACC_FAIL);
     }
-   
+
     /* ensure that a PHY is present at this address */
     if(ixEthAccMiiReadRtn(phyAddr,
                           IX_ETH_ACC_MII_CTRL_REG,
@@ -314,24 +314,24 @@ ixEthAccMiiWriteRtn (UINT8 phyAddr,
     mdioCommand |= IX_ETH_ACC_MII_GO | IX_ETH_ACC_MII_WRITE | value;
 
     ixEthAccMdioCmdWrite(mdioCommand);
-    
+
     miiTimeout = ixEthAccMiiRetryCount;
 
     while(miiTimeout)
     {
-	
+
 	ixEthAccMdioCmdRead(&regval);
 
 	/*The "GO" bit is reset to 0 when the write completes*/
 	if((regval & IX_ETH_ACC_MII_GO) == 0x0)
-	{		    
+	{
 	    break;
 	}
 	/* Sleep for a while */
 	ixOsalSleep(ixEthAccMiiAccessTimeout);
         miiTimeout--;
     }
-    
+
     ixOsalMutexUnlock(&miiAccessLock);
     if(miiTimeout == 0)
     {
@@ -390,13 +390,13 @@ ixEthAccMdioShow (void)
     ixOsalMutexLock(&miiAccessLock, IX_OSAL_WAIT_FOREVER);
     ixEthAccMdioCmdRead(&regval);
     ixOsalMutexUnlock(&miiAccessLock);
-    
+
     printf("MDIO command register\n");
     printf("    Go bit      : 0x%x\n", (regval & BIT(31)) >> 31);
     printf("    MDIO Write  : 0x%x\n", (regval & BIT(26)) >> 26);
     printf("    PHY address : 0x%x\n", (regval >> 21) & 0x1f);
     printf("    Reg address : 0x%x\n", (regval >> 16) & 0x1f);
-	
+
     ixOsalMutexLock(&miiAccessLock, IX_OSAL_WAIT_FOREVER);
     ixEthAccMdioStatusRead(&regval);
     ixOsalMutexUnlock(&miiAccessLock);
@@ -405,6 +405,5 @@ ixEthAccMdioShow (void)
     printf("    Read OK     : 0x%x\n", (regval & BIT(31)) >> 31);
     printf("    Read Data   : 0x%x\n", (regval >> 16) & 0xff);
 
-    return IX_ETH_ACC_SUCCESS;   
+    return IX_ETH_ACC_SUCCESS;
 }
-

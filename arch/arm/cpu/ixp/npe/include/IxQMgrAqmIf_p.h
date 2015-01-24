@@ -5,7 +5,7 @@
  * @date    30-Oct-2001
  *
  * @brief   The IxQMgrAqmIf sub-component provides a number of inline
- * functions for performing I/O on the AQM. 
+ * functions for performing I/O on the AQM.
  *
  * Because  some functions contained in this module are inline and are
  * used in other modules (within the QMgr component) the definitions are
@@ -21,16 +21,16 @@
  * and so define the external references. In all other modules these
  * funtions are defined as "inline extern".
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -43,7 +43,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -56,7 +56,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
 */
@@ -69,17 +69,17 @@
 /*
  * inline definition
  */
- 
+
 #ifdef IX_OSAL_INLINE_ALL
 /* If IX_OSAL_INLINE_ALL is set then each inlineable API functions will be defined as
    inline functions */
 #define IX_QMGR_AQMIF_INLINE IX_OSAL_INLINE_EXTERN
-#else   
+#else
 #ifdef IXQMGRAQMIF_C
 #ifndef IX_QMGR_AQMIF_INLINE
 #define IX_QMGR_AQMIF_INLINE
 #endif
-#else  
+#else
 #ifndef IX_QMGR_AQMIF_INLINE
 #define IX_QMGR_AQMIF_INLINE IX_OSAL_INLINE_EXTERN
 #endif
@@ -104,7 +104,7 @@
 #define IX_QMGR_AQMIF_SAVED_COMPONENT_NAME IX_COMPONENT_NAME
 #undef  IX_COMPONENT_NAME
 #define IX_COMPONENT_NAME ix_qmgr
-#include "IxOsal.h" 
+#include "IxOsal.h"
 
 /*
  * #defines and macros used in this file.
@@ -251,7 +251,7 @@
         (((qId) * (IX_QMGR_QUEACC_SIZE * IX_QMGR_NUM_BYTES_PER_WORD))\
 	 + IX_QMGR_QUEACC0_OFFSET)
 
-/* 
+/*
  * Bit location of bit-3 of INT0SRCSELREG0 register to enabled
  * sticky interrupt register.
  */
@@ -276,7 +276,7 @@ unsigned
 ixQMgrAqmIfLog2 (unsigned number);
 
 void
-ixQMgrAqmIfQRegisterBitsWrite (IxQMgrQId qId, 
+ixQMgrAqmIfQRegisterBitsWrite (IxQMgrQId qId,
 			       UINT32 registerBaseAddrOffset,
 			       unsigned queuesPerRegWord,
 			       UINT32 value);
@@ -318,8 +318,8 @@ ixQMgrAqmIfQueStatRead (IxQMgrQId qId,
 
 
 /*
- *   Set INT0SRCSELREG0 Bit3 
- */ 
+ *   Set INT0SRCSELREG0 Bit3
+ */
 void ixQMgrAqmIfIntSrcSelReg0Bit3Set (void);
 
 
@@ -384,7 +384,7 @@ ixQMgrAqmIfQPoke (IxQMgrQId qId,
 		  unsigned int *entry);
 
 /*
- * Function prototype for inline functions. For description refers to 
+ * Function prototype for inline functions. For description refers to
  * the functions defintion below.
  */
 IX_QMGR_AQMIF_INLINE void
@@ -406,18 +406,18 @@ ixQMgrAqmIfQPush (IxQMgrQId qId,
 		  UINT32 *entry);
 
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQStatusRegsRead (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQStatusRegsRead (IxQMgrDispatchGroup group,
 			    UINT32 *qStatusWords);
 
 IX_QMGR_AQMIF_INLINE BOOL
 ixQMgrAqmIfQStatusCheck (UINT32 *oldQStatusWords,
 			 UINT32 *newQStatusWords,
-			 unsigned int statusWordOffset,			 
+			 unsigned int statusWordOffset,
 			 UINT32 checkValue,
 			 UINT32 mask);
 
 IX_QMGR_AQMIF_INLINE BOOL
-ixQMgrAqmIfRegisterBitCheck (IxQMgrQId qId, 
+ixQMgrAqmIfRegisterBitCheck (IxQMgrQId qId,
 			     UINT32 registerBaseAddrOffset,
 			     unsigned queuesPerRegWord,
 			     unsigned relativeBitOffset,
@@ -430,14 +430,14 @@ IX_QMGR_AQMIF_INLINE BOOL
 ixQMgrAqmIfOverflowCheck (IxQMgrQId qId);
 
 IX_QMGR_AQMIF_INLINE UINT32
-ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId, 
+ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId,
 			      UINT32 registerBaseAddrOffset,
 			      unsigned queuesPerRegWord);
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQInterruptRegWrite (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQInterruptRegWrite (IxQMgrDispatchGroup group,
 			       UINT32 reg);
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQInterruptRegRead (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQInterruptRegRead (IxQMgrDispatchGroup group,
 			      UINT32 *regVal);
 
 IX_QMGR_AQMIF_INLINE void
@@ -449,15 +449,15 @@ ixQMgrAqmIfQueUppStatRead (IxQMgrQId qId,
 			   IxQMgrQStatus *status);
 
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQueStatRead (IxQMgrQId qId, 
+ixQMgrAqmIfQueStatRead (IxQMgrQId qId,
 			IxQMgrQStatus *qStatus);
 
 IX_QMGR_AQMIF_INLINE unsigned
-ixQMgrAqmIfPow2NumDivide (unsigned numerator, 
+ixQMgrAqmIfPow2NumDivide (unsigned numerator,
 			  unsigned denominator);
 
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQInterruptEnableRegRead (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQInterruptEnableRegRead (IxQMgrDispatchGroup group,
 			            UINT32 *regVal);
 /*
  * Inline functions
@@ -534,7 +534,7 @@ ixQMgrAqmIfQPush (IxQMgrQId qId,
 
     accRegAddr = (UINT32*)(aqmBaseAddress +
 			   IX_QMGR_Q_ACCESS_ADDR_GET(qId));
-    
+
     switch (numWords)
     {
 	case IX_QMGR_Q_ENTRY_SIZE1:
@@ -562,7 +562,7 @@ ixQMgrAqmIfQPush (IxQMgrQId qId,
  * function is called by IxQMGrDispatcher component.
  */
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQStatusRegsRead (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQStatusRegsRead (IxQMgrDispatchGroup group,
 			    UINT32 *qStatusWords)
 {
     volatile UINT32 *regAddress = NULL;
@@ -598,11 +598,11 @@ ixQMgrAqmIfQStatusRegsRead (IxQMgrDispatchGroup group,
 IX_QMGR_AQMIF_INLINE BOOL
 ixQMgrAqmIfQStatusCheck (UINT32 *oldQStatusWords,
 			 UINT32 *newQStatusWords,
-			 unsigned int statusWordOffset,			 
+			 unsigned int statusWordOffset,
 			 UINT32 checkValue,
 			 UINT32 mask)
 {
-    if (((oldQStatusWords[statusWordOffset] & mask) != 
+    if (((oldQStatusWords[statusWordOffset] & mask) !=
 	 (newQStatusWords[statusWordOffset] & mask)) &&
 	((newQStatusWords[statusWordOffset] & mask) == checkValue))
     {
@@ -618,7 +618,7 @@ ixQMgrAqmIfQStatusCheck (UINT32 *oldQStatusWords,
  * function is called by IxQMgrDispatcher component.
  */
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQInterruptRegRead (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQInterruptRegRead (IxQMgrDispatchGroup group,
 			      UINT32 *regVal)
 {
     volatile UINT32 *regAddress;
@@ -643,7 +643,7 @@ ixQMgrAqmIfQInterruptRegRead (IxQMgrDispatchGroup group,
  * function is called by IxQMgrDispatcher component.
  */
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQInterruptEnableRegRead (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQInterruptEnableRegRead (IxQMgrDispatchGroup group,
 			            UINT32 *regVal)
 {
     volatile UINT32 *regAddress;
@@ -668,7 +668,7 @@ ixQMgrAqmIfQInterruptEnableRegRead (IxQMgrDispatchGroup group,
  * specified by qId. If reset is TRUE the bit is cleared.
  */
 IX_QMGR_AQMIF_INLINE BOOL
-ixQMgrAqmIfRegisterBitCheck (IxQMgrQId qId, 
+ixQMgrAqmIfRegisterBitCheck (IxQMgrQId qId,
 			     UINT32 registerBaseAddrOffset,
 			     unsigned queuesPerRegWord,
 			     unsigned relativeBitOffset,
@@ -691,7 +691,7 @@ ixQMgrAqmIfRegisterBitCheck (IxQMgrQId qId,
      * Get the status word
      */
     ixQMgrAqmIfWordRead (registerAddress, &registerWord);
-    
+
     /*
      * Calculate the actualBitOffset
      * status for multiple queues stored in one register
@@ -718,11 +718,11 @@ ixQMgrAqmIfRegisterBitCheck (IxQMgrQId qId,
 /*
  * @ingroup IxQmgrAqmIfAPI
  *
- * @brief Read the underflow status of a queue 
+ * @brief Read the underflow status of a queue
  *
  * This inline function will read the underflow status of a queue
  * specified by qId.
- * 
+ *
  */
 IX_QMGR_AQMIF_INLINE BOOL
 ixQMgrAqmIfUnderflowCheck (IxQMgrQId qId)
@@ -769,7 +769,7 @@ ixQMgrAqmIfOverflowCheck (IxQMgrQId qId)
  * specified by qId.
  */
 IX_QMGR_AQMIF_INLINE UINT32
-ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId, 
+ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId,
 			      UINT32 registerBaseAddrOffset,
 			      unsigned queuesPerRegWord)
 {
@@ -792,7 +792,7 @@ ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId,
      * Read the status word
      */
     ixQMgrAqmIfWordRead (registerAddress, &registerWord);
-    
+
 
     /*
      * Calculate the mask for the status bits for this queue.
@@ -801,7 +801,7 @@ ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId,
 
     /*
      * Shift the status word so it is right justified
-     */    
+     */
     registerWord >>= ((qId & (queuesPerRegWord - 1)) * bitsPerQueue);
 
     /*
@@ -815,7 +815,7 @@ ixQMgrAqmIfQRegisterBitsRead (IxQMgrQId qId,
  * the AQM interrupt register.
  */
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQInterruptRegWrite (IxQMgrDispatchGroup group, 
+ixQMgrAqmIfQInterruptRegWrite (IxQMgrDispatchGroup group,
 			       UINT32 reg)
 {
     volatile UINT32 *address;
@@ -861,7 +861,7 @@ ixQMgrAqmIfQueUppStatRead (IxQMgrQId qId,
     /* Reset the status bits */
     *status = 0;
 
-    /* 
+    /*
      * Check if the queue is nearly empty,
      * N.b. QUPP stat register contains status for regs 32-63 at each
      *      bit position so subtract 32 to get bit offset
@@ -875,7 +875,7 @@ ixQMgrAqmIfQueUppStatRead (IxQMgrQId qId,
 	*status |= IX_QMGR_Q_STATUS_NE_BIT_MASK;
     }
 
-    /* 
+    /*
      * Check if the queue is full,
      * N.b. QUPP stat register contains status for regs 32-63 at each
      *      bit position so subtract 32 to get bit offset
@@ -895,7 +895,7 @@ ixQMgrAqmIfQueUppStatRead (IxQMgrQId qId,
  * status of the queue specified by qId.
  */
 IX_QMGR_AQMIF_INLINE void
-ixQMgrAqmIfQueStatRead (IxQMgrQId qId, 
+ixQMgrAqmIfQueStatRead (IxQMgrQId qId,
 			IxQMgrQStatus *qStatus)
 {
     if (qId < IX_QMGR_MIN_QUEUPP_QID)
@@ -913,7 +913,7 @@ ixQMgrAqmIfQueStatRead (IxQMgrQId qId,
  * This function performs a mod division
  */
 IX_QMGR_AQMIF_INLINE unsigned
-ixQMgrAqmIfPow2NumDivide (unsigned numerator, 
+ixQMgrAqmIfPow2NumDivide (unsigned numerator,
 			  unsigned denominator)
 {
     /* Number is evenly divisable by 2 */

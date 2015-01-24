@@ -707,4 +707,3 @@ IX_ETH_DB_PUBLIC BOOL ixEthDBCheckSingleBitValue(UINT32 value);
 IX_ETH_DB_PUBLIC IxEthDBStatus ixEthDBSingleEthNpeCheck(IxEthDBPortId portId);
 
 #endif /* IxEthDB_p_H */
-

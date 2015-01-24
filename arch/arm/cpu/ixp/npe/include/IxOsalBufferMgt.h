@@ -7,13 +7,13 @@
  *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -26,7 +26,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -39,7 +39,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -47,7 +47,7 @@
  * -- Copyright Notice --
  *
  * @par
- * Copyright 1979, 1980, 1983, 1986, 1988, 1989, 1991, 1992, 1993, 1994 
+ * Copyright 1979, 1980, 1983, 1986, 1988, 1989, 1991, 1992, 1993, 1994
  *      The Regents of the University of California. All rights reserved.
  *
  * @par
@@ -89,7 +89,7 @@
  *
  * @brief Buffer management module for IxOsal
  *
- * @{ 
+ * @{
  */
 
 /**
@@ -97,7 +97,7 @@
  *
  * @def IX_OSAL_MBUF_MAX_POOLS
  *
- * @brief The maximum number of pools that can be allocated, must be 
+ * @brief The maximum number of pools that can be allocated, must be
  *        a multiple of 32 as required by implementation logic.
  * @note  This can safely be increased if more pools are required.
  */
@@ -122,7 +122,7 @@
 /* forward declaration of internal structure */
 struct __IXP_BUF;
 
-/* 
+/*
  * OS can define it in IxOsalOs.h to skip the following
  * definition.
  */
@@ -136,23 +136,23 @@ struct __IX_MBUF
     struct __IXP_BUF *ix_next IX_OSAL_ATTRIBUTE_ALIGN32;
     struct __IXP_BUF *ix_nextPacket;
     UINT8 *ix_data;
-    UINT32 ix_len;  
+    UINT32 ix_len;
     unsigned char ix_type;
     unsigned char ix_flags;
     unsigned short ix_reserved;
     UINT32 ix_rsvd;
-    UINT32 ix_PktLen; 
-    void *ix_priv;     
+    UINT32 ix_PktLen;
+    void *ix_priv;
 };
 
 struct __IX_CTRL
 {
     UINT32 ix_reserved[2];        /**< Reserved field */
-    UINT32 ix_signature;          /**< Field to indicate if buffers are allocated by the system */    
-    UINT32 ix_allocated_len;      /**< Allocated buffer length */  
-    UINT32 ix_allocated_data;     /**< Allocated buffer data pointer */  
+    UINT32 ix_signature;          /**< Field to indicate if buffers are allocated by the system */
+    UINT32 ix_allocated_len;      /**< Allocated buffer length */
+    UINT32 ix_allocated_data;     /**< Allocated buffer data pointer */
     void *ix_pool;                /**< pointer to the buffer pool */
-    struct __IXP_BUF *ix_chain;   /**< chaining */ 
+    struct __IXP_BUF *ix_chain;   /**< chaining */
     void *ix_osbuf_ptr;           /**< Storage for OS-specific buffer pointer */
 };
 
@@ -162,8 +162,8 @@ struct __IX_NE_SHARED
 };
 
 
-/* 
- * IXP buffer structure 
+/*
+ * IXP buffer structure
  */
 typedef struct __IXP_BUF
 {
@@ -353,7 +353,7 @@ typedef IXP_BUF IX_OSAL_MBUF;
  * @def IX_OSAL_MBUF_POOL_SIZE_ALIGN
  *
  * @brief This macro takes an integer as an argument and
- * rounds it up to be a multiple of the memory cache-line 
+ * rounds it up to be a multiple of the memory cache-line
  * size.
  *
  * @param int [in] size - the size integer to be rounded up
@@ -375,9 +375,9 @@ PUBLIC UINT32 ixOsalBuffPoolMbufAreaSizeGet (int count);
  *
  * @def IX_OSAL_MBUF_POOL_MBUF_AREA_SIZE_ALIGNED
  *
- * @brief This macro calculates, from the number of mbufs required, the 
+ * @brief This macro calculates, from the number of mbufs required, the
  * size of the memory area required to contain the mbuf headers for the
- * buffers in the pool.  The size to be used for each mbuf header is 
+ * buffers in the pool.  The size to be used for each mbuf header is
  * rounded up to a multiple of the cache-line size, to ensure
  * each mbuf header aligns on a cache-line boundary.
  * This macro is used by IX_OSAL_MBUF_POOL_MBUF_AREA_ALLOC()
@@ -467,7 +467,7 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_INIT
  *
- * @brief Wrapper macro for ixOsalPoolInit() 
+ * @brief Wrapper macro for ixOsalPoolInit()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_INIT(count, size, name) \
@@ -480,9 +480,9 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @return Pointer to the new pool or NULL if the initialization failed.
  *
- * @brief Wrapper macro for ixOsalNoAllocPoolInit() 
+ * @brief Wrapper macro for ixOsalNoAllocPoolInit()
  * See function description below for details.
- * 
+ *
  */
 #define IX_OSAL_MBUF_NO_ALLOC_POOL_INIT(bufPtr, dataPtr, count, size, name) \
     ixOsalNoAllocPoolInit( (bufPtr), (dataPtr), (count), (size), (name))
@@ -492,7 +492,7 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_GET
  *
- * @brief Wrapper macro for ixOsalMbufAlloc() 
+ * @brief Wrapper macro for ixOsalMbufAlloc()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_GET(poolPtr) \
@@ -503,7 +503,7 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_PUT
  *
- * @brief Wrapper macro for ixOsalMbufFree() 
+ * @brief Wrapper macro for ixOsalMbufFree()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_PUT(bufPtr) \
@@ -514,7 +514,7 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_PUT_CHAIN
  *
- * @brief Wrapper macro for ixOsalMbufChainFree() 
+ * @brief Wrapper macro for ixOsalMbufChainFree()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_PUT_CHAIN(bufPtr) \
@@ -525,7 +525,7 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_SHOW
  *
- * @brief Wrapper macro for ixOsalMbufPoolShow() 
+ * @brief Wrapper macro for ixOsalMbufPoolShow()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_SHOW(poolPtr) \
@@ -536,7 +536,7 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_MDATA_RESET
  *
- * @brief Wrapper macro for ixOsalMbufDataPtrReset() 
+ * @brief Wrapper macro for ixOsalMbufDataPtrReset()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_MDATA_RESET(bufPtr) \
@@ -547,14 +547,14 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_MBUF_POOL_UNINIT
  *
- * @brief Wrapper macro for ixOsalBuffPoolUninit() 
+ * @brief Wrapper macro for ixOsalBuffPoolUninit()
  * See function description below for details.
  */
 #define IX_OSAL_MBUF_POOL_UNINIT(m_pool_ptr)  \
         ixOsalBuffPoolUninit(m_pool_ptr)
 
-/* 
- * Include OS-specific bufferMgt definitions 
+/*
+ * Include OS-specific bufferMgt definitions
  */
 #include "IxOsalOsBufferMgt.h"
 
@@ -564,14 +564,14 @@ PUBLIC UINT32 ixOsalBuffPoolDataAreaSizeGet (int count, int size);
  *
  * @def IX_OSAL_CONVERT_OSBUF_TO_IXPBUF( osBufPtr, ixpBufPtr)
  *
- * @brief Convert pre-allocated os-specific buffer format to OSAL IXP_BUF (IX_OSAL_MBUF) format. 
+ * @brief Convert pre-allocated os-specific buffer format to OSAL IXP_BUF (IX_OSAL_MBUF) format.
  * It is users' responsibility to provide pre-allocated and valid buffer pointers.
  * @param osBufPtr (in) - a pre-allocated os-specific buffer pointer.
  * @param ixpBufPtr (in)- a pre-allocated OSAL IXP_BUF pointer
  * @return None
  */
 #define IX_OSAL_CONVERT_OSBUF_TO_IXPBUF( osBufPtr, ixpBufPtr) \
-        IX_OSAL_OS_CONVERT_OSBUF_TO_IXPBUF( osBufPtr, ixpBufPtr)        
+        IX_OSAL_OS_CONVERT_OSBUF_TO_IXPBUF( osBufPtr, ixpBufPtr)
 
 
 /**

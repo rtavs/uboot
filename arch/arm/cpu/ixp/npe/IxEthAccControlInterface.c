@@ -2,7 +2,7 @@
  * @file IxEthAccControlInterface.c
  *
  * @author Intel Corporation
- * @date 
+ * @date
  *
  * @brief IX_ETH_ACC_PUBLIC wrappers for control plane functions
  *
@@ -10,13 +10,13 @@
  *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -42,7 +42,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -70,7 +70,7 @@ ixEthAccPortEnable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortDisable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -103,7 +103,7 @@ ixEthAccPortEnabledQuery(IxEthAccPortId portId, BOOL *enabled)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortPromiscuousModeClear(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -119,7 +119,7 @@ ixEthAccPortPromiscuousModeClear(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortPromiscuousModeSet(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -135,7 +135,7 @@ ixEthAccPortPromiscuousModeSet(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortUnicastMacAddressSet(IxEthAccPortId portId, IxEthAccMacAddr *macAddr)
 {
     IxEthAccStatus result;
@@ -231,11 +231,11 @@ ixEthAccPortMulticastAddressLeaveAll(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortUnicastAddressShow(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
- 
+
     if (!IX_ETH_ACC_IS_SERVICE_INITIALIZED())
     {
 	return (IX_ETH_ACC_FAIL);
@@ -247,7 +247,7 @@ ixEthAccPortUnicastAddressShow(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC void 
+IX_ETH_ACC_PUBLIC void
 ixEthAccPortMulticastAddressShow(IxEthAccPortId portId)
 {
     if (!IX_ETH_ACC_IS_SERVICE_INITIALIZED())
@@ -260,7 +260,7 @@ ixEthAccPortMulticastAddressShow(IxEthAccPortId portId)
     ixOsalMutexUnlock(&ixEthAccControlInterfaceMutex);
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortDuplexModeSet(IxEthAccPortId portId, IxEthAccDuplexMode mode)
 {
     IxEthAccStatus result;
@@ -276,7 +276,7 @@ ixEthAccPortDuplexModeSet(IxEthAccPortId portId, IxEthAccDuplexMode mode)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortDuplexModeGet(IxEthAccPortId portId, IxEthAccDuplexMode *mode)
 {
     IxEthAccStatus result;
@@ -296,7 +296,7 @@ IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortTxFrameAppendPaddingEnable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
-     
+
     if (!IX_ETH_ACC_IS_SERVICE_INITIALIZED())
     {
 	return (IX_ETH_ACC_FAIL);
@@ -420,7 +420,7 @@ ixEthAccRxSchedulingDisciplineSet(IxEthAccSchedulerDiscipline sched)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortNpeLoopbackEnable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -436,7 +436,7 @@ ixEthAccPortNpeLoopbackEnable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortTxEnable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -452,7 +452,7 @@ ixEthAccPortTxEnable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortRxEnable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -468,7 +468,7 @@ ixEthAccPortRxEnable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortNpeLoopbackDisable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -484,7 +484,7 @@ ixEthAccPortNpeLoopbackDisable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortTxDisable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -500,7 +500,7 @@ ixEthAccPortTxDisable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortRxDisable(IxEthAccPortId portId)
 {
     IxEthAccStatus result;
@@ -516,7 +516,7 @@ ixEthAccPortRxDisable(IxEthAccPortId portId)
     return result;
 }
 
-IX_ETH_ACC_PUBLIC IxEthAccStatus 
+IX_ETH_ACC_PUBLIC IxEthAccStatus
 ixEthAccPortMacReset(IxEthAccPortId portId)
 {
     IxEthAccStatus result;

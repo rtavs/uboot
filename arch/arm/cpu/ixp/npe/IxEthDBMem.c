@@ -2,16 +2,16 @@
  * @file IxEthDBDBMem.c
  *
  * @brief Memory handling routines for the MAC address database
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -181,7 +181,7 @@ void ixEthDBFreeHashNode(HashNode *hashNode)
  * is used, which keeps track of the pointer reference count.
  *
  * @see ixEthDBAllocMacDescriptor()
- * 
+ *
  * @warning this function is not used directly by any other function
  * apart from ixEthDBAllocMacDescriptor()
  *
@@ -419,7 +419,7 @@ void ixEthDBFreeMacTreeNode(MacTreeNode *macNode)
  *
  * @param macNode mac tree node to be cloned
  *
- * Increments the usage count of the node, <i>its associated descriptor 
+ * Increments the usage count of the node, <i>its associated descriptor
  * and <b>recursively</b> of all its child nodes</i>.
  *
  * @warning this function is recursive and clones whole trees/subtrees, use only for
@@ -467,7 +467,7 @@ extern HashTable dbHashtable;
 int ixEthDBNumHashElements(void);
 
 int ixEthDBNumHashElements(void)
-{   
+{
     UINT32 bucketIndex;
     int numElements = 0;
     HashTable *hashTable = &dbHashtable;

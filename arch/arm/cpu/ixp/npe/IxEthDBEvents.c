@@ -2,16 +2,16 @@
  * @file IxEthDBEvents.c
  *
  * @brief Implementation of the event processor component
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -48,7 +48,7 @@
 #include "IxEthDB_p.h"
 
 /* forward prototype declarations */
-IX_ETH_DB_PUBLIC void ixEthDBEventProcessorLoop(void *); 
+IX_ETH_DB_PUBLIC void ixEthDBEventProcessorLoop(void *);
 IX_ETH_DB_PUBLIC void ixEthDBNPEEventCallback(IxNpeMhNpeId npeID, IxNpeMhMessage msg);
 IX_ETH_DB_PRIVATE void ixEthDBProcessEvent(PortEvent *local_event, IxEthDBPortMap triggerPorts);
 IX_ETH_DB_PRIVATE IxEthDBStatus ixEthDBTriggerPortUpdate(UINT32 eventType, IxEthDBMacAddr *macAddr, IxEthDBPortId portID, BOOL staticEntry);
@@ -165,7 +165,7 @@ IxEthDBStatus ixEthDBStartLearningFunction(void)
  *
  * @warning do not call directly
  *
- * @return IX_ETH_DB_SUCCESS if the operation completed 
+ * @return IX_ETH_DB_SUCCESS if the operation completed
  * successfully or IX_ETH_DB_FAIL otherwise;
  *
  * @internal
@@ -219,7 +219,7 @@ void ixEthDBNPEEventCallback(IxNpeMhNpeId npeID, IxNpeMhMessage msg)
         /* create event structure on queue */
         local_event->eventType = NPE_MSG_ID(msg);
         local_event->portID    = IX_ETH_DB_NPE_TO_PORT_ID(npeID);
-        
+
         /* update queue */
         PUSH_UPDATE_QUEUE(&eventQueue);
 
@@ -343,11 +343,11 @@ void ixEthDBProcessEvent(PortEvent *local_event, IxEthDBPortMap triggerPorts)
             /* add record */
             memset(&recordTemplate, 0, sizeof (recordTemplate));
             memcpy(recordTemplate.macAddress, local_event->macAddr.macAddress, sizeof (IxEthDBMacAddr));
-            
+
             recordTemplate.type   = IX_ETH_DB_FILTERING_RECORD;
             recordTemplate.portID = local_event->portID;
             recordTemplate.recordData.filteringData.staticEntry = local_event->staticEntry;
-            
+
             ixEthDBAdd(&recordTemplate, triggerPorts);
 
             IX_ETH_DB_EVENTS_TRACE("DB: (Events) Added record on port %d\n", local_event->portID);
@@ -358,11 +358,11 @@ void ixEthDBProcessEvent(PortEvent *local_event, IxEthDBPortMap triggerPorts)
             /* remove record */
             memset(&recordTemplate, 0, sizeof (recordTemplate));
             memcpy(recordTemplate.macAddress, local_event->macAddr.macAddress, sizeof (IxEthDBMacAddr));
-            
+
             recordTemplate.type = IX_ETH_DB_FILTERING_RECORD | IX_ETH_DB_FILTERING_VLAN_RECORD;
-            
+
             ixEthDBRemove(&recordTemplate, triggerPorts);
-            
+
             IX_ETH_DB_EVENTS_TRACE("DB: (Events) Removed record on port %d\n", local_event->portID);
 
             break;
@@ -392,13 +392,13 @@ IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBTriggerAddPortUpdate(IxEthDBMacAddr *macAddr, IxEthDBPortId portID, BOOL staticEntry)
 {
     MacDescriptor reference;
-    
+
     TEST_FIXTURE_INCREMENT_DB_CORE_ACCESS_COUNTER;
 
     /* fill search fields */
     memcpy(reference.macAddress, macAddr, sizeof (IxEthDBMacAddr));
     reference.portID = portID;
-    
+
     /* set acceptable record types */
     reference.type = IX_ETH_DB_ALL_FILTERING_RECORDS;
 
@@ -441,7 +441,7 @@ IxEthDBStatus ixEthDBTriggerRemovePortUpdate(IxEthDBMacAddr *macAddr, IxEthDBPor
 /**
  * @brief adds an ADD or REMOVE event to the main event queue
  *
- * @param eventType event type - IX_ETH_DB_ADD_FILTERING_RECORD 
+ * @param eventType event type - IX_ETH_DB_ADD_FILTERING_RECORD
  * to add and IX_ETH_DB_REMOVE_FILTERING_RECORD to remove a
  * record.
  *
@@ -464,7 +464,7 @@ IxEthDBStatus ixEthDBTriggerPortUpdate(UINT32 eventType, IxEthDBMacAddr *macAddr
 
         /* update fields on the queue */
         memcpy(queueEvent->macAddr.macAddress, macAddr->macAddress, sizeof (IxEthDBMacAddr));
-        
+
         queueEvent->eventType     = eventType;
         queueEvent->portID        = portID;
         queueEvent->staticEntry   = staticEntry;
@@ -473,7 +473,7 @@ IxEthDBStatus ixEthDBTriggerPortUpdate(UINT32 eventType, IxEthDBMacAddr *macAddr
 
         /* imcrement event queue semaphore */
         ixOsalSemaphorePost(&eventQueueSemaphore);
-        
+
         /* unlock interrupts */
         ixOsalIrqUnlock(intLockKey);
 
@@ -517,4 +517,3 @@ void ixEthDBUpdateUnlock(void)
 {
     ixOsalMutexUnlock(&portUpdateLock);
 }
-

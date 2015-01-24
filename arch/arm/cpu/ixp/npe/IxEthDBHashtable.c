@@ -2,16 +2,16 @@
  * @file ethHash.c
  *
  * @brief Hashtable implementation
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -57,7 +57,7 @@
  *
  * @param hashTable uninitialized hash table structure
  * @param numBuckets number of buckets to use
- * @param entryHashFunction hash function used 
+ * @param entryHashFunction hash function used
  * to hash entire hash node data block (for adding)
  * @param matchFunctions array of match functions, indexed on type,
  * used to differentiate records with the same hash value
@@ -67,10 +67,10 @@
  *
  * @internal
  */
-void ixEthDBInitHash(HashTable *hashTable, 
-                     UINT32 numBuckets, 
-                     HashFunction entryHashFunction, 
-                     MatchFunction *matchFunctions, 
+void ixEthDBInitHash(HashTable *hashTable,
+                     UINT32 numBuckets,
+                     HashFunction entryHashFunction,
+                     MatchFunction *matchFunctions,
                      FreeFunction freeFunction)
 {
     UINT32 bucketIndex;
@@ -182,7 +182,7 @@ IxEthDBStatus ixEthDBRemoveHashEntry(HashTable *hashTable, int keyType, void *re
     UINT32 bucketIndex     = hashValue % hashTable->numBuckets;
     HashNode *node         = hashTable->hashBuckets[bucketIndex];
     HashNode *previousNode = NULL;
-    
+
     LockStack locks;
 
     INIT_STACK(&locks);
@@ -249,12 +249,12 @@ IxEthDBStatus ixEthDBRemoveHashEntry(HashTable *hashTable, int keyType, void *re
  * @param hashTable hash table to perform the search into
  * @param reference search key (a MAC address)
  * @param keyType type of record key used for matching
- * @param searchResult pointer where a reference to the located hash node 
+ * @param searchResult pointer where a reference to the located hash node
  * is placed
  *
  * Searches the entry with the same key as <i>reference</i> and places the
  * pointer to the resulting node in <i>searchResult</i>.
- * An implicit write access lock is granted after a search, which gives the 
+ * An implicit write access lock is granted after a search, which gives the
  * caller the opportunity to modify the entry.
  * Access should be released as soon as possible using @ref ixEthDBReleaseHashNode().
  *
@@ -309,7 +309,7 @@ IxEthDBStatus ixEthDBSearchHashEntry(HashTable *hashTable, int keyType, void *re
  * @param keyType type of record key used for matching
  *
  * Searches the entry with the same key as <i>reference</i>.
- * No implicit write access lock is granted after a search, hence the 
+ * No implicit write access lock is granted after a search, hence the
  * caller cannot access or modify the entry. The result is only temporary.
  *
  * @see ixEthDBReleaseHashNode()
@@ -518,7 +518,7 @@ IxEthDBStatus ixEthDBIncrementHashIterator(HashTable *hashTable, HashIterator *i
                     UNLOCK(&iterator->previousNode->lock);
                 }
             }
-            
+
             /* redirect iterator */
             iterator->previousNode = NULL;
             iterator->node         = node;

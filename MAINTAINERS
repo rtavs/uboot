@@ -562,7 +562,7 @@ Stefano Babic <sbabic@denx.de>
 	mx51evk		i.MX51
 	polaris		xscale
 	trizepsiv	xscale
- 	vision2		i.MX51
+	vision2		i.MX51
 
 Jason Liu <r64343@freescale.com>
 
@@ -840,7 +840,7 @@ Marek Vasut <marek.vasut@gmail.com>
 	palmtc		xscale
 	vpac270		xscale
 	zipitz2		xscale
- 	efikamx		i.MX51
+	efikamx		i.MX51
 
 Hugo Villeneuve <hugo.villeneuve@lyrtech.com>
 
@@ -888,7 +888,7 @@ Sughosh Ganu <urwithsughosh@gmail.com>
 -------------------------------------------------------------------------
 
 Unknown / orphaned boards:
- 	Board		CPU	Last known maintainer / Comment
+	Board		CPU	Last known maintainer / Comment
 .........................................................................
 	cradle		xscale	Kyle Harris <kharris@nexus-tech.net> / dead address
 	ixdp425		xscale	Kyle Harris <kharris@nexus-tech.net> / dead address

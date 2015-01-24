@@ -2,16 +2,16 @@
  * @file IxEthDBAPI.c
  *
  * @brief Implementation of the public API
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,7 +24,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,7 +37,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -57,41 +57,41 @@ IX_ETH_DB_PUBLIC IxEthDBStatus ixEthDBDependencyPortMapShow(IxEthDBPortId portID
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed
  * successfully
- */ 
+ */
 IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBDependencyPortMapShow(IxEthDBPortId portID, IxEthDBPortMap map)
 {
     UINT32 portIndex;
     BOOL mapSelf = TRUE, mapNone = TRUE, firstPort = TRUE;
-    
+
     /* dependency port maps */
     printf("Dependency port map: ");
-    
+
     /* browse the port map */
     for (portIndex = 0 ; portIndex < IX_ETH_DB_NUMBER_OF_PORTS ; portIndex++)
     {
         if (IS_PORT_INCLUDED(portIndex, map))
         {
             mapNone   = FALSE;
-            
+
             if (portIndex != portID)
             {
                 mapSelf = FALSE;
             }
-            
+
             printf("%s%d", firstPort ? "{" : ", ", portIndex);
-            
+
             firstPort = FALSE;
         }
     }
-    
+
     if (mapNone)
     {
         mapSelf = FALSE;
     }
-    
+
     printf("%s (%s)\n", firstPort ? "" : "}", mapSelf ? "self" : mapNone ? "none" : "group");
-    
+
     return IX_ETH_DB_SUCCESS;
 }
 
@@ -103,7 +103,7 @@ IxEthDBStatus ixEthDBDependencyPortMapShow(IxEthDBPortId portID, IxEthDBPortMap 
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
- * @warning deprecated, use @ref ixEthDBFilteringDatabaseShowRecords() 
+ * @warning deprecated, use @ref ixEthDBFilteringDatabaseShowRecords()
  * instead. Calling this function is equivalent to calling
  * ixEthDBFilteringDatabaseShowRecords(portID, IX_ETH_DB_FILTERING_RECORD)
  */
@@ -123,9 +123,9 @@ IxEthDBStatus ixEthDBFilteringDatabaseShow(IxEthDBPortId portID)
 
     /* display table header */
     printf("Ethernet database records for port ID [%d]\n", portID);
-    
+
     ixEthDBDependencyPortMapShow(portID, portInfo->dependencyPortMap);
-    
+
     if (ixEthDBPortDefinitions[portID].type == IX_ETH_NPE)
     {
         printf("NPE updates are %s\n\n", portInfo->updateMethod.updateEnabled ? "enabled" : "disabled");
@@ -183,7 +183,7 @@ IxEthDBStatus ixEthDBFilteringDatabaseShow(IxEthDBPortId portID)
  * Note that this function is documented in the main component
  * header file, IxEthDB.h.
  *
- * @warning deprecated, use @ref ixEthDBFilteringDatabaseShowRecords() 
+ * @warning deprecated, use @ref ixEthDBFilteringDatabaseShowRecords()
  * instead. Calling this function is equivalent to calling
  * ixEthDBFilteringDatabaseShowRecords(IX_ETH_DB_ALL_PORTS, IX_ETH_DB_FILTERING_RECORD)
  */
@@ -275,7 +275,7 @@ void ixEthDBRecordShow(MacDescriptor *descriptor, IxEthDBRecordType recordFilter
     }
     else if (recordFilter == IX_ETH_DB_WIFI_RECORD)
     {
-        /* display WiFi record header - leave this commented code in place, its purpose is to align the print format with the header 
+        /* display WiFi record header - leave this commented code in place, its purpose is to align the print format with the header
         printf("    MAC address    |   GW MAC address  \n");
         printf("_______________________________________\n"); */
 
@@ -313,7 +313,7 @@ void ixEthDBRecordShow(MacDescriptor *descriptor, IxEthDBRecordType recordFilter
     }
     else if (recordFilter == IX_ETH_DB_FIREWALL_RECORD)
     {
-        /* display Firewall record header - leave this commented code in place, its purpose is to align the print format with the header 
+        /* display Firewall record header - leave this commented code in place, its purpose is to align the print format with the header
         printf("    MAC address   \n");
         printf("__________________\n"); */
 
@@ -330,7 +330,7 @@ void ixEthDBRecordShow(MacDescriptor *descriptor, IxEthDBRecordType recordFilter
     }
     else if (recordFilter == IX_ETH_DB_ALL_RECORD_TYPES)
     {
-        /* display composite record header - leave this commented code in place, its purpose is to align the print format with the header 
+        /* display composite record header - leave this commented code in place, its purpose is to align the print format with the header
         printf("    MAC address   | Record | Age|  Type   | VLAN |CFI| QoS |  GW MAC address   \n");
         printf("_______________________________________________________________________________\n"); */
 
@@ -462,7 +462,7 @@ void ixEthDBPortInfoShow(IxEthDBPortId portID, IxEthDBRecordType recordFilter)
     ixEthDBDependencyPortMapShow(portID, portInfo->dependencyPortMap);
 
     /* NPE dynamic updates */
-    if (ixEthDBPortDefinitions[portID].type == IX_ETH_NPE) 
+    if (ixEthDBPortDefinitions[portID].type == IX_ETH_NPE)
     {
         printf(" - NPE dynamic update is %s\n", portInfo->updateMethod.updateEnabled ? "enabled" : "disabled");
     }
@@ -476,19 +476,19 @@ void ixEthDBPortInfoShow(IxEthDBPortId portID, IxEthDBRecordType recordFilter)
         if ((portInfo->featureStatus & IX_ETH_DB_WIFI_HEADER_CONVERSION) != 0)
         {
             /* WiFi header conversion */
-            if ((portInfo->frameControlDurationID 
-                + portInfo->bbsid[0] 
-                + portInfo->bbsid[1] 
-                + portInfo->bbsid[2] 
-                + portInfo->bbsid[3] 
-                + portInfo->bbsid[4] 
+            if ((portInfo->frameControlDurationID
+                + portInfo->bbsid[0]
+                + portInfo->bbsid[1]
+                + portInfo->bbsid[2]
+                + portInfo->bbsid[3]
+                + portInfo->bbsid[4]
                 + portInfo->bbsid[5]) == 0)
             {
                 printf(" - WiFi header conversion not configured\n");
             }
             else
-            {  
-                printf(" - WiFi header conversion: BBSID [%02X:%02X:%02X:%02X:%02X:%02X], Frame Control 0x%X, Duration/ID 0x%X\n", 
+            {
+                printf(" - WiFi header conversion: BBSID [%02X:%02X:%02X:%02X:%02X:%02X], Frame Control 0x%X, Duration/ID 0x%X\n",
                     portInfo->bbsid[0],
                     portInfo->bbsid[1],
                     portInfo->bbsid[2],
@@ -518,7 +518,7 @@ void ixEthDBPortInfoShow(IxEthDBPortId portID, IxEthDBRecordType recordFilter)
             printf(" - Firewall not enabled\n");
         }
     }
-  
+
     /* browse database if asked to display records */
     if (recordFilter != IX_ETH_DB_NO_RECORD_TYPE)
     {
@@ -548,7 +548,7 @@ void ixEthDBPortInfoShow(IxEthDBPortId portID, IxEthDBRecordType recordFilter)
                 printf("EthDB (API): Error, database browser failed (no access), giving up\n");
             }
         }
-        
+
         printf("\nFound %d records\n\n", recordCount);
     }
 }
@@ -608,7 +608,7 @@ IxEthDBStatus ixEthDBHeaderShow(IxEthDBRecordType recordFilter)
   {
     return IX_ETH_DB_INVALID_ARG;
   }
-  
+
   return IX_ETH_DB_SUCCESS;
 }
 
@@ -618,35 +618,34 @@ IxEthDBStatus ixEthDBHeaderShow(IxEthDBRecordType recordFilter)
  * @param portID ID of the port to display (or IX_ETH_DB_ALL_PORTS for all the ports)
  * @param recordFilter record filter (use IX_ETH_DB_NO_RECORD_TYPE to display only
  * port information)
- * 
+ *
  * Note that this function is documented in the main component header
  * file, IxEthDB.h.
  *
  * @return IX_ETH_DB_SUCCESS if the operation completed successfully or
  * an appropriate error code otherwise
- * 
+ *
  */
 IX_ETH_DB_PUBLIC
 IxEthDBStatus ixEthDBFilteringDatabaseShowRecords(IxEthDBPortId portID, IxEthDBRecordType recordFilter)
 {
   IxEthDBPortId currentPort;
   BOOL showAllPorts = (portID == IX_ETH_DB_ALL_PORTS);
-  
+
   IX_ETH_DB_CHECK_PORT_ALL(portID);
 
   printf("\nEthernet learning/filtering database: listing %d port(s)\n\n", showAllPorts ? (UINT32) IX_ETH_DB_NUMBER_OF_PORTS : 1);
-  
+
   currentPort = showAllPorts ? 0 : portID;
-  
+
   while (currentPort != IX_ETH_DB_NUMBER_OF_PORTS)
   {
     /* display port info */
     ixEthDBPortInfoShow(currentPort, recordFilter);
-    
+
     /* next port */
     currentPort = showAllPorts ? currentPort + 1 : IX_ETH_DB_NUMBER_OF_PORTS;
   }
-  
+
   return IX_ETH_DB_SUCCESS;
 }
-

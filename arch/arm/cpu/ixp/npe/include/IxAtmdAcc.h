@@ -9,16 +9,16 @@
  * This file contains the public API of IxAtmdAcc, related to the
  * data functions of the component
  *
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -44,7 +44,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -455,7 +455,7 @@ typedef void (*IxAtmdAccTxVcBufferReturnCallback) (IxAtmdAccUserId userId,
  *
  * Failing to initilialize the IxAtmdAcc API before any use of it will
  * result in a failed status.
- * If the specified component is not present, a success status will still be 
+ * If the specified component is not present, a success status will still be
  * returned, however, a warning indicating the NPE to download to is not
  * present will be issued.
  *
@@ -487,7 +487,7 @@ ixAtmdAccShow (void);
 /**
  *
  * @ingroup IxAtmdAccAPI
- * 
+ *
  * @fn ixAtmdAccStatsShow (void)
  *
  * @brief Show all IxAtmdAcc stats
@@ -657,7 +657,7 @@ PUBLIC IX_STATUS ixAtmdAccRxVcConnect (IxAtmLogicalPort port,
 /**
  *
  * @ingroup IxAtmdAccAPI
- * 
+ *
  * @fn ixAtmdAccRxVcFreeReplenish (IxAtmConnId connId,
                         IX_OSAL_MBUF * mbufPtr)
  *
@@ -743,7 +743,7 @@ PUBLIC IX_STATUS ixAtmdAccRxVcFreeReplenish (IxAtmConnId connId,
 /**
  *
  * @ingroup IxAtmdAccAPI
- * 
+ *
  * @fn ixAtmdAccRxVcFreeLowCallbackRegister (IxAtmConnId connId,
                                     unsigned int numberOfMbufs,
                                     IxAtmdAccRxVcFreeLowCallback callback)
@@ -874,7 +874,7 @@ PUBLIC IX_STATUS ixAtmdAccRxVcEnable (IxAtmConnId connId);
 /**
  *
  * @ingroup IxAtmdAccAPI
- * 
+ *
  * @fn ixAtmdAccRxVcDisable (IxAtmConnId connId)
  *
  * @brief Stop the RX service on a VC.
@@ -914,7 +914,7 @@ PUBLIC IX_STATUS ixAtmdAccRxVcDisable (IxAtmConnId connId);
 /**
  *
  * @ingroup IxAtmdAccAPI
- * 
+ *
  * @fn ixAtmdAccRxVcTryDisconnect (IxAtmConnId connId)
  *
  * @brief Disconnect a VC from the RX service.
@@ -949,7 +949,7 @@ PUBLIC IX_STATUS ixAtmdAccRxVcTryDisconnect (IxAtmConnId connId);
 /**
  *
  * @ingroup IxAtmdAccAPI
- * 
+ *
  * @fn ixAtmdAccTxVcConnect (IxAtmLogicalPort port,
                       unsigned int vpi,
                       unsigned int vci,
@@ -1190,5 +1190,3 @@ PUBLIC IX_STATUS ixAtmdAccTxVcTryDisconnect (IxAtmConnId connId);
 /**
  * @} defgroup IxAtmdAccAPI
  */
-
-

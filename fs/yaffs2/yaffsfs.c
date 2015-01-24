@@ -393,7 +393,7 @@ int yaffs_open(const char *path, int oflag, int mode)
 				   yaffsfs_handle[i].inUse &&
 				    obj == yaffsfs_handle[i].obj)
 				 {
-				 	alreadyOpen = 1;
+					alreadyOpen = 1;
 					if(yaffsfs_handle[i].exclusive)
 					{
 						alreadyExclusive = 1;
@@ -453,7 +453,7 @@ int yaffs_open(const char *path, int oflag, int mode)
 		{
 			h->obj = obj;
 			h->inUse = 1;
-	    	h->readOnly = (oflag & (O_WRONLY | O_RDWR)) ? 0 : 1;
+		h->readOnly = (oflag & (O_WRONLY | O_RDWR)) ? 0 : 1;
 			h->append =  (oflag & O_APPEND) ? 1 : 0;
 			h->exclusive = (oflag & O_EXCL) ? 1 : 0;
 			h->position = 0;
@@ -835,9 +835,9 @@ static int yaffsfs_DoStat(yaffs_Object *obj,struct yaffs_stat *buf)
 
 	if(obj && buf)
 	{
-    	buf->st_dev = (int)obj->myDev->genericDevice;
-    	buf->st_ino = obj->objectId;
-    	buf->st_mode = obj->yst_mode & ~S_IFMT; // clear out file type bits
+	buf->st_dev = (int)obj->myDev->genericDevice;
+	buf->st_ino = obj->objectId;
+	buf->st_mode = obj->yst_mode & ~S_IFMT; // clear out file type bits
 
 		if(obj->variantType == YAFFS_OBJECT_TYPE_DIRECTORY)
 		{
@@ -852,16 +852,16 @@ static int yaffsfs_DoStat(yaffs_Object *obj,struct yaffs_stat *buf)
 			buf->st_mode |= S_IFREG;
 		}
 
-    	buf->st_nlink = yaffs_GetObjectLinkCount(obj);
-    	buf->st_uid = 0;
-    	buf->st_gid = 0;;
-    	buf->st_rdev = obj->yst_rdev;
-    	buf->st_size = yaffs_GetObjectFileLength(obj);
+	buf->st_nlink = yaffs_GetObjectLinkCount(obj);
+	buf->st_uid = 0;
+	buf->st_gid = 0;;
+	buf->st_rdev = obj->yst_rdev;
+	buf->st_size = yaffs_GetObjectFileLength(obj);
 		buf->st_blksize = obj->myDev->nDataBytesPerChunk;
-    	buf->st_blocks = (buf->st_size + buf->st_blksize -1)/buf->st_blksize;
-    	buf->yst_atime = obj->yst_atime;
-    	buf->yst_ctime = obj->yst_ctime;
-    	buf->yst_mtime = obj->yst_mtime;
+	buf->st_blocks = (buf->st_size + buf->st_blksize -1)/buf->st_blksize;
+	buf->yst_atime = obj->yst_atime;
+	buf->yst_ctime = obj->yst_ctime;
+	buf->yst_mtime = obj->yst_mtime;
 		retVal = 0;
 	}
 	return retVal;
@@ -1203,9 +1203,9 @@ static void yaffsfs_SetDirRewound(yaffsfs_DirectorySearchContext *dsc)
 	   dsc->offset = 0;
 
 	   if( list_empty(&dsc->dirObj->variant.directoryVariant.children)){
-	   	dsc->nextReturn = NULL;
+		dsc->nextReturn = NULL;
 	   } else {
-	      	dsc->nextReturn = list_entry(dsc->dirObj->variant.directoryVariant.children.next,
+		dsc->nextReturn = list_entry(dsc->dirObj->variant.directoryVariant.children.next,
 						yaffs_Object,siblings);
 	   }
 	} else {
@@ -1221,14 +1221,14 @@ static void yaffsfs_DirAdvance(yaffsfs_DirectorySearchContext *dsc)
 
 	   if( dsc->nextReturn == NULL ||
 	       list_empty(&dsc->dirObj->variant.directoryVariant.children)){
-	   	dsc->nextReturn = NULL;
+		dsc->nextReturn = NULL;
 	   } else {
 		   struct list_head *next = dsc->nextReturn->siblings.next;
 
 		   if( next == &dsc->dirObj->variant.directoryVariant.children)
-	   		dsc->nextReturn = NULL; /* end of list */
-	   	   else
-		   	dsc->nextReturn = list_entry(next,yaffs_Object,siblings);
+			dsc->nextReturn = NULL; /* end of list */
+		   else
+			dsc->nextReturn = list_entry(next,yaffs_Object,siblings);
 	   }
 	} else {
 		/* Hey someone isn't playing nice! */
@@ -1262,7 +1262,7 @@ static void yaffsfs_RemoveObjectCallback(yaffs_Object *obj)
 yaffs_DIR *yaffs_opendir(const char *dirname)
 {
 	yaffs_DIR *dir = NULL;
- 	yaffs_Object *obj = NULL;
+	yaffs_Object *obj = NULL;
 	yaffsfs_DirectorySearchContext *dsc = NULL;
 
 	yaffsfs_Lock();

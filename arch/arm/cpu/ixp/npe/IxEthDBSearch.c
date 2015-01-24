@@ -1,15 +1,15 @@
 /**
  * @file IxEthDBSearch.c
- * 
+ *
  * @par
  * IXP400 SW Release version 2.0
- * 
+ *
  * -- Copyright Notice --
- * 
+ *
  * @par
  * Copyright 2001-2005, Intel Corporation.
  * All rights reserved.
- * 
+ *
  * @par
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -22,7 +22,7 @@
  * 3. Neither the name of the Intel Corporation nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * @par
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,7 +35,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
+ *
  * @par
  * -- End of Copyright Notice --
  */
@@ -59,10 +59,10 @@ BOOL ixEthDBAddressRecordMatch(void *untypedReference, void *untypedEntry)
 {
     MacDescriptor *entry     = (MacDescriptor *) untypedEntry;
     MacDescriptor *reference = (MacDescriptor *) untypedReference;
-    
+
     /* check accepted record types */
     if ((entry->type & reference->type) == 0) return FALSE;
-       
+
     return (ixEthDBAddressCompare((UINT8 *) entry->macAddress, (UINT8 *) reference->macAddress) == 0);
 }
 
@@ -82,10 +82,10 @@ BOOL ixEthDBVlanRecordMatch(void *untypedReference, void *untypedEntry)
 {
     MacDescriptor *entry     = (MacDescriptor *) untypedEntry;
     MacDescriptor *reference = (MacDescriptor *) untypedReference;
-    
+
     /* check accepted record types */
     if ((entry->type & reference->type) == 0) return FALSE;
-    
+
     return (IX_ETH_DB_GET_VLAN_ID(entry->recordData.filteringVlanData.ieee802_1qTag) ==
         IX_ETH_DB_GET_VLAN_ID(reference->recordData.filteringVlanData.ieee802_1qTag)) &&
         (ixEthDBAddressCompare(entry->macAddress, reference->macAddress) == 0);
@@ -107,10 +107,10 @@ BOOL ixEthDBPortRecordMatch(void *untypedReference, void *untypedEntry)
 {
     MacDescriptor *entry     = (MacDescriptor *) untypedEntry;
     MacDescriptor *reference = (MacDescriptor *) untypedReference;
-    
+
     /* check accepted record types */
     if ((entry->type & reference->type) == 0) return FALSE;
-    
+
     return (entry->portID == reference->portID) &&
         (ixEthDBAddressCompare(entry->macAddress, reference->macAddress) == 0);
 }
@@ -122,7 +122,7 @@ BOOL ixEthDBPortRecordMatch(void *untypedReference, void *untypedEntry)
  * @param entry record to match (unused)
  *
  * This function is registered in the matching functions
- * array on invalid types. Calling it will display an 
+ * array on invalid types. Calling it will display an
  * error message, indicating an error in the component logic.
  *
  * @return FALSE
@@ -147,8 +147,8 @@ BOOL ixEthDBNullMatch(void *reference, void *entry)
  *
  * This function registers the available record matching functions
  * by indexing them on record types into the given function array.
- * 
- * Note that it is compulsory to call this in ixEthDBInit(), 
+ *
+ * Note that it is compulsory to call this in ixEthDBInit(),
  * otherwise hashtable searching and removal will not work
  *
  * @return number of registered functions
@@ -159,22 +159,22 @@ IX_ETH_DB_PUBLIC
 UINT32 ixEthDBMatchMethodsRegister(MatchFunction *matchFunctions)
 {
     UINT32 i;
-    
+
     /* safety first */
     for ( i = 0 ; i < IX_ETH_DB_MAX_KEY_INDEX + 1 ; i++)
     {
         matchFunctions[i] = ixEthDBNullMatch;
     }
-    
+
     /* register MAC search method */
     matchFunctions[IX_ETH_DB_MAC_KEY] = ixEthDBAddressRecordMatch;
-    
+
     /* register MAC/PortID search method */
     matchFunctions[IX_ETH_DB_MAC_PORT_KEY] = ixEthDBPortRecordMatch;
-    
+
     /* register MAC/VLAN ID search method */
     matchFunctions[IX_ETH_DB_MAC_VLAN_KEY] = ixEthDBVlanRecordMatch;
-    
+
     return 3; /* three methods */
 }
 
@@ -185,7 +185,7 @@ UINT32 ixEthDBMatchMethodsRegister(MatchFunction *matchFunctions)
  * @param typeFilter type of records to consider for matching
  *
  * @warning if searching is successful an implicit write lock
- * to the search result is granted, therefore unlock the 
+ * to the search result is granted, therefore unlock the
  * entry using @ref ixEthDBReleaseHashNode() as soon as possible.
  *
  * @see ixEthDBReleaseHashNode()
@@ -200,7 +200,7 @@ HashNode* ixEthDBSearch(IxEthDBMacAddr *macAddress, IxEthDBRecordType typeFilter
 {
     HashNode *searchResult = NULL;
     MacDescriptor reference;
-    
+
     TEST_FIXTURE_INCREMENT_DB_CORE_ACCESS_COUNTER;
 
     if (macAddress == NULL)
@@ -210,10 +210,10 @@ HashNode* ixEthDBSearch(IxEthDBMacAddr *macAddress, IxEthDBRecordType typeFilter
 
     /* fill search fields */
     memcpy(reference.macAddress, macAddress, sizeof (IxEthDBMacAddr));
-    
+
     /* set acceptable record types */
     reference.type = typeFilter;
-    
+
     BUSY_RETRY(ixEthDBSearchHashEntry(&dbHashtable, IX_ETH_DB_MAC_KEY, &reference, &searchResult));
 
     return searchResult;
@@ -224,7 +224,7 @@ IxEthDBStatus ixEthDBPeek(IxEthDBMacAddr *macAddress, IxEthDBRecordType typeFilt
 {
     MacDescriptor reference;
     IxEthDBStatus result;
-    
+
     TEST_FIXTURE_INCREMENT_DB_CORE_ACCESS_COUNTER;
 
     if (macAddress == NULL)
@@ -234,10 +234,10 @@ IxEthDBStatus ixEthDBPeek(IxEthDBMacAddr *macAddress, IxEthDBRecordType typeFilt
 
     /* fill search fields */
     memcpy(reference.macAddress, macAddress, sizeof (IxEthDBMacAddr));
-    
+
     /* set acceptable record types */
     reference.type = typeFilter;
-    
+
     result = ixEthDBPeekHashEntry(&dbHashtable, IX_ETH_DB_MAC_KEY, &reference);
 
     return result;
@@ -251,7 +251,7 @@ IxEthDBStatus ixEthDBPeek(IxEthDBMacAddr *macAddress, IxEthDBRecordType typeFilt
  * @param typeFilter type of records to consider for matching
  *
  * @warning if searching is successful an implicit write lock
- * to the search result is granted, therefore unlock the 
+ * to the search result is granted, therefore unlock the
  * entry using @ref ixEthDBReleaseHashNode() as soon as possible.
  *
  * @see ixEthDBReleaseHashNode()
@@ -266,16 +266,16 @@ HashNode* ixEthDBPortSearch(IxEthDBMacAddr *macAddress, IxEthDBPortId portID, Ix
 {
     HashNode *searchResult = NULL;
     MacDescriptor reference;
-    
+
     if (macAddress == NULL)
     {
         return NULL;
     }
-    
+
     /* fill search fields */
     memcpy(reference.macAddress, macAddress, sizeof (IxEthDBMacAddr));
     reference.portID = portID;
-    
+
     /* set acceptable record types */
     reference.type = typeFilter;
 
@@ -292,7 +292,7 @@ HashNode* ixEthDBPortSearch(IxEthDBMacAddr *macAddress, IxEthDBPortId portID, Ix
  * @param typeFilter type of records to consider for matching
  *
  * @warning if searching is successful an implicit write lock
- * to the search result is granted, therefore unlock the 
+ * to the search result is granted, therefore unlock the
  * entry using @ref ixEthDBReleaseHashNode() as soon as possible.
  *
  * @see ixEthDBReleaseHashNode()
@@ -307,17 +307,17 @@ HashNode* ixEthDBVlanSearch(IxEthDBMacAddr *macAddress, IxEthDBVlanId vlanID, Ix
 {
     HashNode *searchResult = NULL;
     MacDescriptor reference;
-    
+
     if (macAddress == NULL)
     {
         return NULL;
     }
-    
+
     /* fill search fields */
     memcpy(reference.macAddress, macAddress, sizeof (IxEthDBMacAddr));
-    reference.recordData.filteringVlanData.ieee802_1qTag = 
+    reference.recordData.filteringVlanData.ieee802_1qTag =
             IX_ETH_DB_SET_VLAN_ID(reference.recordData.filteringVlanData.ieee802_1qTag, vlanID);
-    
+
     /* set acceptable record types */
     reference.type = typeFilter;
 
