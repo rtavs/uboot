@@ -7,6 +7,8 @@
 #usage:
 #
 
+CROSS_COMPILE="arm-linux-gnueabihf-"
+
 if [ "${CROSS_COMPILE}" ] ; then
 	MAKE="make CROSS_COMPILE=${CROSS_COMPILE}"
 else
@@ -14,6 +16,8 @@ else
 fi
 
 
+target=m8_k200_v1
+out=out
 
 build_target() {
 
