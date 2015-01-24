@@ -91,7 +91,7 @@ ifeq ("$(origin O)", "command line")
 BUILD_DIR := $(O)
 endif
 endif
-
+BUILD_DIR ?=$(CURDIR)/build
 ifneq ($(BUILD_DIR),)
 saved-output := $(BUILD_DIR)
 
