@@ -67,8 +67,8 @@ ifeq ($(CONFIG_NEXT_NAND),y)
 COBJS-$(CONFIG_ENV_IS_IN_AML_NAND) += env_amlnf.o
 endif
 
-#COBJS-y += partition_table.o
-COBJS-$(CONFIG_NEXT_NAND) += partition_table.o
+COBJS-y += partition_table.o
+#COBJS-$(CONFIG_NEXT_NAND) += partition_table.o
 
 ifneq ($(CONFIG_NEXT_NAND),y)
 COBJS-$(CONFIG_ENV_IS_IN_AML_NAND) += env_amlnand.o

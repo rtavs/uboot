@@ -21,8 +21,8 @@ static void delay_us(unsigned long us)
     #define hx_serial_puts serial_puts
 	#define hx_serial_put_hex serial_put_hex
 #else
-    #define hx_serial_puts
-	#define hx_serial_put_hex
+    #define hx_serial_puts(...)
+	#define hx_serial_put_hex(...)
 #endif
 
 int init_pctl_ddr3(struct ddr_set * timing_set)

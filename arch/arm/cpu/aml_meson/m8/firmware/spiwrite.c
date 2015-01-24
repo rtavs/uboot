@@ -15,10 +15,9 @@ STATIC_PREFIX int SPI_page_program(unsigned * addr_source, unsigned spi_addr, in
 {
    //unsigned temp;
    unsigned temp_addr;
-   int temp_bl,i;
+   int i;
 
    temp_addr = spi_addr;
-   temp_bl = byte_length;
    if(byte_length&0x1f)
         return -1;
    ///remove SPI nor from AHB bus)

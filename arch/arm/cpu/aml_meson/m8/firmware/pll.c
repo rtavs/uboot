@@ -13,7 +13,6 @@ unsigned long    clk_util_clk_msr(unsigned long   clk_mux)
 {
 	unsigned long   measured_val;
 	unsigned long   uS_gate_time=64; //64us: 1024MHz, 32us:2048MHz
-	unsigned long   dummy_rd;
 
 	//set resolution
 	writel((uS_gate_time-1),P_MSR_CLK_REG0);
@@ -23,7 +22,7 @@ unsigned long    clk_util_clk_msr(unsigned long   clk_mux)
 		P_MSR_CLK_REG0);
 
 	//dummy read
-	{ dummy_rd = readl(P_MSR_CLK_REG0); }
+	{ readl(P_MSR_CLK_REG0); }
 
 	//Wait for the measurement to be done
 	while( (readl(P_MSR_CLK_REG0) & (1 << 31)) ) {}
