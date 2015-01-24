@@ -6,7 +6,7 @@ $(warning $(FIRMWARE))
 
 PLATFORM_CPPFLAGS+=-DCONFIG_AMLROM_SPL
 
-LDFLAGS	= -Bstatic -T $(obj)firmware.lds  $(PLATFORM_LDFLAGS)
+LDFLAGS	= -Bstatic -T $(obj)spl.lds  $(PLATFORM_LDFLAGS)
 
 
 CFLAGS	:=$(CFLAGS:-marm=-mthumb)
@@ -37,15 +37,12 @@ vpath %.S $(VPATH_LIST)
 vpath %.s $(VPATH_LIST)
 
 origin_LDS=$(abspath firmware.lds)
-target_LDS=$(abspath $(obj)firmware.lds)
-ifeq ( $(origin_LDS),$(target_LDS))
-	target_LDS=$(OBJTREE)/firmware.lds
-endif
-
+target_LDS=$(abspath $(obj)spl.lds)
 
 
 $(warning VPATH_LIST=$(VPATH_LIST))
-
+$(warning origin_LDS=$(origin_LDS))
+$(warning target_LDS=$(target_LDS))
 
 ALL	= $(FIRMWARE) $(basename $(FIRMWARE)).out
 
