@@ -188,13 +188,6 @@ extern int post_hotkeys_pressed(void);
 #define CONFIG_SYS_POST_CODEC		0x00200000
 #define CONFIG_SYS_POST_COPROC		0x00400000
 
-#ifdef CONFIG_POST_AML
-#define CONFIG_SYS_POST_PLL				0x00800000
-#define CONFIG_SYS_POST_NAND		0x01000000
-#define CONFIG_SYS_POST_SDCARD    0x02000000
-#define CONFIG_SYS_POST_ADC			0x04000000
-#endif
-
 #endif /* CONFIG_POST */
 
 #endif /* _POST_H */

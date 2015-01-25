@@ -57,11 +57,7 @@ static char buf[1024];
 
 /* This combination will not print messages with the default loglevel */
 static unsigned console_loglevel = 3;
-#ifdef CONFIG_POST_AML
-static unsigned default_message_loglevel = 1;
-#else
- static unsigned default_message_loglevel = 4;
-#endif
+static unsigned default_message_loglevel = 4;
 static unsigned log_version = 1;
 #ifdef CONFIG_ALT_LB_ADDR
 static volatile logbuff_t *log;
@@ -72,11 +68,7 @@ static char *lbuf;
 
 unsigned long __logbuffer_base(void)
 {
-#ifdef CONFIG_POST_AML
-	return CONFIG_SYS_SDRAM_BASE + gd->ram_size - LOGBUFF_LEN;
-#else
 	return CONFIG_SYS_SDRAM_BASE + gd->bd->bi_memsize - LOGBUFF_LEN;
-#endif
 }
 unsigned long logbuffer_base (void) __attribute__((weak, alias("__logbuffer_base")));
 

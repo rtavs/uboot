@@ -758,9 +758,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	 */
 	{
 		ulong pram;
-#ifndef CONFIG_POST_AML
 		uchar memsz[32];
-#endif
 #ifdef CONFIG_PRAM
 		char *s;
 
@@ -778,10 +776,8 @@ void board_init_r (gd_t *id, ulong dest_addr)
 		pram += (LOGBUFF_LEN+LOGBUFF_OVERHEAD)/1024;
 #endif
 #endif
-#ifndef CONFIG_POST_AML
 		sprintf ((char *)memsz, "%ldk", (bd->bi_memsize / 1024) - pram);
 		setenv ("mem", (char *)memsz);
-#endif
 	}
 #endif
 

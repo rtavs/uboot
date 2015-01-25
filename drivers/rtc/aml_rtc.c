@@ -16,9 +16,6 @@
 #include <common.h>
 #include <asm/arch/io.h>
 #include <aml_rtc.h>
-#ifdef CONFIG_POST_AML
-#include <post.h>
-#endif
 
 #define printk printf
 
@@ -453,22 +450,4 @@ int aml_rtc_init(void)
 #endif
 	return 0;
 }
-
-#ifdef CONFIG_POST_AML
-#if CONFIG_POST & CONFIG_SYS_POST_RTC
-void aml_test_1s_clock(unsigned long* osc_clk_count1, unsigned long* osc_clk_count2)
-{
-	WR_RTC(RTC_ADDR3, RD_RTC(RTC_ADDR3) | (1 << 17));   // Enable count always
-	*osc_clk_count1 = RD_RTC(RTC_ADDR2);    // Wait for 50uS.  32.768khz is 30.5uS.  This should be long
-										// enough for one full cycle of 32.768 khz
-	delay_us( 1000000 );
-	*osc_clk_count2 = RD_RTC(RTC_ADDR2);
-	WR_RTC(RTC_ADDR3, RD_RTC(RTC_ADDR3) & ~(1 << 17));  // disable count always
-}
-
-unsigned aml_get_gpo_dig()
-{
-	return (RD_RTC(RTC_ADDR1) & 0x8);
-}
-#endif
 #endif

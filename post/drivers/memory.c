@@ -155,10 +155,6 @@
 
 #if CONFIG_POST & CONFIG_SYS_POST_MEMORY
 
-#ifdef CONFIG_POST_AML
-#include <asm/cache.h>
-#endif
-
 DECLARE_GLOBAL_DATA_PTR;
 
 /*
@@ -459,47 +455,14 @@ static int memory_post_tests (unsigned long start, unsigned long size)
 __attribute__((weak))
 int arch_memory_test_prepare(u32 *vstart, u32 *size, phys_addr_t *phys_offset)
 {
-#ifdef CONFIG_POST_AML
-	//*vstart = POST_MEM_START;
-	//*size=POST_MEM_SIZE;  // just for test
-	*vstart = CONFIG_SYS_SDRAM_BASE;
-	*size = (gd->ram_size >= 256 << 20 ?
-			256 << 20 :  gd->ram_size) - (1 << 20);
-	/* Limit area to be tested with the board info struct */
-	if(gd->flags & GD_FLG_RELOC){
-		if ((*vstart) + (*size) > (ulong)gd)
-			*size = (ulong)gd - *vstart;
-	}
-	else{
-		// reserved program stack 1M area
-		if ((*vstart) + (*size) > ((ulong)gd-0x100000))
-			*size = (ulong)gd - *vstart - 0x100000;
-	}
-
-
-/*
-	// if need disable/enable cache, board_init_f POST function call need move to board_init_r
-	// because cache enable will set up MMU, mmu table addr is stored in gd->tlb_addr,
-	// so POST memory must after gd->tlb_addr initial
-	dcache_flush();
-	icache_invalid();
-	dcache_clean();
-	dcache_disable();
-	 // must invalid dcache after dcache_disable
-	 // if no valid dcache, dcache_enable() will jump here
-	dcache_invalid();
-	asm("mov r0, r0");
-	asm("mov r0, r0");
-	asm("mov r0, r0");	*/
-#else
 	bd_t *bd = gd->bd;
 	*vstart = CONFIG_SYS_SDRAM_BASE;
 	*size = (bd->bi_memsize >= 256 << 20 ?
 			256 << 20 : bd->bi_memsize) - (1 << 20);
+
 	/* Limit area to be tested with the board info struct */
 	if ((*vstart) + (*size) > (ulong)bd)
 		*size = (ulong)bd - *vstart;
-#endif
 
 	return 0;
 }
@@ -513,9 +476,6 @@ int arch_memory_test_advance(u32 *vstart, u32 *size, phys_addr_t *phys_offset)
 __attribute__((weak))
 int arch_memory_test_cleanup(u32 *vstart, u32 *size, phys_addr_t *phys_offset)
 {
-//#ifdef CONFIG_POST_AML
-//	dcache_enable();
-//#endif
 	return 0;
 }
 
@@ -532,6 +492,7 @@ int memory_post_test(int flags)
 	u32 memsize, vstart;
 
 	arch_memory_test_prepare(&vstart, &memsize, &phys_offset);
+
 	do {
 		if (flags & POST_SLOWTEST) {
 			ret = memory_post_tests(vstart, memsize);
