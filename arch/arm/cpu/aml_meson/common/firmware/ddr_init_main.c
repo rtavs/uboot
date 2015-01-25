@@ -122,26 +122,6 @@ static unsigned _ddr_init_main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	}
 #endif //#if defined(CONFIG_M8)
 
-
-#ifdef AML_M6_JTAG_ENABLE
-	#ifdef AML_M6_JTAG_SET_ARM
-		//A9 JTAG enable
-		writel(0x80000510,0xda004004);
-		//TDO enable
-		writel(readl(0xc8100014)|0x4000,0xc8100014);
-	#elif AML_M6_JTAG_SET_ARC
-		//ARC JTAG enable
-		writel(0x80051001,0xda004004);
-		//ARC bug fix disable
-		writel((readl(0xc8100040)|1<<24),0xc8100040);
-	#endif	//AML_M6_JTAG_SET_ARM
-
-	//Watchdog disable
-	//writel(0,0xc1109900);
-	//asm volatile ("wfi");
-
-#endif //AML_M6_JTAG_ENABLE
-
 	//Note: Following msg is used to calculate romcode boot time
 	//         Please DO NOT remove it!
     serial_puts("\nTE : ");

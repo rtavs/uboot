@@ -72,22 +72,6 @@ static void jtag_init(void)
 		writel(pinmux_2,P_PERIPHS_PIN_MUX_2);
 	}
 #endif
-
-
-#ifdef AML_M6_JTAG_ENABLE
-	#ifdef AML_M6_JTAG_SET_ARM
-		//A9 JTAG enable
-		writel(0x80000510,0xda004004);
-		//TDO enable
-		writel(readl(0xc8100014)|0x4000,0xc8100014);
-	#elif AML_M6_JTAG_SET_ARC
-		//ARC JTAG enable
-		writel(0x80051001,0xda004004);
-		//ARC bug fix disable
-		writel((readl(0xc8100040)|1<<24),0xc8100040);
-	#endif	//AML_M6_JTAG_SET_ARM
-
-#endif //AML_M6_JTAG_ENABLE
 }
 
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
