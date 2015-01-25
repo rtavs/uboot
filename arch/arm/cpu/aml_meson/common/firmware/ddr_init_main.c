@@ -94,34 +94,6 @@ static unsigned _ddr_init_main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
 	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
 
-//write ENCI_MACV_N0 (CBUS 0x1b30) to 0, disable Macrovision
-#if defined(CONFIG_M6) || defined(CONFIG_M6TV)
-	writel(0, CBUS_REG_ADDR(ENCI_MACV_N0));
-#endif
-
-//Default to open ARM JTAG for M6 only
-#if  defined(CONFIG_M6) || defined(CONFIG_M6TV)
-	#define AML_M6_JTAG_ENABLE
-	#define AML_M6_JTAG_SET_ARM
-
-	//for M6 only. And it will cause M3 fail to boot up.
-	//TEST_N enable: This bit should be set to 1 as soon as possible during the
-	//Boot process to prevent board changes from placing the chip into a production test mode
-	setbits_le32(0xda004000,(1<<0));
-
-	// set bit [12..14] to 1 in AO_RTI_STATUS_REG0
-	// This disables boot device fall back feature in MX Rev-D
-	// This still enables bootloader to detect which boot device
-	// is selected during boot time.
-	switch(readl(0xc8100000))
-	{
-	case 0x6b730001:
-	case 0x6b730002: writel(readl(0xc8100000) |(0x70<<8),0xc8100000);break;
-	}
-
-#endif
-
-
 #ifdef	CONFIG_M8
 	//A9 JTAG enable
 	writel(0x102,0xda004004);
@@ -248,26 +220,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     binRunInfoHead->magic = BIN_RUN_INFO_MAGIC_RESULT; binRunInfoHead->retVal = 0xdd;
     //serial_puts("\nboot_ID "), serial_put_hex(C_ROM_BOOT_DEBUG->boot_id, 32), serial_puts("\n");
     //serial_puts("binMagic "), serial_put_hex(paraMagic, 32), serial_puts("\n");
-#if defined(CONFIG_M6)//Asset m6 platform
-    if(22 != ChipId){
-            binRunInfoHead->retVal = ChipId + (22<<16);//Error value for pc
-            return __LINE__;
-    }
-    else{
-            const unsigned encryptReg           = readl(0xD9018A80);
-            const unsigned* dataEncryptedByTool = (unsigned*)(CONFIG_DDR_INIT_ADDR + 0x20);
-
-            if(encryptReg & (1U<<7)){//RSA key already burned
-                    int i = 0;
-                    for(i=0; i < 4; ++i){
-                            if(0xc003 != *dataEncryptedByTool++){
-                                    binRunInfoHead->retVal = 0xc003 + i;//Error value for pc
-                                    return __LINE__;
-                            }
-                    }
-            }
-    }
-#endif//
 
 #if 1
     if(BIN_RUN_INFO_MAGIC_PARA != paraMagic)//default to run ddr_init.bin, Attention that sram area will not clear if not poweroff!

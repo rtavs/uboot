@@ -628,12 +628,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	set_storage_device_flag();
 #endif
 
-//#ifdef MX_REVD
-#if defined(CONFIG_M6) || defined(CONFIG_M6TV)
-		//if not clear, uboot command reset will fail -> blocked
-		*((volatile unsigned long *)0xc8100000) = 0;
-#endif
-
 	if ((s = getenv ("aml_dt")) != NULL) {
 		run_command(s, 0);
 	}

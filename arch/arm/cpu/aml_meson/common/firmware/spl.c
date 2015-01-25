@@ -45,29 +45,6 @@ static void spl_hello(void)
 
 static void jtag_init(void)
 {
-//Default to open ARM JTAG for M6 only
-#if  defined(CONFIG_M6) || defined(CONFIG_M6TV)
-	#define AML_M6_JTAG_ENABLE
-	#define AML_M6_JTAG_SET_ARM
-
-	//for M6 only. And it will cause M3 fail to boot up.
-	//TEST_N enable: This bit should be set to 1 as soon as possible during the
-	//Boot process to prevent board changes from placing the chip into a production test mode
-	setbits_le32(0xda004000,(1<<0));
-
-	// set bit [12..14] to 1 in AO_RTI_STATUS_REG0
-	// This disables boot device fall back feature in MX Rev-D
-	// This still enables bootloader to detect which boot device
-	// is selected during boot time.
-	switch(readl(0xc8100000))
-	{
-	case 0x6b730001:
-	case 0x6b730002: writel(readl(0xc8100000) |(0x70<<8),0xc8100000);break;
-	}
-
-#endif
-
-
 #if defined(CONFIG_M8)
 	//A9 JTAG enable
 	writel(0x102,0xda004004);
@@ -124,11 +101,6 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	//setbits_le32(0xda004000,(1<<0));	//TEST_N enable: This bit should be set to 1 as soon as possible during the Boot process to prevent board changes from placing the chip into a production test mode
 
 	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
-
-//write ENCI_MACV_N0 (CBUS 0x1b30) to 0, disable Macrovision
-#if defined(CONFIG_M6) || defined(CONFIG_M6TV)
-	writel(0, CBUS_REG_ADDR(ENCI_MACV_N0));
-#endif
 
     jtag_init();
     spl_hello();

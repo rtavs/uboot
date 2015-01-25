@@ -25,12 +25,7 @@ static void update_ddr_mmu_table(void)
 	extern ulong __mmu_table;
 	volatile unsigned int *pVMMUTable = __mmu_table;
 	unsigned m6_offset = 0;
-#if defined(CONFIG_M6)
-	m6_offset = 0x800;
-	nSetting = 0;
-	for(nIndex = 0 ; nIndex < 0x800; ++nIndex)
-		*(pVMMUTable+nIndex) = nSetting;
-#endif
+
 	for(nIndex = m6_offset ; nIndex < 0xc00;++nIndex)
 	{
 		if(nIndex< (ddr_size_ind + m6_offset))
