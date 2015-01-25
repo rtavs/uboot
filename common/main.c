@@ -336,17 +336,6 @@ void main_loop (void)
 	hush_init_var ();
 #endif
 
-#ifdef CONFIG_CMD_CHIPREV
-	extern int init_env_chiprev(void);
-	char env_bootargs[256];
-	init_env_chiprev();
-	memset(env_bootargs, 0, 18);
-	sprintf(env_bootargs, "%s chiprev=%s", getenv("bootargs"), getenv("chiprev"));
-	setenv("bootargs", env_bootargs);
-	printf("bootargs = %s\n", env_bootargs);
-#endif
-
-
 #ifdef CONFIG_PREBOOT
 	if ((p = getenv ("preboot")) != NULL) {
 # ifdef CONFIG_AUTOBOOT_KEYED
