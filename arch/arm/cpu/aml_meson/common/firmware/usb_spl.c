@@ -26,16 +26,6 @@
 
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
-
-#if defined(WA_AML8726_M3_REF_V10) || defined(SHUTTLE_M3_MID_V1)
-	//PWREN GPIOAO_2, PWRHLD GPIOAO_6 pull up
-	//@WA-AML8726-M3_REF_V1.0.pdf -- WA_AML8726_M3_REF_V10
-	//@Q07CL_DSN_RB_0922A.pdf -- SHUTTLE_M3_MID_V1
-	//@AppNote-M3-CorePinMux.xlsx
-	clrbits_le32(P_AO_GPIO_O_EN_N, ((1<<2)|(1<<6)));
-	setbits_le32(P_AO_GPIO_O_EN_N,((1<<18)|(1<<22)));
-#endif
-
     //Adjust 1us timer base
     timer_init();
     //default uart clock.
