@@ -208,98 +208,47 @@ static int menukey = 0;
 static __inline__ int abortboot(int bootdelay)
 {
 	int abort = 0;
-	char cKey = 0; //for key filter, only "enter" key can triger abort
 
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT);
 #else
-	printf("Hit Enter key to stop autoboot -- : %2d ", bootdelay);
+	printf("Hit any key to stop autoboot: %2d ", bootdelay);
 #endif
 
 #if defined CONFIG_ZERO_BOOTDELAY_CHECK
-    /*
-     * Check if key already pressed
-     * Don't check if bootdelay < 0
-     */
-    if (bootdelay >= 0) {
-#ifdef CONFIG_CRLC_TO_STOP_ATOBOOT
-        //int key = getc();
-        if (tstc()) {
-            switch (getc()) {
-            case 0x03:      /* ^C - Ctrl+C */
-                abort = 1;
-                break;
-            case 0x0d:      /* Enter */
-                abort = 1;
-                break;
-            case 0x20:      /* Space */
-                abort = 1;
-                break;
-            default:
-                break;
-            }
-        }
-    //    printf("CONFIG_CRLC_TO_STOP_ATOBOOT test ctrl c / enter / space tab\n");
-#else
-        if (tstc()) {   /* we got a key press   */
-            (void) getc();  /* consume input    */
-            puts ("\b\b\b 0");
-            abort = 1;  /* don't auto boot  */
-        }
-#endif
-    }
+	/*
+	 * Check if key already pressed
+	 * Don't check if bootdelay < 0
+	 */
+	if (bootdelay >= 0) {
+		if (tstc()) {	/* we got a key press	*/
+			(void) getc();  /* consume input	*/
+			puts ("\b\b\b 0");
+			abort = 1;	/* don't auto boot	*/
+		}
+	}
 #endif
 
-    char *s_us = getenv ("us_delay_step");
-    int delay_us = s_us ? (int)simple_strtol(s_us, NULL, 10) : 0;
-    //printf("\n ----- delay ms : %d \n",delay_ms);
-
-    if (abort == 1) {
-         //Disable Watchdog
-        writel(0, 0xc1109900);
-    }
-
-	#define BOOT_DELAY_UNIT_US (10000)
-
-	if((!delay_us) ||(delay_us > BOOT_DELAY_UNIT_US))
-		delay_us = BOOT_DELAY_UNIT_US;
-
-#undef BOOT_DELAY_UNIT_US
-
-    unsigned int sect = get_timer(0);// 1---> 20ms
-   // printf("get_timer0 = %d \n",t1);
-
-    while ((bootdelay > 0) && (!abort)) {
-        int i;
+	while ((bootdelay > 0) && (!abort)) {
+		int i;
 
 		--bootdelay;
 		/* delay 100 * 10ms */
 		for (i=0; !abort && i<100; ++i) {
 			if (tstc()) {	/* we got a key press	*/
-				printf("tstc enter\n");
+				abort  = 1;	/* don't auto boot	*/
+				bootdelay = 0;	/* no more delay	*/
 # ifdef CONFIG_MENUKEY
 				menukey = getc();
-				cKey = menukey;
 # else
-                cKey = getc();
+				(void) getc();  /* consume input	*/
 # endif
-	            switch (cKey) {
-	            case 0x03:      /* ^C - Ctrl+C */
-	            case 0x0d:      /* Enter */
-	            case 0x20:      /* Space */
-	                abort = 1;
-	                break;
-	            default:
-	                break;
-	            }
+				break;
 			}
-
-			udelay(delay_us); ///100 X 10000us = 1S
-
+			udelay(10000);
 		}
 
-		if(!abort)
-			printf("\b\b\b%2d ", bootdelay);
+		printf("\b\b\b%2d ", bootdelay);
 	}
 
 	putc('\n');
@@ -309,7 +258,6 @@ static __inline__ int abortboot(int bootdelay)
 		gd->flags &= ~GD_FLG_SILENT;
 #endif
 
-	printf("exit abortboot: %d\n",abort);
 	return abort;
 }
 # endif	/* CONFIG_AUTOBOOT_KEYED */

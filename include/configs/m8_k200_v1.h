@@ -197,7 +197,6 @@
 #define CONFIG_BOOTFILE		boot.img
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"us_delay_step=1\0" \
 	"loadaddr=0x12000000\0" \
 	"loadaddr_logo=0x13000000\0" \
 	"testaddr=0x12400000\0" \
