@@ -359,12 +359,6 @@ void main_loop (void)
 	update_tftp ();
 #endif /* CONFIG_UPDATE_TFTP */
 
-
-#ifdef CONFIG_SWITCH_BOOT_MODE
-extern int switch_boot_mode(void);
-	switch_boot_mode();
-#endif
-
 #if defined(CONFIG_BOOTDELAY) && (CONFIG_BOOTDELAY >= 0)
 	s = getenv ("bootdelay");
 	bootdelay = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
