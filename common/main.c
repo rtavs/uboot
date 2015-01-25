@@ -38,16 +38,11 @@
 #include <hush.h>
 #endif
 
-#ifdef CONFIG_EFUSE
-#include <amlogic/efuse.h>
-#endif
-
 #include <post.h>
 
 #if defined(CONFIG_SILENT_CONSOLE) || defined(CONFIG_POST) || defined(CONFIG_CMDLINE_EDITING)
 DECLARE_GLOBAL_DATA_PTR;
 #endif
-
 
 /*
  * Board-specific Platform code can reimplement show_boot_progress () if needed
@@ -345,15 +340,6 @@ void main_loop (void)
 	char bcs_set[16];
 #endif /* CONFIG_BOOTCOUNT_LIMIT */
 
-#ifdef CONFIG_EFUSE
-	//char *r_addr;
-//	char *r_efus;
-	char addr[20];
-	char efuse_data[20];
-	efuseinfo_item_t info;
-	int i;
-#endif
-
 #if defined(CONFIG_VFD) && defined(VFD_TEST_LOGO)
 	ulong bmp = 0;		/* default bitmap */
 	extern int trab_vfd (ulong bitmap);
@@ -412,10 +398,6 @@ void main_loop (void)
 	printf("bootargs = %s\n", env_bootargs);
 #endif
 
-#if defined(CONFIG_AML_MESON_8)&&defined(CONFIG_EFUSE)&&defined(CONFIG_VIDEO_AMLTVOUT)
-	extern void cvbs_trimming(void);
-	cvbs_trimming();
-#endif
 
 #ifdef CONFIG_PREBOOT
 	if ((p = getenv ("preboot")) != NULL) {
@@ -444,23 +426,6 @@ void main_loop (void)
 #ifdef CONFIG_SWITCH_BOOT_MODE
 extern int switch_boot_mode(void);
 	switch_boot_mode();
-#endif
-
-#ifdef CONFIG_EFUSE
-	//r_addr = getenv ("ethaddr");
-	if(efuse_getinfo("mac", &info) == 0){
-		memset(efuse_data, 0, sizeof(efuse_data));
-		efuse_read_usr(efuse_data, info.data_len, (loff_t*)&info.offset);
-		for(i=0; i<info.data_len; i++){
-			if(efuse_data[i] != 0)
-				break;
-		}
-		if(i<info.data_len){
-			memset(addr,0,sizeof(addr));
-			sprintf(addr,"%02x:%02x:%02x:%02x:%02x:%02x",efuse_data[0],efuse_data[1],efuse_data[2],efuse_data[3],efuse_data[4],efuse_data[5]);
-			setenv ("ethaddr", addr);
-		}
-	}
 #endif
 
 #if defined(CONFIG_BOOTDELAY) && (CONFIG_BOOTDELAY >= 0)
@@ -508,7 +473,6 @@ extern int switch_boot_mode(void);
 # endif
 	}
 
-
 # ifdef CONFIG_MENUKEY
 	if (menukey == CONFIG_MENUKEY) {
 	    s = getenv("menucmd");
@@ -529,7 +493,6 @@ extern int switch_boot_mode(void);
 	 */
 #ifdef CONFIG_SYS_HUSH_PARSER
 	parse_file_outer();
-
 	/* This point is never reached */
 	for (;;);
 #else

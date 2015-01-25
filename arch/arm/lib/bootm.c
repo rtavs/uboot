@@ -50,9 +50,6 @@ static void setup_initrd_tag (bd_t *bd, ulong initrd_start,
 # endif
 static void setup_end_tag (bd_t *bd);
 
-#if defined(CONFIG_CMD_NAND)
-extern void aml_nand_set_reg_default_hynix(void);
-#endif
 static struct tag *params;
 #endif /* CONFIG_SETUP_MEMORY_TAGS || CONFIG_CMDLINE_TAG || CONFIG_INITRD_TAG */
 
@@ -87,9 +84,6 @@ static void announce_and_cleanup(void)
 {
 	printf("\nStarting kernel ...\n\n");
 
-#if defined(CONFIG_CMD_NAND)
-//	aml_nand_set_reg_default_hynix();
-#endif
 #ifdef CONFIG_USB_DEVICE
 	{
 		extern void udc_disconnect(void);
@@ -103,8 +97,7 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 {
 	bd_t	*bd = gd->bd;
 	char	*s;
-	int	machid = 0;
-	int  machidenv = bd->bi_arch_number;
+	int	machid = bd->bi_arch_number;
 	void	(*kernel_entry)(int zero, int arch, uint params);
 
 #ifdef CONFIG_CMDLINE_TAG
@@ -116,35 +109,9 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 
 	s = getenv ("machid");
 	if (s) {
-		machidenv = simple_strtoul (s, NULL, 16);
-		printf ("machid from environment: 0x%x \n", machidenv);
+		machid = simple_strtoul (s, NULL, 16);
+		printf ("Using machid 0x%x from environment\n", machid);
 	}
-
-#ifdef CONFIG_EFUSE
-	extern	unsigned efuse_readcustomerid(void);
-	int machidefuse = (int)efuse_readcustomerid();
-	char buf[5];
-	if(machidefuse != 0){
-		machid = machidefuse;
-		printf ("Using machid 0x%x from EFUSE\n", machid);
-		if(s && (machidefuse != machidenv)){
-			memset(buf, 0, 5);
-			sprintf(buf, "%x", machidefuse);
-			setenv("machid", buf);
-#if defined(CONFIG_CMD_SAVEENV) && !defined(CONFIG_ENV_IS_NOWHERE)
-			saveenv();
-#endif
-		}
-	}
-	else{
-			machid = machidenv;
-			printf ("EFUSE machid is not set.\n");
-			printf ("Using machid 0x%x from environment\n", machid);
-	}
-#else
-	machid = machidenv;
-	printf ("Using machid 0x%x from environment\n", machid);
-#endif
 
 	show_boot_progress (15);
 
@@ -176,18 +143,13 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 #ifdef CONFIG_CMDLINE_TAG
 	setup_commandline_tag (bd, commandline);
 #endif
-
 #ifdef CONFIG_INITRD_TAG
 	if (images->rd_start && images->rd_end)
 		setup_initrd_tag (bd, images->rd_start, images->rd_end);
 #endif
 	setup_end_tag(bd);
 #endif
-/*
-	// Normal World can not access address 0
-	if(strcmp(getenv("dbgkernel"),"y")==0)
-		asm volatile ("wfi");
-*/
+
 	announce_and_cleanup();
 
 	kernel_entry(0, machid, bd->bi_boot_params);

@@ -118,107 +118,15 @@ static int key_securestorage_uninit(void)
 
 static int key_efuse_init(char *buf,unsigned int len)
 {
-#ifdef CONFIG_EFUSE
-	char ver;
-	int ret;
-	char title[] = "version";
-	efuseinfo_item_t info;
-	loff_t pos;
-	if(efuse_getinfo(title, &info) < 0)
-		return -EINVAL;
-	pos = info.offset;
-	ret = efuse_chk_written(pos, info.data_len);
-	if(ret < 0){
-		return -EINVAL;
-	}
-	if(ret > 0){
-		return 0;// efuse version was written
-	}
-	if(!(info.we)){
-		printf("%s write unsupport now. \n", title);
-		return -EACCES;
-	}
-	ver = unifykey_get_efuse_version();
-	if(ver == 0){
-		printf("not config efuse version\n");
-		return 0;
-	}
-	else{
-		if(efuse_write_usr((char*)&ver, 1, &pos)<0){
-			printf("error: efuse write fail.\n");
-			return -1;
-		}
-		else{
-			printf("%s written done.\n", info.title);
-			return 0;
-		}
-	}
-#else
 	return 0;
-#endif
 }
 static int key_efuse_write(char *keyname,unsigned char *keydata,unsigned int datalen,enum key_manager_df_e flag)
 {
-#ifdef CONFIG_EFUSE
-	char *title = keyname;
-	efuseinfo_item_t info;
-	if(flag >= KEY_M_MAX_DF){
-		printf("%s:%d,%s key config [%x] err\n",__func__,__LINE__,keyname, flag);
-		return -EINVAL;
-	}
-
-	if(efuse_getinfo(title, &info) < 0)
-		return -EINVAL;
-	if(!(info.we)){
-		printf("%s write unsupport now. \n", title);
-		return -EACCES;
-	}
-	if(efuse_write_usr((char*)keydata, datalen, (loff_t*)&info.offset)<0){
-		printf("error: efuse write fail.\n");
-		return -1;
-	}
-	else{
-		printf("%s written done.\n", info.title);
-	}
-	return 0;
-#else
 	return -EINVAL;
-#endif
 }
 static int key_efuse_read(char *keyname,unsigned char *keydata,unsigned int datalen,unsigned int *reallen,enum key_manager_df_e flag)
 {
-#ifdef CONFIG_EFUSE
-	char *title = keyname;
-	efuseinfo_item_t info;
-	int err=0;
-	char *buf;
-	if(flag >= KEY_M_MAX_DF){
-		printf("%s:%d,%s key config[%x] err\n",__func__,__LINE__,keyname, flag);
-		return -EINVAL;
-	}
-
-	if(efuse_getinfo(title, &info) < 0)
-		return -EINVAL;
-
-	buf = malloc(info.data_len);
-	if(buf == NULL){
-		printf("%s:%d,malloc mem fail\n",__func__,__LINE__);
-		return -ENOMEM;
-	}
-	//err = efuse_read_usr((char*)keydata, datalen, (loff_t *)&info.offset);
-	err = efuse_read_usr((char*)buf, info.data_len, (loff_t *)&info.offset);
-	if(err>=0){
-		*reallen = info.data_len;
-		if(datalen > info.data_len){
-			datalen = info.data_len;
-		}
-		memcpy(keydata,buf,datalen);
-	}
-	free(buf);
-	return err;
-#else
 	return -EINVAL;
-#endif
 }
 
 static int _key_query_secure_boot_set(char* keyname, unsigned int * keystate)
@@ -248,31 +156,6 @@ static int _key_query_secure_boot_set(char* keyname, unsigned int * keystate)
 static int key_efuse_query(char *keyname,unsigned int *keystate)
 {
 	int err=-EINVAL;
-#ifdef CONFIG_EFUSE
-	int i;
-	char *title = keyname;
-	efuseinfo_item_t info;
-	char *buf;
-	if(efuse_getinfo(title, &info) < 0)
-		return -EINVAL;
-	buf = malloc(info.data_len);
-	if(buf == NULL){
-		printf("%s:%d,malloc mem fail\n",__func__,__LINE__);
-		return -ENOMEM;
-	}
-	memset(buf,0,info.data_len);
-	err = efuse_read_usr(buf, info.data_len, (loff_t *)&info.offset);
-	*keystate = KEY_NO_EXIST;
-	if(err >0){
-		for(i=0;i<info.data_len;i++){
-			if(buf[i] != 0){
-				*keystate = KEY_BURNED;
-				break;
-			}
-		}
-	}
-	free(buf);
-#endif
 	return err;
 }
 

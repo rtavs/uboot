@@ -239,26 +239,6 @@ static void cvbs_cntl_output(unsigned int open)
 	return ;
 }
 
-#if CONFIG_EFUSE
-extern int efuse_read_intlItem(char *intl_item,char *buf,int size);
-
-void cvbs_trimming(void)
-{
-	char cvbs_buf[2] = {0,0}, cvbs_value[8];
-	int ret;
-	int fake;
-
-	ret = efuse_read_intlItem("cvbs_trimming", cvbs_buf, 2);
-
-	cvbs_config_vdac(cvbs_buf[1], cvbs_buf[0]);
-
-	sprintf(cvbs_value, "0x%x", (cvbs_buf[1]<<8)|cvbs_buf[0] );
-	setenv("vdac_config",cvbs_value);
-
-	return ;
-}
-#endif
-
 #endif
 
 int tv_out_open(int mode)
