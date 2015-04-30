@@ -19,9 +19,6 @@ SECTIONS
 	}
 
 	. = CONFIG_DDR_INIT_ADDR+0x200;
-	.acs_entry :{
-	  *acs_entry.o(.text)
-	}
 	. = ALIGN(4);
 	.setting		:
 	{
