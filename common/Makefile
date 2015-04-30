@@ -63,17 +63,8 @@ COBJS-$(CONFIG_ENV_IS_IN_MG_DISK) += env_mgdisk.o
 COBJS-$(CONFIG_ENV_IS_IN_MMC) += env_mmc.o
 COBJS-$(CONFIG_ENV_IS_IN_NAND) += env_nand.o
 
-ifeq ($(CONFIG_NEXT_NAND),y)
-COBJS-$(CONFIG_ENV_IS_IN_AML_NAND) += env_amlnf.o
-endif
-
 COBJS-y += partition_table.o
-#COBJS-$(CONFIG_NEXT_NAND) += partition_table.o
-
-ifneq ($(CONFIG_NEXT_NAND),y)
 COBJS-$(CONFIG_ENV_IS_IN_AML_NAND) += env_amlnand.o
-endif
-
 COBJS-$(CONFIG_CMD_CALINFO) += cmd_calinfo.o
 
 COBJS-$(CONFIG_ENV_IS_IN_NVRAM) += env_nvram.o
@@ -152,18 +143,12 @@ endif
 ifndef CONFIG_STORE_COMPATIBLE
 COBJS-$(CONFIG_CMD_MMC) += cmd_mmc.o
 endif
-ifneq ($(CONFIG_NEXT_NAND),y)
+
 COBJS-$(CONFIG_CMD_MTDPARTS) += cmd_mtdparts.o
 COBJS-$(CONFIG_CMD_NAND) += cmd_nand.o
-endif
 
 COBJS-$(CONFIG_SPI_NAND_COMPATIBLE) += cmd_interface.o
 COBJS-$(CONFIG_SPI_NAND_EMMC_COMPATIBLE) += cmd_interface.o
-
-ifeq ($(CONFIG_NEXT_NAND),y)
-COBJS-y += store_interface.o
-COBJS-y += cmd_burnup.o
-endif
 
 COBJS-$(CONFIG_AML_GPIO_CMD) += cmd_gpio.o
 

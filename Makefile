@@ -209,18 +209,8 @@ LIBS += drivers/i2c/libi2c.o
 LIBS += drivers/input/libinput.o
 LIBS += drivers/misc/libmisc.o
 LIBS += drivers/mmc/libmmc.o
-
-
-ifneq ($(CONFIG_NEXT_NAND),y)
 LIBS += drivers/mtd/libmtd.o
 LIBS += drivers/mtd/nand/libnand.o
-endif
-
-ifeq ($(CONFIG_NEXT_NAND),y)
-LIBS += drivers/amlnf/phy/libamlnf_phy.o
-LIBS += drivers/amlnf/logic/libamlnf_logic.o
-LIBS += drivers/amlnf/dev/libamlnf_dev.o
-endif
 LIBS += drivers/mtd/onenand/libonenand.o
 LIBS += drivers/mtd/ubi/libubi.o
 LIBS += drivers/mtd/spi/libspi_flash.o
@@ -324,6 +314,7 @@ endif
 
 __OBJS := $(subst $(obj),,$(OBJS))
 __LIBS := $(subst $(obj),,$(LIBS)) $(subst $(obj),,$(LIBBOARD))
+
 #########################################################################
 #########################################################################
 

@@ -20,7 +20,6 @@
 
 
 //#define  CONFIG_AML_GATE_INIT	1
-//#define CONFIG_NEXT_NAND
 //support "boot,bootd"
 //#define CONFIG_CMD_BOOTD 1
 
@@ -34,11 +33,6 @@
 #ifdef CONFIG_ACS
 #define CONFIG_DDR_SIZE_IND_ADDR 0xD9000000	//pass memory size, spl->uboot
 #endif
-
-#ifdef CONFIG_NEXT_NAND
-#define CONFIG_CMD_IMGREAD  1   //read the actual size of boot.img/recovery.img/logo.img use cmd 'imgread'
-#define CONFIG_AML_V2_USBTOOL 1
-#endif//#ifdef CONFIG_NEXT_NAND
 
 #if CONFIG_AML_V2_USBTOOL
 #define CONFIG_SHA1

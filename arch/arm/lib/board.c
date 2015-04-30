@@ -572,17 +572,10 @@ void board_init_r (gd_t *id, ulong dest_addr)
 		hang ();
 	}
 #endif
+
 #if defined(CONFIG_CMD_NAND)
 	puts ("NAND:  ");
-#ifdef  CONFIG_NEXT_NAND
-	ret = amlnf_init(0x0);
-	init_ret = ret;
-// flag = 0,indicate normal boot;
-//flag = 1, indicate update;
-//flag = 2, indicate need erase
-#else
-	nand_init();	/* go init the NAND */
-#endif
+	nand_init();		/* go init the NAND */
 #endif
 
 #ifdef CONFIG_STORE_COMPATIBLE
