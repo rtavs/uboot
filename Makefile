@@ -249,7 +249,6 @@ LIBS += drivers/adc/libadc.o
 endif
 LIBS += drivers/securitkey/libsecuritykey.o
 LIBS += drivers/securestorage/libsecurestoragekey.o
-LIBS += drivers/keymanage/libkeymanage.o
 
 ifdef CONFIG_AML_V2_USBTOOL
 LIBS += drivers/usb/gadget/v2_burning/v2_burning.o
