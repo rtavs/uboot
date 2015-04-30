@@ -201,7 +201,6 @@ COBJS-$(CONFIG_VFD) += cmd_vfd.o
 COBJS-$(CONFIG_CMD_SUSPEND) += cmd_suspend.o
 COBJS-$(CONFIG_CMD_AML) += cmd_aml.o
 COBJS-$(CONFIG_CMD_AML_MAGIC) += cmd_magic.o
-COBJS-$(CONFIG_RTC_DAY_TEST) += cmd_rtc.o
 COBJS-$(CONFIG_CMD_SARADC) += cmd_saradc.o
 COBJS-$(CONFIG_CMD_IMGPACK) += cmd_imgpack.o
 COBJS-$(CONFIG_CMD_REBOOT) += cmd_reboot.o

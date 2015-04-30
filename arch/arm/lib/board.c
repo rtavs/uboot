@@ -54,10 +54,6 @@
 #include <asm/arch/reboot.h>
 #include <partition_table.h>
 
-#ifdef CONFIG_AML_RTC
-#include <aml_rtc.h>
-#endif
-
 #ifdef CONFIG_BITBANGMII
 #include <miiphy.h>
 #endif
@@ -285,9 +281,6 @@ init_fnc_t *init_sequence[] = {
 #endif
 #if defined(CONFIG_HARD_I2C) || defined(CONFIG_SOFT_I2C)
 	init_func_i2c,
-#endif
-#ifdef CONFIG_AML_RTC
-	aml_rtc_init,
 #endif
 	dram_init,		/* configure available RAM banks */
 #if defined(CONFIG_CMD_PCI) || defined (CONFIG_PCI)

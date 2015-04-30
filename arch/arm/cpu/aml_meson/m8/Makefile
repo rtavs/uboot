@@ -16,8 +16,6 @@ SOBJS := mmutable.o
 
 COBJS-$(CONFIG_AML_ETHERNET) += aml_eth_clk_set.o aml_eth_pinmux.o
 
-COBJS-$(CONFIG_AML_RTC)+=aml_rtc_setting.o
-
 COBJS-$(CONFIG_USB_DWC_OTG_HCD) += usb.o
 
 COBJS += vpu.o
