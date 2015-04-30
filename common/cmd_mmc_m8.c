@@ -26,7 +26,6 @@
 #include <command.h>
 #include <linux/ctype.h>
 #include <mmc.h>
-#include <partition_table.h>
 #include <emmc_partitions.h>
 
 static int get_off_size(struct mmc * mmc, char * name, uint64_t offset, uint64_t  size, u64 * blk, u64 * cnt, u64 * sz_byte)

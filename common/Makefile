@@ -63,7 +63,6 @@ COBJS-$(CONFIG_ENV_IS_IN_MG_DISK) += env_mgdisk.o
 COBJS-$(CONFIG_ENV_IS_IN_MMC) += env_mmc.o
 COBJS-$(CONFIG_ENV_IS_IN_NAND) += env_nand.o
 
-COBJS-y += partition_table.o
 COBJS-$(CONFIG_ENV_IS_IN_AML_NAND) += env_amlnand.o
 
 COBJS-$(CONFIG_ENV_IS_IN_NVRAM) += env_nvram.o

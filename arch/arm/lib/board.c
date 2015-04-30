@@ -52,7 +52,6 @@
 #include <asm/cache.h>
 
 #include <asm/arch/reboot.h>
-#include <partition_table.h>
 
 #ifdef CONFIG_BITBANGMII
 #include <miiphy.h>
