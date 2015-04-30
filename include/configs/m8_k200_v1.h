@@ -224,7 +224,6 @@
     \
     "preboot="\
         "echo preboot ...; "\
-        "run prepare;"\
         "run storeargs;"\
         "get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode};" \
         "run update_key; " \
@@ -244,20 +243,7 @@
     \
     "bootupdateargs="\
         "root=/dev/mmcblk0p1 rw rootfstype=vfat rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode} firmware=rootfs.tar.gz\0"\
-     \
-    "prepare="\
-        "echo prepare ing...; "\
-        "logo size ${outputmode}; video open; video clear; video dev open ${outputmode};"\
-        "imgread res logo ${loadaddr_logo}; "\
-        "unpackimg ${loadaddr_logo}; "\
-        "bmp display ${bootup_offset}; bmp scale;"\
-        "\0"\
 	\
-	"storeboot="\
-        "echo Booting...; "\
-        "imgread kernel boot ${loadaddr};"\
-        "bootm\0"\
-    \
      "bootsdcard="\
         "echo Booting ...;"\
          "setenv bootargs ${bootsdargs}; "\
@@ -276,11 +262,6 @@
         "if mmcinfo; then "\
             "if fatload mmc 0 ${loadaddr} recovery.img; then setenv bootargs ${initargs} a9_clk_max=800000000; bootm;fi;"\
         "fi; "\
-	      "if imgread kernel recovery ${loadaddr}; then "\
-	        "setenv bootargs ${initargs} a9_clk_max=800000000; bootm; "\
-				"else "\
-					"echo no recovery in flash; "\
-				"fi;\0" \
     \
     "sdc_burning=sdc_burn ${sdcburncfg}\0"
 
