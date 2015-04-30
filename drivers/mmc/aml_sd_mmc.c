@@ -712,6 +712,10 @@ void sdio_register(struct mmc* mmc,struct aml_card_sd_info * aml_priv)
     // printf("\033[0;40;32m [%s] port=%d, aml_card_type=%#x, card_type=%d, mmc->block_dev.if_type=%d \033[0m\n",
             // __FUNCTION__, aml_priv->sdio_port, aml_card_type, card_type, mmc->block_dev.if_type);
 #endif
+
+	if(aml_priv->sdio_port == SDIO_PORT_B){
+		mmc->block_dev.if_type = IF_TYPE_SD;
+	}
 }
 
 void aml_sd_cs_high (void) // chip select high
