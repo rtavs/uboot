@@ -243,13 +243,9 @@ LIBS += drivers/usb/musb/libusb_musb.o
 LIBS += drivers/usb/phy/libusb_phy.o
 LIBS += drivers/video/libvideo.o
 LIBS += drivers/watchdog/libwatchdog.o
-LIBS += drivers/efuse/libefuse.o
 ifdef CONFIG_SARADC
 LIBS += drivers/adc/libadc.o
 endif
-LIBS += drivers/securitkey/libsecuritykey.o
-LIBS += drivers/securestorage/libsecurestoragekey.o
-
 
 LIBS += common/libcommon.o
 LIBS += lib/libfdt/libfdt.o

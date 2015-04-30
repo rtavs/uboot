@@ -287,7 +287,6 @@
 #define CONFIG_CMD_SOURCE 1
 //support "editenv"
 #define CONFIG_CMD_EDITENV 1
-#define CONFIG_CMD_CALINFO 1
 /*default command select end*/
 
 //max watchdog timer: 41.943s

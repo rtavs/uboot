@@ -65,7 +65,6 @@ COBJS-$(CONFIG_ENV_IS_IN_NAND) += env_nand.o
 
 COBJS-y += partition_table.o
 COBJS-$(CONFIG_ENV_IS_IN_AML_NAND) += env_amlnand.o
-COBJS-$(CONFIG_CMD_CALINFO) += cmd_calinfo.o
 
 COBJS-$(CONFIG_ENV_IS_IN_NVRAM) += env_nvram.o
 COBJS-$(CONFIG_ENV_IS_IN_ONENAND) += env_onenand.o
@@ -78,9 +77,6 @@ COBJS-$(CONFIG_SPI_NAND_EMMC_COMPATIBLE) += env_amlnand.o env_sf.o env_mmc.o env
 # command
 COBJS-$(CONFIG_CMD_SECURESTORE) += cmd_securestore.o
 COBJS-$(CONFIG_CMD_RANDOM) +=  cmd_randomb.o
-COBJS-$(CONFIG_HDCP_PREFETCH) += cmd_hdcp.o
-COBJS-$(CONFIG_GET_AML_KEY) += cmd_get_key.o
-COBJS-$(CONFIG_UNIFY_KEY_MANAGE) += cmd_unifykey.o
 COBJS-$(CONFIG_CMD_AMBAPP) += cmd_ambapp.o
 COBJS-$(CONFIG_CMD_AUTOSCRIPT) += cmd_autoscript.o
 COBJS-$(CONFIG_SOURCE) += cmd_source.o
