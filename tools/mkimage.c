@@ -366,7 +366,7 @@ NXTARG:		;
 		exit (EXIT_FAILURE);
 	}
 
-	if (params.type == IH_TYPE_MULTI || params.type == IH_TYPE_SCRIPT ) {
+	if (params.type == IH_TYPE_MULTI || params.type == IH_TYPE_SCRIPT) {
 		char *file = params.datafile;
 		uint32_t size;
 
