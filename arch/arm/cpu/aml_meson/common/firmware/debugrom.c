@@ -11,10 +11,6 @@
 #include <ddr.c>
 #include <sdio.c>
 #include <debug_rom.c>
-#ifdef CONFIG_ACS
-#include <storage.c>
-#include <acs.c>
-#endif
 
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {

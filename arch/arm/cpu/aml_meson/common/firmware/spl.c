@@ -20,10 +20,6 @@
 #include <debug_rom.c>
 
 #include <loaduboot.c>
-#ifdef CONFIG_ACS
-#include <storage.c>
-#include <acs.c>
-#endif
 
 #include <asm/arch/reboot.h>
 

@@ -19,11 +19,6 @@
 #include <usb_boot/usb_boot.c>
 #include <asm/arch/reboot.h>
 
-#ifdef CONFIG_ACS
-#include <storage.c>
-#include <acs.c>
-#endif
-
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
     //Adjust 1us timer base
