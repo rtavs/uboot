@@ -578,10 +578,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	nand_init();		/* go init the NAND */
 #endif
 
-#ifdef CONFIG_STORE_COMPATIBLE
-	get_storage_device_flag(init_ret);
-#endif
-
 #if defined(CONFIG_CMD_ONENAND)
 	onenand_init();
 #endif
@@ -609,10 +605,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 
 	/* initialize environment */
 	env_relocate ();
-
-#ifdef CONFIG_STORE_COMPATIBLE
-	set_storage_device_flag();
-#endif
 
 	if ((s = getenv ("aml_dt")) != NULL) {
 		run_command(s, 0);

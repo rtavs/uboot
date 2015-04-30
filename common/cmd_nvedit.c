@@ -67,8 +67,7 @@ DECLARE_GLOBAL_DATA_PTR;
     !defined(CONFIG_ENV_IS_IN_EMMC)	&& \
     !defined(CONFIG_ENV_IS_NOWHERE)    && \
     !defined(CONFIG_SPI_NAND_COMPATIBLE) && \
-	!defined(CONFIG_SPI_NAND_EMMC_COMPATIBLE) &&\
-	!defined(CONFIG_STORE_COMPATIBLE)
+	!defined(CONFIG_SPI_NAND_EMMC_COMPATIBLE)
 # error Define one of CONFIG_ENV_IS_IN_{EEPROM|FLASH|DATAFLASH|ONENAND|\
 SPI_FLASH|MG_DISK|NVRAM|MMC|NOWHERE}
 #endif
@@ -172,7 +171,6 @@ int do_env_print (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 int _do_env_set (int flag, int argc, char * const argv[])
 {
-
 	bd_t  *bd = gd->bd;
 	int   i, len;
 	int   console = -1;
@@ -966,9 +964,6 @@ int do_loadenv (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 int do_defenv (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	set_default_env(NULL);
-#ifdef  CONFIG_STORE_COMPATIBLE
-	run_command("put  store",0);
-#endif
 	return 0;
 }
 
@@ -1040,118 +1035,3 @@ U_BOOT_CMD(
 	"name ...\n"
 	"    - defenv without specified u-boot environment variables\n"
 );
-
-#ifdef  CONFIG_STORE_COMPATIBLE
-
-void replace(char* org, char* find, char* rep)
-{
-	char *p1, *p2;
-	while(p1 = strstr(org, find)){
-	p2 = p1 + strlen(find);
-	memmove(p1 + strlen(rep), p2, strlen(p2) + 1);
-	memcpy(p1, rep, strlen(rep));
-	}
-
-	return;
-}
-
-
-int put_storage(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
-{
-	char *cmd, *s, *args;
-	char rep[20];
-	unsigned char store=0,tmp = 0;
-	char *p1 = NULL, *p2;
-
-	if (argc < 2)
-		return cmd_usage(cmdtp);
-
-	cmd = argv[1];
-
-	if(!strcmp(cmd,"storage")){
-        char env_bootargs[512];
-		s = getenv("store");
-		store = simple_strtoul(s,NULL,16);
-		//memset(env_bootargs, 0, 128);
-		args =  getenv("initargs");
-        if(args){
-		if(!strstr(args, "storage")){ // no storage in bootargs
-			//printf("####set bootargs of the storage value\n");
-
-			sprintf(env_bootargs, "%s storage=%d", getenv("initargs"), store);
-			setenv("initargs", env_bootargs);
-			saveenv();
-
-			//printf("####put_storage : bootargs %s\n",getenv("bootargs"));
-		}else{ // check storage value in bootargs
-
-		//	printf("@put_storage : set bootargs of the storage value\n");
-			p1 = strstr(args, "storage");
-			if(p1 == NULL){
-				printf("@put_storage: no storage in initargs: failed\n");
-				return -1;
-			}
-			p2 = p1+strlen("storage")+1;
-
-			tmp = simple_strtoul(p2 ,NULL,16);
-		//	printf("@put_storage: tmp %d store %d\n",tmp,store);
-			if(tmp!= store){
-				sprintf(rep,"storage=%d",store);
-				memcpy(p1, rep, strlen(rep));
-				saveenv();
-			//	printf("@put_storage : bootargs %s\n",getenv("bootargs"));
-			}else{
-				printf("@put_storage : initargs %s\n",getenv("initargs"));
-			}
-		}
-	   }
-       else{
-        printf("no initargs,put storage to bootargs\n");
-        args =  getenv("bootargs");
-		if(!strstr(args, "storage")){ // no storage in bootargs
-		//printf("####set bootargs of the storage value\n");
-
-		sprintf(env_bootargs, "%s storage=%d", getenv("bootargs"), store);
-		setenv("bootargs", env_bootargs);
-		saveenv();
-
-			//printf("####put_storage : bootargs %s\n",getenv("bootargs"));
-		}else{ // check storage value in bootargs
-
-		//	printf("@put_storage : set bootargs of the storage value\n");
-			p1 = strstr(args, "storage");
-			if(p1 == NULL){
-				printf("@put_storage: no storage in bootargs: failed\n");
-				return -1;
-			}
-			p2 = p1+strlen("storage")+1;
-
-			tmp = simple_strtoul(p2 ,NULL,16);
-		//	printf("@put_storage: tmp %d store %d\n",tmp,store);
-			if(tmp!= store){
-				sprintf(rep,"storage=%d",store);
-				memcpy(p1, rep, strlen(rep));
-				saveenv();
-			//	printf("@put_storage : bootargs %s\n",getenv("bootargs"));
-			}else{
-				printf("@put_storage : bootargs %s\n",getenv("bootargs"));
-			}
-		}
-       }
-	}else if(!strcmp(cmd,"store")){
-		set_storage_device_flag();
-	}else{
-		return cmd_usage(cmdtp);
-	}
-
-	return 0;
-}
-
-
-U_BOOT_CMD(
-	put, CONFIG_SYS_MAXARGS, 1,	put_storage,
-	"put  storage ",
-	"set storage with the value store,and set storage to bootargs"
-);
-
-#endif

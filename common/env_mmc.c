@@ -29,17 +29,13 @@
 #include <malloc.h>
 #include <errno.h>
 #include <partition_table.h>
-#ifdef CONFIG_STORE_COMPATIBLE
-#include <asm/arch/storage.h>
-#endif
-
 
 
 DECLARE_GLOBAL_DATA_PTR;
 extern env_t *env_ptr;
 extern uchar default_environment[];
 
-#if defined CONFIG_SPI_NAND_COMPATIBLE || defined CONFIG_SPI_NAND_EMMC_COMPATIBLE || defined CONFIG_STORE_COMPATIBLE
+#if defined CONFIG_SPI_NAND_COMPATIBLE || defined CONFIG_SPI_NAND_EMMC_COMPATIBLE
 int emmc_env_init(void)
 {
 	/* use default */
@@ -49,7 +45,6 @@ int emmc_env_init(void)
 	return 0;
 }
 
-#ifndef CONFIG_STORE_COMPATIBLE
 void emmc_env_relocate_spec(void)
 {
 #if !defined(ENV_IS_EMBEDDED)
@@ -86,75 +81,7 @@ void emmc_env_relocate_spec(void)
 	env_import(&env_buf, 1);
 #endif
 }
-#else
-void emmc_env_relocate_spec(void)
-{
-#if !defined(ENV_IS_EMBEDDED)
-    int dev_num;
-    int ret;
-    env_t * env_buf =  NULL;
-	u64 cnt = CONFIG_ENV_SIZE;
-	u64 blk = 0;
-	uint32_t crc;
 
-	struct mmc *mmc = NULL;
-	char *name = "env";
-	struct partitions *part_info = NULL;
-	int blk_shift = 0;
-	env_buf = (env_t *)malloc(CONFIG_ENV_SIZE);
-	if(!env_buf){
-		printf("malloc failed \n");
-		return ;
-	}
-	memset(env_buf->data, 0, ENV_SIZE);
-#ifdef CONFIG_STORE_COMPATIBLE
-    part_info = find_mmc_partition_by_name(name);
-	if(part_info == NULL){
-		printf("get partition info failed !!\n");
-		return ;
-	}
-
-	dev_num = find_dev_num_by_partition_name (name);
-	if(dev_num < 0){
-		printf("get mmc dev  failed !!\n");
-		return ;
-	}
-	store_dbg(" read env: dev_num %d",dev_num);
-
-	mmc = find_mmc_device(dev_num);
-	if (!mmc) {
-		set_default_env("!No MMC device");
-		return;
-	}
-	if ((cnt % 512) || (blk % 512)) {
-	    set_default_env("!addr or blk count notalign");
-	    return ;
-	}
-
-    blk_shift = ffs(mmc->read_bl_len) - 1;
-	blk = part_info->offset >> blk_shift;
-	 cnt  = cnt >> blk_shift;
-#endif
-	store_dbg(" read env: blk_shift %d blk %d cnt %llx",blk_shift,blk,cnt);
-	ret =(cnt == mmc->block_dev.block_read(dev_num, blk, cnt, env_buf));
-	if(!ret){
-		set_default_env("!readenv() failed");
-		saveenv();
-		return;
-	}
-
-	crc = env_buf->crc;
-	if (crc32(0, env_buf->data, ENV_SIZE) != crc){
-		set_default_env("!bad CRC");
-		saveenv();
-	}
-
-	env_import(env_buf, 1);
-
-#endif
-}
-
-#endif
 
 #ifdef CONFIG_CMD_SAVEENV
 
@@ -167,26 +94,10 @@ int emmc_saveenv(void)
     env_t *env_new_p = NULL;
     ssize_t	len;
     char	*res;
-#ifdef  CONFIG_STORE_COMPATIBLE
-	char *name = "env";
-	struct partitions *part_info = NULL;
-	int blk_shift = 0;
 
-	 store_dbg("emmc save env: cnt %llx",cnt);
-	part_info = find_mmc_partition_by_name(name);
-	if(part_info == NULL){
-		printf("get partition info failed !!\n");
-		return ;
-	}
-	dev_num = find_dev_num_by_partition_name (name);
-	if(dev_num < 0){
-		printf("get mmc dev  failed !!\n");
-		return ;
-	}
-#else
 	blk = CONFIG_ENV_IN_EMMC_OFFSET;
     dev_num = CONFIG_SYS_MMC_ENV_DEV;
-#endif
+	
 	 mmc = find_mmc_device(dev_num);
 	if (!mmc)
 	{
@@ -209,15 +120,8 @@ int emmc_saveenv(void)
 	}
 	env_new_p->crc   = crc32(0, env_new_p->data, ENV_SIZE);
 	mmc_init(mmc);
-#ifdef CONFIG_STORE_COMPATIBLE
-	blk_shift =  ffs(mmc->read_bl_len) - 1;
-	blk = part_info->offset >> blk_shift;
-	store_dbg("cnt %llx",cnt);
-	cnt  = cnt >> blk_shift;
-#else
     blk >>= 9;
     cnt >>= 9;
-#endif
 
 	if(cnt == mmc->block_dev.block_write(dev_num, blk, cnt, (const void *)env_new_p))
     {

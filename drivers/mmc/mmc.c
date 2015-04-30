@@ -34,12 +34,6 @@
 #include <div64.h>
 #include <asm/arch/sdio.h>
 
-#ifdef CONFIG_STORE_COMPATIBLE
-#include <emmc_partitions.h>
-#include <partition_table.h>
-#endif
-
-#include "emmc_key.h"
 
 struct list_head mmc_devices;
 static int cur_dev_num = -1;
@@ -1042,18 +1036,8 @@ int mmc_startup(struct mmc *mmc)
 		}
 
         if (mmc->card_caps & MMC_MODE_HS) {
-#ifdef CONFIG_STORE_COMPATIBLE
-            if (aml_is_emmc_tsd(mmc)) {
-                mmc_set_clock(mmc, 40000000);
-                mmc->tran_speed = 40000000;
-            } else {
-                mmc_set_clock(mmc, 30000000);
-                mmc->tran_speed = 20000000;
-            }
-#else
 			mmc_set_clock(mmc, 50000000);
 			mmc->tran_speed = 40000000;
-#endif
         } else {
 			mmc_set_clock(mmc, 25000000);
 			mmc->tran_speed = 20000000;
@@ -1085,15 +1069,7 @@ int mmc_startup(struct mmc *mmc)
 			if (mmc->card_caps & MMC_MODE_HS_52MHz)
 				mmc_set_clock(mmc, 52000000);
 			else {
-#ifdef CONFIG_STORE_COMPATIBLE
-                if (aml_is_emmc_tsd(mmc)) {
-                    mmc_set_clock(mmc, 40000000);
-                } else {
-                    mmc_set_clock(mmc, 26000000);
-                }
-#else
                 mmc_set_clock(mmc, 26000000);
-#endif
             }
 		} else
 			mmc_set_clock(mmc, 20000000);
@@ -1275,28 +1251,6 @@ int mmc_init(struct mmc *mmc)
             mmc_device_partitions(mmc);
             is_init_partition_flag = 1;
             printf("eMMC/TSD partition table have been checked OK!\n");
-        }
-#endif
-#ifdef CONFIG_STORE_COMPATIBLE
-	    if (!is_partition_checked) {
-
-#ifdef CONFIG_STORE_COMPATIBLE
-		info_disprotect |= DISPROTECT_KEY; //disprotect key
-#endif
-            if (mmc_device_init(mmc) == 0) {
-                is_partition_checked = true;
-                printk("eMMC/TSD partition table have been checked OK!\n");
-#endif
-
-#ifdef CONFIG_STORE_COMPATIBLE
-            }
-            else
-                printk("eMMC/TSD partition table have been checked ERROR!\n");
-
-#ifdef CONFIG_STORE_COMPATIBLE
-	info_disprotect &= ~DISPROTECT_KEY; //protect key
-#endif
-
         }
 #endif
     }

@@ -46,9 +46,7 @@ int do_reset(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	puts ("resetting ...\n");
 #if defined(CONFIG_CMD_NAND)
-#ifndef CONFIG_STORE_COMPATIBLE
 	aml_nand_set_reg_default_hynix();
-#endif
 #endif
 
 #if defined(CONFIG_M8)

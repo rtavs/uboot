@@ -37,7 +37,6 @@ COBJS-$(CONFIG_OMAP_HSMMC) += omap_hsmmc.o
 COBJS-$(CONFIG_PXA_MMC) += pxa_mmc.o
 COBJS-$(CONFIG_S5P_MMC) += s5p_mmc.o
 COBJS-$(CONFIG_AML_SDIO) += aml_sd_mmc.o
-COBJS-$(CONFIG_STORE_COMPATIBLE) += emmc_partitions.o
 
 COBJS	:= $(COBJS-y)
 SRCS	:= $(COBJS:.o=.c)

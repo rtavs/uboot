@@ -16,9 +16,6 @@
 #include <asm/arch/sdio.h>
 #include <mmc.h>
 
-#ifdef CONFIG_STORE_COMPATIBLE
-#include <asm/arch/storage.h>
-#endif
 
 #define sd_debug(a...) debug("[%08u,%s]:",(unsigned int)get_timer(0),__func__);debug(a);debug("\n")
 #define PREG_SDIO_CFG     	CBUS_REG_ADDR(SDIO_CONFIG)
@@ -666,15 +663,8 @@ int aml_sd_init(struct mmc *mmc)
 		return 1;
 }
 
-#ifdef CONFIG_STORE_COMPATIBLE
-extern int aml_card_type;
-#endif
 void sdio_register(struct mmc* mmc,struct aml_card_sd_info * aml_priv)
 {
-#ifdef CONFIG_STORE_COMPATIBLE
-    int card_type;
-#endif
-
     strncpy(mmc->name,aml_priv->name,31);
     mmc->priv = aml_priv;
 	aml_priv->removed_flag = 1;
@@ -702,16 +692,6 @@ void sdio_register(struct mmc* mmc,struct aml_card_sd_info * aml_priv)
 
 	//WRITE_CBUS_REG(RESET6_REGISTER, (1<<8));
         WRITE_CBUS_REG(SDIO_AHB_CBUS_CTRL, 0);
-
-#ifdef CONFIG_STORE_COMPATIBLE
-    card_type = AML_GET_CARD_TYPE(aml_card_type, aml_priv->sdio_port);
-    if (card_type == CARD_TYPE_MMC)
-        mmc->block_dev.if_type = IF_TYPE_MMC;
-    else
-        mmc->block_dev.if_type = IF_TYPE_SD;
-    // printf("\033[0;40;32m [%s] port=%d, aml_card_type=%#x, card_type=%d, mmc->block_dev.if_type=%d \033[0m\n",
-            // __FUNCTION__, aml_priv->sdio_port, aml_card_type, card_type, mmc->block_dev.if_type);
-#endif
 
 	if(aml_priv->sdio_port == SDIO_PORT_B){
 		mmc->block_dev.if_type = IF_TYPE_SD;
