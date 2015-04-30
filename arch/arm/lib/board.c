@@ -72,9 +72,6 @@
 #include <logbuff.h>
 #endif
 
-#if defined(CONFIG_AML_V2_USBTOOL)
-#include <amlogic/aml_v2_burning.h>
-#endif// #if defined(CONFIG_AML_V2_USBTOOL)
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -538,12 +535,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 #ifdef CONFIG_AML_I2C
     aml_i2c_init();
 #endif
-#if defined(CONFIG_AML_V2_USBTOOL)
-	if(is_tpl_loaded_from_usb())//is uboot loaded from usb or bootable sdcard
-	{
-        aml_v2_usb_producing(0, bd);//would NOT return if 1)boot from usb, 2)boot from sdmmc and fatexist(aml_sdc_burn.ini)
-	}
-#endif// #if defined(CONFIG_AML_V2_USBTOOL)
 
 	board_init();	/* Setup chipselects */
 #if !defined(CONFIG_SYS_NO_FLASH)

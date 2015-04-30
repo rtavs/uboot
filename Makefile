@@ -250,9 +250,6 @@ endif
 LIBS += drivers/securitkey/libsecuritykey.o
 LIBS += drivers/securestorage/libsecurestoragekey.o
 
-ifdef CONFIG_AML_V2_USBTOOL
-LIBS += drivers/usb/gadget/v2_burning/v2_burning.o
-endif
 
 LIBS += common/libcommon.o
 LIBS += lib/libfdt/libfdt.o

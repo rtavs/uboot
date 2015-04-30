@@ -34,19 +34,6 @@
 #define CONFIG_DDR_SIZE_IND_ADDR 0xD9000000	//pass memory size, spl->uboot
 #endif
 
-#if CONFIG_AML_V2_USBTOOL
-#define CONFIG_SHA1
-//#define CONFIG_AUTO_START_SD_BURNING     1//1 then auto detect whether or not jump into sdc_burning when boot from external mmc card
-#define CONFIG_SD_BURNING_SUPPORT_LED    1//1 then using led flickering states changing to show burning states when sdcard burning
-#define CONFIG_POWER_KEY_NOT_SUPPORTED_FOR_BURN 1//power key and poweroff can't work
-#define CONFIG_SD_BURNING_SUPPORT_UI     1//have bmp display to indicate burning state when sdcard burning
-#ifdef CONFIG_ACS
-#define CONFIG_TPL_BOOT_ID_ADDR       		(0xD9000000U + 4)//pass boot_id, spl->uboot
-#else
-#define CONFIG_TPL_BOOT_ID_ADDR       		(&reboot_mode)//pass boot_id, spl->uboot
-#endif// #ifdef CONFIG_ACS
-#endif// #if CONFIG_AML_V2_USBTOOL
-
 
 #define CONFIG_CMD_PWM  1
 //#define CONFIG_CMD_IMGREAD_FOR_SECU_BOOT_V2 1  //open this macro if need read encrypted kernel/dtb with whole part size
@@ -232,42 +219,22 @@
 	"sdcburncfg=aml_sdc_burn.ini\0"\
 	"normalstart=1000000\0" \
 	"normalsize=400000\0" \
-	"upgrade_step=2\0" \
 	"firstboot=1\0" \
 	"store=0\0"\
     \
     "preboot="\
         "echo preboot ...; "\
-        "if itest ${upgrade_step} == 3; then run prepare; run storeargs; run update; fi; "\
-        "if itest ${upgrade_step} == 1; then  "\
-            "defenv; setenv upgrade_step 2; saveenv;"\
-        "fi; "\
         "run prepare;"\
         "run storeargs;"\
         "get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode};" \
         "run update_key; " \
-        "run switch_bootmode\0" \
     \
     "update_key="\
         "saradc open 0; " \
         "if saradc get_in_range 0 0x50; then " \
             "msleep 50; " \
-            "if saradc get_in_range 0 0x50; then echo update by key...; run update; fi;" \
+            "if saradc get_in_range 0 0x50; then echo update by key...; run recovery; fi;" \
         "fi\0" \
-    \
-	"update="\
-        /*first try usb burning, second sdc_burn, third autoscr, last recovery*/\
-        "run usb_burning; "\
-        "if mmcinfo; then "\
-            "if fatexist mmc 0 ${sdcburncfg}; then "\
-                "run sdc_burning; "\
-            "else "\
-                "if fatload mmc 0 ${loadaddr} aml_autoscript; then autoscr ${loadaddr}; fi;"\
-                "run recovery;"\
-            "fi;"\
-        "else "\
-            "run recovery;"\
-        "fi;\0"\
     \
 	"storeargs="\
         "setenv bootargs ${initargs} vdaccfg=${vdac_config} logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} androidboot.firstboot=${firstboot} hdmitx=${hdmimode}\0"\
@@ -278,18 +245,6 @@
     "bootupdateargs="\
         "root=/dev/mmcblk0p1 rw rootfstype=vfat rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode} firmware=rootfs.tar.gz\0"\
      \
-    "switch_bootmode="\
-        "echo switch bootmode ...; "\
-        "if test ${reboot_mode} = factory_reset; then "\
-			"run recovery;"\
-        "else if test ${reboot_mode} = update; then "\
-		"run update;"\
-        "else if test ${reboot_mode} = usb_burning; then "\
-		"run usb_burning;"\
-        "else " \
-		"  "\
-        "fi;fi;fi\0" \
-    \
     "prepare="\
         "echo prepare ing...; "\
         "logo size ${outputmode}; video open; video clear; video dev open ${outputmode};"\
@@ -327,7 +282,6 @@
 					"echo no recovery in flash; "\
 				"fi;\0" \
     \
-	"usb_burning=update 1000\0" \
     "sdc_burning=sdc_burn ${sdcburncfg}\0"
 
 

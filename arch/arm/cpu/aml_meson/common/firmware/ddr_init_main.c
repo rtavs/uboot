@@ -176,11 +176,6 @@ static unsigned _ddr_init_main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	serial_wait_tx_empty();
 #endif
 
-
-#if defined(CONFIG_AML_V2_USBTOOL) && 0
-    writel(MESON_USB_BURNER_REBOOT, CONFIG_TPL_BOOT_ID_ADDR);//tell TPL it loaded from USB otg
-#endif//#if defined(CONFIG_AML_V2_USBTOOL)
-
     serial_puts("\nEnd ddr main\n");
 
     return 0;
