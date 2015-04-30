@@ -1,6 +1,8 @@
 CROSS_COMPILE=arm-linux-gnueabi-
 ARM_CPU=cortex-a9
+PF_NO_UNALIGNED := $(call cc-option, -mno-unaligned-access,)
 PLATFORM_CPPFLAGS += $(call cc-option,-mcpu=cortex-a9  -ffixed-r8 -mno-long-calls  -Wall -fPIC )
+PLATFORM_CPPFLAGS += $(PF_NO_UNALIGNED)
 #USE_PRIVATE_LIBGCC=yes
 ifeq ($(CONFIG_AML_MESON_8),y) #m8 or m8baby or m8m2
 	TEXT_BASE=0x10000000
