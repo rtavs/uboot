@@ -207,7 +207,7 @@ static int menukey = 0;
 
 static __inline__ int abortboot(int bootdelay)
 {
-	int abort = 0;
+	int abort = 1;
 
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT);
