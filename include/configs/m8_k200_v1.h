@@ -194,7 +194,6 @@
 	"outputmode=1080p\0" \
 	"vdac_config=0x10\0" \
 	"initargs=root=/dev/system rootfstype=ext4 init=/init console=ttyS0,115200n8 no_console_suspend\0" \
-	"preloaddtb=imgread dtb boot ${loadaddr}\0" \
 	"video_dev=tvout\0" \
 	"display_width=1920\0" \
 	"display_height=1080\0" \
@@ -225,15 +224,7 @@
     "preboot="\
         "echo preboot ...; "\
         "run storeargs;"\
-        "get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode};" \
-        "run update_key; " \
-    \
-    "update_key="\
-        "saradc open 0; " \
-        "if saradc get_in_range 0 0x50; then " \
-            "msleep 50; " \
-            "if saradc get_in_range 0 0x50; then echo update by key...; run recovery; fi;" \
-        "fi\0" \
+        "get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode}\0" \
     \
 	"storeargs="\
         "setenv bootargs ${initargs} vdaccfg=${vdac_config} logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} androidboot.firstboot=${firstboot} hdmitx=${hdmimode}\0"\
@@ -382,7 +373,6 @@
 
 /* Pass open firmware flat tree*/
 #define CONFIG_OF_LIBFDT	1
-#define CONFIG_DT_PRELOAD	1
 #define CONFIG_SYS_BOOTMAPSZ   PHYS_MEMORY_SIZE       /* Initial Memory map for Linux */
 #define CONFIG_ANDROID_IMG	1
 

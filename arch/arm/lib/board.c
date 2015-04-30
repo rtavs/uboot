@@ -601,16 +601,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 		run_command(s, 0);
 	}
 
-#ifdef CONFIG_DT_PRELOAD
-	if ((s = getenv ("preloaddtb")) != NULL) {
-		run_command(s, 0);
-	}
-#endif
-
-	if ((s = getenv ("aml_dt")) != NULL) {
-		run_command(s, 0);
-	}
-
 #ifdef CONFIG_VPU_PRESET
 	vpu_probe();
 #endif
