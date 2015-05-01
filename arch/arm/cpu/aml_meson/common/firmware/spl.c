@@ -1,8 +1,6 @@
 #define  CONFIG_AMLROM_SPL 1
 #include <timer.c>
 #include <timming.c>
-#include <uartpin.c>
-
 
 #include <serial.c>
 

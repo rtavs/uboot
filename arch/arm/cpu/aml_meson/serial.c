@@ -17,7 +17,15 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-SPL_STATIC_FUNC int serial_set_pin_port(unsigned port_base);
+static int serial_set_pin_port(unsigned port_base)
+
+{
+    //UART in "Always On Module"
+    //GPIOAO_0==tx,GPIOAO_1==rx
+    //setbits_le32(P_AO_RTI_PIN_MUX_REG,3<<11);
+    return 0;
+}
+
 static void serial_putc_port (unsigned port_base,const char c);
 
 /*
