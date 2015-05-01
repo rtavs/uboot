@@ -1,13 +1,10 @@
 #ifndef __CONFIG_M8_K200_V1_H__
 #define __CONFIG_M8_K200_V1_H__
 
-
+#define CONFIG_M8				1
 #define CONFIG_AML_MESON_8      1
 #define CONFIG_MACH_MESON8_K200_V1  // generate M8 K200 machid number
 
-#ifndef CONFIG_M8
-#define CONFIG_M8
-#endif // ifndef CONFIG_M8
 
 // cart type of each port
 #define PORT_A_CARD_TYPE            CARD_TYPE_UNKNOWN
