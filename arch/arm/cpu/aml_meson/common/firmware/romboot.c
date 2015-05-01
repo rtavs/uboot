@@ -89,7 +89,7 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
 
 	if((((unsigned int)fw_load_intl >> 24) & 0xFF) != ((AHB_SRAM_BASE>>24)&0xFF))
 	{
-		memcpy(temp_addr,target,size); //here need fine tune!!
+		ipl_memcpy(temp_addr,target,size); //here need fine tune!!
 		serial_puts("Aml log : M8-TPL-UCL-DEC-1\n");
 		goto m8_tpl_ucl_dec;
 	}
@@ -108,7 +108,7 @@ STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
             mem=(unsigned *)(NOR_START_ADDR+READ_SIZE);
             spi_init();
             serial_puts("Boot From SPI\n");
-            //memcpy((unsigned*)temp_addr,mem,size);
+            //ipl_memcpy((unsigned*)temp_addr,mem,size);
             ipl_memcpy((unsigned char*)temp_addr,(unsigned char*)mem,size);
             break;
         case POR_1ST_SDIO_C:
@@ -146,7 +146,7 @@ STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
 
 	if((((unsigned int)fw_load_extl >> 24) & 0xFF) != ((AHB_SRAM_BASE>>24)&0xFF))
 	{
-		memcpy(temp_addr,target,size); //here need fine tune!!
+		ipl_memcpy(temp_addr,target,size); //here need fine tune!!
 		serial_puts("Aml log : M8-TPL-UCL-DEC-2\n");
 		goto m8_tpl_ucl_dec;
 	}
@@ -184,6 +184,6 @@ STATIC_PREFIX void load_ext(unsigned por_cfg,unsigned bootid,unsigned target)
         if(__load_table[i].size==0)
             continue;
 
-        memcpy((void*)(__load_table[i].dest),(const void*)(__load_table[i].src+temp_addr),__load_table[i].size&0x3fffff);
+        ipl_memcpy((void*)(__load_table[i].dest),(const void*)(__load_table[i].src+temp_addr),__load_table[i].size&0x3fffff);
     }
 }

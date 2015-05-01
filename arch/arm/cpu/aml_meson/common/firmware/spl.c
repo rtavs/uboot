@@ -15,7 +15,8 @@
 #include <ddr.c>
 #include <mtddevices.c>
 #include <sdio.c>
-#include <debug_rom.c>
+
+
 
 #include <loaduboot.c>
 
