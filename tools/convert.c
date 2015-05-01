@@ -6,38 +6,7 @@
 
 #include "romfuns.h"
 struct romboot_s support_socs[]={
-    {
-        .cpu="m1",
-        .write=m1_write,
-    },
-    {
-        .cpu="m2",
-        .write=m1_write,
-    },
-    {
-        .cpu="m3",
-        .write=m3_write,
-        .write_ex=m3_write_ex,
-    },
-    {
-        .cpu="a3",
-        .write=a3_write,
-    },
-    {
-        .cpu="m6",
-        .write=m6_write,
-        .write_ex=m6_write_ex,
-    },
-    {
-        .cpu="m6tv",
-        .write=m6_write,
-        .write_ex=m6_write_ex,
-    },
-    {
-        .cpu="m6tvd",
-        .write=m6tvd_write,
-        .write_ex=m6tvd_write_ex,
-    },
+
     {
         .cpu="m8",
         .write=m8_write,
@@ -47,21 +16,6 @@ struct romboot_s support_socs[]={
         .cpu="m8b",
         .write=m8_write,
         .write_ex=m8_write_ex,
-    },
-    {
-        .cpu="m8+",
-        .write=m8_write_crypto,
-        .write_ex=m8_write_ex,
-    },
-    {
-        .cpu="m8b+",
-        .write=m8_write_crypto,
-        .write_ex=m8_write_ex,
-    },
-    {
-        .cpu="m6tvd+",
-        .write=m6tvd_write_crypto,
-        .write_ex=m6tvd_write_ex,
     },
     {
         .cpu=NULL,
