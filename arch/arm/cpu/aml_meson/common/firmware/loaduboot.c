@@ -12,22 +12,6 @@
 #define CONFIG_AML_UBOOT_MAGIC 0x12345678
 #endif
 
-#if defined(CONFIG_AML_SMP)
-#include <smp.dat>
-SPL_STATIC_FUNC int load_smp_code()
-{
-	serial_puts("Start load SMP code!\n");
-	unsigned * paddr = (unsigned*)PHYS_MEMORY_START;
-	unsigned size = sizeof(smp_code)/sizeof(unsigned);
-	int i;
-	for(i = 0; i < size; i++){
-		*paddr = smp_code[i];
-		paddr++;
-	}
-	serial_puts("Load SMP code finished!\n");
-}
-#endif
-
 SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
 	unsigned por_cfg=romboot_info->por_cfg;
@@ -36,10 +20,6 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 	int rc=0;
 
     serial_puts("\nHHH\n");
-
-#if defined(CONFIG_AML_SMP)
-	load_smp_code();
-#endif
 
 #ifdef  CONFIG_AML_SPL_L1_CACHE_ON
 	aml_cache_enable();

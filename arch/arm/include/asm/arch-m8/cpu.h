@@ -296,7 +296,6 @@
 #define AML_WATCHDOG_CPU_RESET_OFFSET		24
 
 #define MESON_CPU_TYPE	MESON_CPU_TYPE_MESON8
-//#define CONFIG_AML_SMP
 
 //support gpio cmd
 #define CONFIG_AML_GPIO_CMD 1
