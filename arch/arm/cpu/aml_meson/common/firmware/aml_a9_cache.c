@@ -352,8 +352,6 @@ static inline void mmu_setup(void)
 	uint nVal = 0;
 	for(i = 0 ; i < 0x1000;++i)
 	{
-#ifdef CONFIG_M8
-
 		if(i< CONFIG_MMU_DDR_SIZE || 0xd90 == i)
 			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_WB);
 		else if(i>= 0xC00 && i< 0xC13)
@@ -364,43 +362,7 @@ static inline void mmu_setup(void)
 			nVal = (i<<20)|(SEC_PROT_RW_NA | SEC_XN | SECTION);
 		else
 			nVal = 0;
-
-#else
-		if(i< 0x10)
-			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_SO_MEM);
-		if((i>= 0x10 && i< 0x800) ||
-			(i>= 0xd91 && i< 0xda0) ||
-			(i>= 0xC13 && i< 0xC42) ||
-			(i>= 0xC44 && i< 0xC80) ||
-			(i>= 0xC00 && i< 0xC11) ||
-			(i>= 0xd01 && i< 0xd90) ||
-			(i>= 0xda1 && i< 0xe00))
-			nVal = 0;
-
-		if((i>= 0x800 && i< 0xa00) || (i>= 0xd90 && i< 0xd91))
-			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_WB);
-#ifdef M6_DDR3_1GB
-		if(i>= 0xA00 && i< 0xC00)
-			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_WB);
-#else
-		if(i>= 0xA00 && i< 0xC00)
-			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_SO_MEM);
-#endif
-		if(i>= 0xC11 && i< 0xC13)
-			nVal = (i<<20)|(SEC_PROT_RW_NA | SEC_XN | SEC_SO_MEM);
-
-		if((i>= 0xC42 && i< 0xC44) || (0xda0 == i))
-			nVal = (i<<20)|(SEC_PROT_RW_NA |  SEC_XN | SEC_DEVICE);
-
-		if(i>= 0xC80 && i< 0xd01)
-			nVal = (i<<20)|(SEC_PROT_RW_NA | SEC_XN | SECTION);
-
-		if(i>= 0xe00 && i<= 0xfff)
-			nVal = (i<<20)|(SEC_PROT_RW_RW | SEC_SO_MEM);
-#endif //CONFIG_M8
-
 		*(pVMMUTable+i) = nVal;//(i << 20 | (SEC_PROT_RW_RW | SEC_WB));
-
 	}
 	u32 *page_table = (u32 *)(pVMMUTable);
 	//int i;
