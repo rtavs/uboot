@@ -24,8 +24,7 @@ OBJS	:= $(addprefix $(obj),$(SOBJS)  )
 __OBJS	:= $(SOBJS) $(COBJS)
 
 
-VPATH_LIST=	$(TOPDIR)/board/$(BOARDDIR) \
-			$(SRCTREE)/$(CPUDIR)/$(SOC) \
+VPATH_LIST=	$(SRCTREE)/$(CPUDIR)/$(SOC) \
 			$(SRCTREE)/$(CPUDIR)/common
 
 VPATH_LIST:=$(VPATH_LIST:%=%/firmware)
