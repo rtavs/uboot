@@ -8,10 +8,10 @@
 #include <sdpinmux.c>
 #include <memtest.c>
 #include <pll.c>
-#ifdef CONFIG_POWER_SPL
+
 #include <hardi2c_lite.c>
 #include <power.c>
-#endif
+
 #include <ddr.c>
 #include <mtddevices.c>
 #include <sdio.c>
@@ -22,9 +22,7 @@
 
 #include <asm/arch/reboot.h>
 
-#ifdef CONFIG_POWER_SPL
 #include <amlogic/aml_pmu_common.h>
-#endif
 
 
 static void spl_hello(void)
@@ -40,7 +38,6 @@ static void spl_hello(void)
 
 static void jtag_init(void)
 {
-#if defined(CONFIG_M8)
 	//A9 JTAG enable
 	writel(0x102,0xda004004);
 	//TDO enable
@@ -66,17 +63,15 @@ static void jtag_init(void)
 		serial_puts("\nno sdio debug board detected ");
 		writel(pinmux_2,P_PERIPHS_PIN_MUX_2);
 	}
-#endif
 }
 
 unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 {
-#if defined(CONFIG_M8)
 	//enable watchdog for 5s
 	//if bootup failed, switch to next boot device
 	AML_WATCH_DOG_SET(5000); //5s
 	writel(readl(0xc8100000), SKIP_BOOT_REG_BACK_ADDR); //[By Sam.Wu]backup the skip_boot flag to sram for v2_burning
-#endif
+
 	//setbits_le32(0xda004000,(1<<0));	//TEST_N enable: This bit should be set to 1 as soon as possible during the Boot process to prevent board changes from placing the chip into a production test mode
 
 	writel((readl(0xDA000004)|0x08000000), 0xDA000004);	//set efuse PD=1
@@ -84,9 +79,8 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     jtag_init();
     spl_hello();
 
-#ifdef CONFIG_POWER_SPL
+
     power_init(POWER_INIT_MODE_NORMAL);
-#endif
 
     // initial pll
     pll_init(&__plls);
@@ -124,12 +118,11 @@ unsigned main(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
     serial_puts("\nStarting uboot ...\n");
 
-#if defined(CONFIG_M8)
+
 	//if bootup failed, switch to next boot device
 	AML_WATCH_DOG_DISABLE(); //disable watchdog
-	//temp added
 	writel(0,0xc8100000);
-#endif
+
 
     typedef  void (*uboot_entry)(void);
     uboot_entry uboot = (uboot_entry)CONFIG_SYS_TEXT_BASE;
