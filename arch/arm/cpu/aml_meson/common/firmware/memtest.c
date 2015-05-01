@@ -16,11 +16,9 @@
 
 
 #include "memtest.h"
-#ifndef FIRMWARE_IN_ONE_FILE
+
 #define STATIC_PREFIX
-#else
-#define STATIC_PREFIX static
-#endif
+
 //#if (defined CONFIG_MEM_TEST)||(defined AML_DEBUG_ROM)
 
 

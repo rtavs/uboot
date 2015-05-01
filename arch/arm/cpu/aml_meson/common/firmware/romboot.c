@@ -2,11 +2,9 @@
 #include <asm/arch/cpu.h>
 #include <asm/arch/romboot.h>
 
-#ifndef FIRMWARE_IN_ONE_FILE
+
 #define STATIC_PREFIX
-#else
-#define STATIC_PREFIX static inline
-#endif
+
 #ifndef CONFIG_AML_UBOOT_MAGIC
 #define CONFIG_AML_UBOOT_MAGIC 0x12345678
 #endif

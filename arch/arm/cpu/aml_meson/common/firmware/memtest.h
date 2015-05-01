@@ -34,10 +34,9 @@ typedef unsigned long datum;
  * Function prototypes.
  */
 
-#ifndef FIRMWARE_IN_ONE_FILE
 datum   memTestDataBus(volatile datum * address);
 datum * memTestAddressBus(volatile datum * baseAddress, unsigned long nBytes);
 datum * memTestDevice(volatile datum * baseAddress, unsigned long nBytes);
-#endif
+
 
 #endif /* _memtest_h */

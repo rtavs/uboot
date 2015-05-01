@@ -6,11 +6,8 @@
 #include <ddr_types.h>
 
 
-#ifndef FIRMWARE_IN_ONE_FILE
 #define STATIC_PREFIX_DATA
-#else
-#define STATIC_PREFIX_DATA static
-#endif
+
 
 static int init_pctl_ddr3(struct ddr_set * timing_set);
 
