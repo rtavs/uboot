@@ -6,9 +6,9 @@
 #include "nfio.c"
 //#include <asm/arch/firm/config.h>
 
-#if defined(CONFIG_AML_SPL_L1_CACHE_ON)
+
 #include <aml_a9_cache.c>
-#endif //defined(CONFIG_AML_SPL_L1_CACHE_ON)
+
 
 /**
 **/
@@ -193,10 +193,9 @@ STATIC_PREFIX int sdio_read(unsigned target,unsigned size,unsigned por_sel)
 
 #if 0
     //send cmd6 to switch Highspeed
-#if defined(CONFIG_AML_SPL_L1_CACHE_ON)
         memset((unsigned char *)&switch_status, 0, 64);
         invalidate_dcache_range((unsigned char *)&switch_status, (unsigned char *)&switch_status+64);
-#endif
+
 
     WRITE_CBUS_REG(SDIO_M_ADDR, (unsigned char *)&switch_status);
 
@@ -235,10 +234,9 @@ STATIC_PREFIX int sdio_read(unsigned target,unsigned size,unsigned por_sel)
 
     //switch width bus 4bit here
     if(card_type == CARD_TYPE_EMMC){
-#if defined(CONFIG_AML_SPL_L1_CACHE_ON)
         memset((unsigned char *)&switch_status, 0, 64);
         invalidate_dcache_range((unsigned char *)&switch_status, (unsigned char *)&switch_status+64);
-#endif
+
 
         WRITE_CBUS_REG(SDIO_M_ADDR, (unsigned char *)&switch_status);
         WRITE_CBUS_REG(SDIO_EXTENSION,(64*8 + (16 - 1)) << 16);
@@ -334,9 +332,9 @@ DATA_READ:
 
       cur_size=(size-read_size)>CONFIG_SDIO_BUFFER_SIZE?CONFIG_SDIO_BUFFER_SIZE:(size-read_size);
 
-#if defined(CONFIG_AML_SPL_L1_CACHE_ON)
-        invalidate_dcache_range(read_size+target,read_size+target+cur_size);
-#endif
+
+      invalidate_dcache_range(read_size+target,read_size+target+cur_size);
+
 
       WRITE_CBUS_REG(SDIO_M_ADDR,read_size+target);
       if(bus_width == 0)

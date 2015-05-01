@@ -3,9 +3,7 @@
 #include <asm/arch/romboot.h>
 
 
-#ifdef  CONFIG_AML_SPL_L1_CACHE_ON
 #include <aml_a9_cache.c>
-#endif  //CONFIG_AML_SPL_L1_CACHE_ON
 
 #include <romboot.c>
 #ifndef CONFIG_AML_UBOOT_MAGIC
@@ -21,10 +19,7 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
 
     serial_puts("\nHHH\n");
 
-#ifdef  CONFIG_AML_SPL_L1_CACHE_ON
 	aml_cache_enable();
-	//serial_puts("\nSPL log : ICACHE & DCACHE ON\n");
-#endif	//CONFIG_AML_SPL_L1_CACHE_ON
 
 	size=__TEXT_SIZE;
 
@@ -60,11 +55,7 @@ SPL_STATIC_FUNC int load_uboot(unsigned __TEXT_BASE,unsigned __TEXT_SIZE)
     }
 
 	//here no need to flush I/D cache?
-#if CONFIG_AML_SPL_L1_CACHE_ON
 	aml_cache_disable();
-	//dcache_flush();
-#endif	//CONFIG_AML_SPL_L1_CACHE_ON
-
 
     if(rc==0) {
 	    fw_print_info(por_cfg,boot_id);
