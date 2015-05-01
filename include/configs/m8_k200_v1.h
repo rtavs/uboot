@@ -295,8 +295,6 @@
 //For M8 DDR clock gating disable
 #define CONFIG_M8_GATEACDDRCLK_DISABLE 1
 
-//For M8 DDR low power feature disable
-//#define CONFIG_M8_DDR_LOW_POWER_DISABLE 1
 
 //For M8 DDR PUB WL/WD/RD/RG-LVT, WD/RD-BVT disable
 #define CONFIG_M8_PUB_WLWDRDRGLVTWDRDBVT_DISABLE 1

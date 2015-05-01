@@ -264,11 +264,7 @@ pub_init_ddr1:
 	writel(0x0, P_DDR0_SOFT_RESET);
 	writel(0xf, P_DDR0_SOFT_RESET);
 
-#if defined(CONFIG_M8_DDR_LOW_POWER_DISABLE)
-	writel((timing_set->t_ddr_apd_ctrl & (~0xFF)), P_DDR0_APD_CTRL);
-#else
 	writel(timing_set->t_ddr_apd_ctrl, P_DDR0_APD_CTRL);
-#endif
 
 	writel(timing_set->t_ddr_clk_ctrl, P_DDR0_CLK_CTRL);
 
@@ -281,11 +277,8 @@ pub_init_ddr1:
 	writel(0x0, P_DDR1_SOFT_RESET);
 	writel(0xf, P_DDR1_SOFT_RESET);
 
-#if defined(CONFIG_M8_DDR_LOW_POWER_DISABLE)
-	writel((timing_set->t_ddr_apd_ctrl & (~0xFF)), P_DDR1_APD_CTRL);
-#else
+
 	writel(timing_set->t_ddr_apd_ctrl, P_DDR1_APD_CTRL);
-#endif
 
 	writel(timing_set->t_ddr_clk_ctrl, P_DDR1_CLK_CTRL);
 
@@ -310,11 +303,7 @@ pub_init_ddr1:
 		writel(timing_set->t_pctl_rsth_us,   P_DDR0_PCTL_TRSTH);       // 0 for ddr2;  2 for simulation; 500 for ddr3.
 		writel(timing_set->t_pctl_rstl_us,   P_DDR0_PCTL_TRSTL);       // 0 for ddr2;  2 for simulation; 500 for ddr3.
 
-	#if defined(CONFIG_M8_DDR_LOW_POWER_DISABLE)
-		writel((timing_set->t_pctl_mcfg & (~(0xFF<<8))),  P_DDR0_PCTL_MCFG );
-	#else
 		writel(timing_set->t_pctl_mcfg,  P_DDR0_PCTL_MCFG );
-	#endif
 
 		writel(timing_set->t_pctl_mcfg1, P_DDR0_PCTL_MCFG1);  //enable hardware c_active_in;
 
@@ -392,11 +381,7 @@ pub_init_ddr1:
 		writel(timing_set->t_pctl_rsth_us,   P_DDR1_PCTL_TRSTH);       // 0 for ddr2;  2 for simulation; 500 for ddr3.
 		writel(timing_set->t_pctl_rstl_us,   P_DDR1_PCTL_TRSTL);
 
-	#if defined(CONFIG_M8_DDR_LOW_POWER_DISABLE)
-		writel((timing_set->t_pctl_mcfg & (~(0xFF<<8))),   P_DDR1_PCTL_MCFG  );
-	#else
 		writel(timing_set->t_pctl_mcfg,   P_DDR1_PCTL_MCFG  );
-	#endif
 
 		writel( timing_set->t_pctl_mcfg1, P_DDR1_PCTL_MCFG1 );  //enable hardware c_active_in;
 
