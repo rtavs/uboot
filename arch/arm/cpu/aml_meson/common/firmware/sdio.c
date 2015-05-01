@@ -191,47 +191,6 @@ STATIC_PREFIX int sdio_read(unsigned target,unsigned size,unsigned por_sel)
         goto DATA_READ;
     }
 
-#if 0
-    //send cmd6 to switch Highspeed
-        memset((unsigned char *)&switch_status, 0, 64);
-        invalidate_dcache_range((unsigned char *)&switch_status, (unsigned char *)&switch_status+64);
-
-
-    WRITE_CBUS_REG(SDIO_M_ADDR, (unsigned char *)&switch_status);
-
-    WRITE_CBUS_REG(SDIO_EXTENSION,(64*8 + (16 - 1)) << 16);
-
-    if(card_type == CARD_TYPE_EMMC){
-        arg = ((0x3 << 24) |(185 << 16) |(1 << 8));  //emmc
-    }
-    else{
-        arg = (1 << 31) | 0xffffff;
-	arg &= ~(0xf << (0 * 4));
-	arg |= 1 << (0 * 4);
-    }
-
-	//serial_puts("***CMD6 switch highspeed here\n");
-	error=sdio_send_cmd((0 << check_busy_on_dat0_bit) | // RESPONSE is R1
-	      (0 << repeat_package_times_bit) | // packet number
-	      (1 << use_int_window_bit) | // will disable interrupt
-          (0 << response_crc7_from_8_bit) | // RESPONSE CRC7 is normal
-          (0 << response_do_not_have_crc7_bit) | // RESPONSE has CRC7
-          (1 << response_have_data_bit) | // RESPONSE has data receive
-          (45 << cmd_response_bits_bit) | // RESPONSE have 7(cmd)+32(respnse)+7(crc)-1 data
-          ((0x40+6) << cmd_command_bit)
-			,arg
-			,TIMEOUT_DATA
-			,ERROR_MMC_SWITCH_BUS);
-
-	if(error){
-	    serial_puts("###CMD6 switch Highspeed failed error:0x");
-        serial_put_dec(error);
-        serial_puts("\n");
-        goto DATA_READ;
-	}
-    __udelay(200);
-#endif
-
     //switch width bus 4bit here
     if(card_type == CARD_TYPE_EMMC){
         memset((unsigned char *)&switch_status, 0, 64);
