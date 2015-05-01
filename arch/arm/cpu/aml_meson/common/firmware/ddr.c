@@ -1076,12 +1076,9 @@ m8_ddr_pxp_emulator_step:
 	if(CONFIG_M8_DDR1_ONLY != nM8_DDR_CHN_SET) //DDR 0
 	{
 		nTempVal = readl(P_DDR0_PUB_PGSR0);
-#ifdef CONFIG_M8_NO_DDR_PUB_VT_CHECK
+
 		if ((( (nTempVal >> 20) & 0xfff ) != 0xC00 ) &&
 			(( (nTempVal >> 20) & 0xfff ) != 0x800 ))
-#else
-		if (( (nTempVal >> 20) & 0xfff ) != 0xC00 )
-#endif
 	    {
 			serial_puts("\nAml log : DDR0 - PUB init fail with PGSR0 : 0x");
 			serial_put_hex(nTempVal,32);
@@ -1102,12 +1099,9 @@ m8_ddr_pxp_emulator_step:
 	if(CONFIG_M8_DDR0_ONLY != nM8_DDR_CHN_SET) //DDR 1
 	{
 		nTempVal = readl(P_DDR1_PUB_PGSR0);
-#ifdef CONFIG_M8_NO_DDR_PUB_VT_CHECK
+
 		if ((( (nTempVal >> 20) & 0xfff ) != 0xC00 ) &&
 			(( (nTempVal >> 20) & 0xfff ) != 0x800 ))
-#else
-		if (( (nTempVal >> 20) & 0xfff ) != 0xC00 )
-#endif
 	    {
 			serial_puts("\nAml log : DDR1 - PUB init fail with PGSR0 : 0x");
 			serial_put_hex(nTempVal,32);

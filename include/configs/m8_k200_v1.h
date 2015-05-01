@@ -289,8 +289,6 @@
 #define CONFIG_M8_DDR_CHANNEL_SET (CONFIG_M8_DDRX2_S12)
 #define CONFIG_M8_DDR_AMBM_SET    (CONFIG_M8_DDR_ADDR_MAP_BANK_MODE_4_BNK)
 
-//For DDR PUB training not check the VT done flag
-#define CONFIG_M8_NO_DDR_PUB_VT_CHECK 1
 
 //For M8 DDR clock gating disable
 #define CONFIG_M8_GATEACDDRCLK_DISABLE 1
