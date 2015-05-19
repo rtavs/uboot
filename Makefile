@@ -356,7 +356,7 @@ firmware:$(obj)firmware.bin
 .PHONY :	$(obj)firmware.bin
 
 $(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk
-	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@
+	$(MAKE) -C $(TOPDIR)/firmware all FIRMWARE=$@
 
 endif #end CONFIG_AML_MESON
 
