@@ -176,7 +176,7 @@
 	"mmcargs=setenv bootargs console=${console} " \
 	"boardname=m8_board\0" \
 	"chipname=8726m8\0" \
-	"aml_dt=checkhw\0" \
+	"get_dt=checkhw\0" \
 	"initrd_high=60000000\0" \
 	"hdmimode=1080p\0" \
 	"cvbsmode=576cvbs\0" \

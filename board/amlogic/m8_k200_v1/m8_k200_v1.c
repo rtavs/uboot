@@ -574,10 +574,10 @@ static int do_checkhw(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			break;
 		default:
 			printf("bad chip version!!!");
-			break;
+			return 1;
 	}
 
-  return 1;
+  return 0;
 }
 
 U_BOOT_CMD(

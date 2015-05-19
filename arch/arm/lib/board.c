@@ -593,7 +593,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	/* initialize environment */
 	env_relocate ();
 
-	if ((s = getenv ("aml_dt")) != NULL) {
+	if ((s = getenv ("get_dt")) != NULL) {
 		run_command(s, 0);
 	}
 
