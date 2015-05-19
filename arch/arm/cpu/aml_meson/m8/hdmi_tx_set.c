@@ -1,6 +1,6 @@
 #include <common.h>
-#include <asm/arch-m8/reg_addr.h>
-#include <asm/arch-m8/io.h>
+#include <asm/arch/reg_addr.h>
+#include <asm/arch/io.h>
 #include <asm/io.h>
 #include "hdmi_tx_reg.h"
 #include <amlogic/aml_tv.h>

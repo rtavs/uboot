@@ -21,8 +21,8 @@
  * Author:  Tim Yao <timyao@amlogic.com>
  *
  */
-#include <asm/arch-m8/reg_addr.h>
-#include <asm/arch-m8/io.h>
+#include <asm/arch/reg_addr.h>
+#include <asm/arch/io.h>
 #include <asm/io.h>
 #ifndef TVREGS_H
 #define TVREGS_H

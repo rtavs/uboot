@@ -1,7 +1,7 @@
 #include <amlogic/aml_tv.h>
 #include <amlogic/enc_clk_config.h>
-#include <asm/arch-m8/reg_addr.h>
-#include <asm/arch-m8/io.h>
+#include <asm/arch/reg_addr.h>
+#include <asm/arch/io.h>
 #include <asm/io.h>
 #include "hdmi_tx_reg.h"
 

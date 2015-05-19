@@ -5,15 +5,7 @@
 #include <asm/arch/io.h>
 
 #include <amlogic/aml_tv.h>
-#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8B
-#include <asm/arch-m8b/tvregs.h>
-#endif
-#if CONFIG_AML_MESON_8
-#include <asm/arch-m8/tvregs.h>
-#endif
-#if CONFIG_AML_MESON_6
-#include <asm/arch-m6/tvregs.h>
-#endif
+#include <asm/arch/tvregs.h>
 #include "tv_out.h"
 
 static int tvmode = -1;
