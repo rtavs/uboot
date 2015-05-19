@@ -326,53 +326,39 @@ BOARD_SIZE_CHECK =
 endif
 
 # Always append ALL so that arch config.mk's can add custom ones
-ifneq ($(CONFIG_AML_MESON),y)
-ALL += $(obj)u-boot.srec
-else
-ALL += $(obj)u-boot-orig.bin
+
+ifeq ($(CONFIG_AML_MESON),y)
+ALL += $(obj)u-boot-with-spl.bin
 ALL += $(obj)firmware.bin
 endif
 
 
-ALL += $(obj)u-boot.bin $(obj)System.map $(U_BOOT_NAND) $(U_BOOT_ONENAND)
-
-
-AML_USB_UBOOT_NAME = u-boot-usb.bin
+ALL += $(obj)u-boot.srec $(obj)u-boot.bin $(obj)System.map $(U_BOOT_NAND) $(U_BOOT_ONENAND)
 
 all:		$(ALL)
 
-#$(obj)u-boot.hex:	$(obj)u-boot
-#		$(OBJCOPY) ${OBJCFLAGS} -O ihex $< $@
-#		cp -rf $@ ../../../project_m4/software/out
+$(obj)u-boot.hex:	$(obj)u-boot
+		$(OBJCOPY) ${OBJCFLAGS} -O ihex $< $@
 
 $(obj)u-boot.srec:	$(obj)u-boot
 		$(OBJCOPY) -O srec $< $@
 
-
-ifneq ($(CONFIG_AML_MESON),y)
 $(obj)u-boot.bin:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 		$(BOARD_SIZE_CHECK)
-else   #ELSE CONFIG_AML_MESON
-
-#################
-$(obj)u-boot.bin:	$(obj)u-boot-orig.bin  $(obj)firmware.bin
-	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
-$(obj)u-boot-orig.bin:	$(obj)u-boot
-	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-	$(BOARD_SIZE_CHECK)
-
-endif #end CONFIG_AML_MESON
-
-
 ifeq ($(CONFIG_AML_MESON),y)
+
+$(obj)u-boot-with-spl.bin:	$(obj)u-boot.bin  $(obj)firmware.bin
+	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
+
+
 firmware:$(obj)firmware.bin
 .PHONY :	$(obj)firmware.bin
 
 $(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk
 	$(MAKE) -C $(TOPDIR)/$(CPUDIR)/common/firmware all FIRMWARE=$@
 
-endif #END CONFIG_AML_MESON
+endif #end CONFIG_AML_MESON
 
 $(obj)u-boot.ldr:	$(obj)u-boot
 		$(CREATE_LDR_ENV)
