@@ -5,12 +5,6 @@
 #define CONFIG_AML_MESON_8      1
 #define CONFIG_MACH_MESON8_K200_V1  // generate M8 K200 machid number
 
-
-// cart type of each port
-#define PORT_A_CARD_TYPE            CARD_TYPE_UNKNOWN
-#define PORT_B_CARD_TYPE            CARD_TYPE_UNKNOWN
-#define PORT_C_CARD_TYPE            CARD_TYPE_MMC // otherwise CARD_TYPE_SD
-
 //UART Sectoion
 #define CONFIG_CONS_INDEX   2
 
@@ -246,7 +240,7 @@
 	"recovery="\
         "echo enter recovery;"\
         "if mmcinfo; then "\
-            "if fatload mmc 0 ${loadaddr} recovery.img; then setenv bootargs ${initargs} a9_clk_max=800000000; bootm;fi;"\
+            "if fatload mmc 0 ${loadaddr} recovery.img; then bootm;fi;"\
         "fi; "\
     \
     "sdc_burning=sdc_burn ${sdcburncfg}\0"
