@@ -49,9 +49,6 @@
 #include <nand.h>
 #include <onenand_uboot.h>
 #include <mmc.h>
-#include <asm/cache.h>
-
-#include <asm/arch/reboot.h>
 
 #ifdef CONFIG_BITBANGMII
 #include <miiphy.h>
@@ -89,12 +86,6 @@ extern void rtl8019_get_enetaddr (uchar * addr);
 #include <i2c.h>
 #endif
 
-#ifdef CONFIG_VIDEO_AMLLCD
-extern int aml_lcd_init(void);
-#endif
-
-// Pre-clear hdmi hdcp ksv ram
-extern int hdmi_hdcp_clear_ksv_ram(void);
 
 /************************************************************************
  * Coloured LED functionality
@@ -274,7 +265,6 @@ init_fnc_t *init_sequence[] = {
 #if defined(CONFIG_CMD_PCI) || defined (CONFIG_PCI)
 	arm_pci_init,
 #endif
-   hdmi_hdcp_clear_ksv_ram,
 	NULL,
 };
 
@@ -371,7 +361,6 @@ void board_init_f (ulong bootflag)
 	/* reserve memory for LCD display (always full pages) */
 	addr = lcd_setmem (addr);
 	gd->fb_base = addr;
-	debug("fb_base=%x\n", gd->fb_base);
 #endif /* CONFIG_LCD */
 
 	/*
@@ -474,10 +463,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	char *s;
 	bd_t *bd;
 	ulong malloc_start;
-	int init_ret=0, ret = 0;
-#ifdef CONFIG_GENERIC_MMC
-    struct mmc *mmc;
-#endif
 #if !defined(CONFIG_SYS_NO_FLASH)
 	ulong flash_size;
 #endif
@@ -563,7 +548,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
 
 #if defined (CONFIG_GENERIC_MMC) && defined(CONFIG_STORE_COMPATIBLE)
     if((device_boot_flag == SPI_EMMC_FLAG) || (device_boot_flag == EMMC_BOOT_FLAG)) { // if eMMC/tSD is exist
-        mmc = find_mmc_device(1);
+        struct mmc *mmc = find_mmc_device(1);
         if (mmc) {
             mmc_init(mmc); // init eMMC/tSD
         }
