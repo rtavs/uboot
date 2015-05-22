@@ -94,15 +94,16 @@ int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
     {
         case POR_1ST_NAND:
         //case POR_1ST_NAND_RB:
-            rc=nf_read(temp_addr,size);
+            serial_puts("Boot From Nand\n");
+            //rc=nf_read(temp_addr,size);
             break;
         case POR_1ST_SPI :
         case POR_1ST_SPI_RESERVED :
-            mem=(unsigned *)(NOR_START_ADDR+READ_SIZE);
-            spi_init();
+            //mem=(unsigned *)(NOR_START_ADDR+READ_SIZE);
+            //spi_init();
             serial_puts("Boot From SPI\n");
             //ipl_memcpy((unsigned*)temp_addr,mem,size);
-            ipl_memcpy((unsigned char*)temp_addr,(unsigned char*)mem,size);
+            //ipl_memcpy((unsigned char*)temp_addr,(unsigned char*)mem,size);
             break;
         case POR_1ST_SDIO_C:
 		serial_puts("Boot From SDIO C\n");

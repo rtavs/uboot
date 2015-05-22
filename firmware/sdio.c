@@ -3,7 +3,7 @@
 #include <asm/arch/timing.h>
 #include <asm/arch/io.h>
 #include <asm/arch/sdio.h>
-#include "nfio.c"
+
 //#include <asm/arch/firm/config.h>
 
 

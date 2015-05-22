@@ -4,7 +4,6 @@
 
 #include <serial.c>
 
-#include <pinmux.c>
 #include <sdpinmux.c>
 #include <memtest.c>
 #include <pll.c>
@@ -13,7 +12,7 @@
 #include <power.c>
 
 #include <ddr.c>
-#include <mtddevices.c>
+
 #include <sdio.c>
 
 
