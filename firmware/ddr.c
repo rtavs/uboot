@@ -15,7 +15,7 @@ static unsigned short ddr_clk;
     #define hx_serial_puts serial_puts
     #define hx_serial_put_hex serial_put_hex
 #else
-    #define ddr_udelay
+    #define ddr_udelay(...)
     #define hx_serial_puts(...)
     #define hx_serial_put_hex(...)
 #endif
