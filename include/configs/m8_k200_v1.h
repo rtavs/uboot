@@ -296,8 +296,8 @@
 #define CFG_M8_DDR_CLK    792 //696 //768  //792// (636)
 
 //On board DDR capactiy
-#define CFG_M8_DDR3_1GB
-//#define CFG_M8_DDR3_2GB
+//#define CFG_M8_DDR3_1GB
+#define CFG_M8_DDR3_2GB
 //#define CFG_M8_DDR3_4GB
 //above setting will affect following:
 //board/amlogic/m8_k200_v1/firmware/timming.c
