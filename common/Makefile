@@ -199,7 +199,6 @@ COBJS-$(CONFIG_UPDATE_TFTP) += update.o
 COBJS-$(CONFIG_USB_KEYBOARD) += usb_kbd.o
 COBJS-$(CONFIG_VIDEO_AML) += cmd_video.o
 COBJS-$(CONFIG_AML_FONT) += devfont.o
-COBJS-$(CONFIG_AML_AUTOSCRIPT) += aml_autoscript.o
 COBJS-$(CONFIG_AML_AXI_RATIO)+=cmd_clockchange.o
 COBJS-$(CONFIG_AML_JPEG_LOGO) += cmd_jpeg.o
 COBJS-$(CONFIG_AML_JPEG_LOGO) += jdecEngine.o
