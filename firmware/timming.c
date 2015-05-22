@@ -6,9 +6,6 @@
 #include <ddr_types.h>
 
 
-#define STATIC_PREFIX_DATA
-
-
 static int init_pctl_ddr3(struct ddr_set * timing_set);
 
 #if (CFG_M8_DDR_CLK >= 384) && (CFG_M8_DDR_CLK < 750)
@@ -416,8 +413,7 @@ static struct ddr_set __ddr_setting={
 	#error "CONFIG_SYS_CPU_CLK is not set! Please set M8 CPU clock first!\n"
 #endif
 
-STATIC_PREFIX_DATA struct pll_clk_settings __plls
-={
+struct pll_clk_settings __plls = {
 	//current test: >=1320MHz  can not work stable@VDD_CPU=1.2V
 	//0x1098[0xc1104260]
 	.sys_pll_cntl=	(M8_SYS_PLL_OD << 16) | //OD
@@ -479,4 +475,4 @@ STATIC_PREFIX_DATA struct pll_clk_settings __plls
 //#define DEBUGROM_CMD_BUF_SIZE ((0x1b0-0xc0-sizeof(__ddr_setting)-sizeof(__plls))&~0x1f)
 #define DEBUGROM_CMD_BUF_SIZE (0x1f)	//debugrom buffer size
 
-STATIC_PREFIX_DATA char init_script[DEBUGROM_CMD_BUF_SIZE] __attribute__((section(".setting"))) ="r c1107d54";
+char init_script[DEBUGROM_CMD_BUF_SIZE] __attribute__((section(".setting"))) ="r c1107d54";

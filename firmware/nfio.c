@@ -91,7 +91,7 @@ unsigned char pagelist_1ynm_hynix256[128] = {
 	0xDf, 0xe1, 0xE3, 0xE5, 0xE7, 0xE9, 0xEb, 0xEd,
 	0xEf, 0xf1, 0xF3, 0xF5, 0xF7, 0xF9, 0xFb, 0xFd,
 };
-STATIC_PREFIX short nfio_reset(int no_rb)
+short nfio_reset(int no_rb)
 {
     unsigned long tmp;
 
@@ -124,7 +124,7 @@ STATIC_PREFIX short nfio_reset(int no_rb)
     return 0;
 }
 
-STATIC_PREFIX short nfio_read_id()
+short nfio_read_id()
 {
 	writel((CE0 | IDLE | 0), P_NAND_CMD);
 	writel((CE0 | CLE | 0x90), P_NAND_CMD);
@@ -148,7 +148,7 @@ void nfio_read_retry(int mode)
 
 }
 
-STATIC_PREFIX short nfio_page_read_hwctrl(unsigned src,unsigned mem, unsigned char *oob_buf, unsigned ext)
+short nfio_page_read_hwctrl(unsigned src,unsigned mem, unsigned char *oob_buf, unsigned ext)
 {
 	int i, k, ecc_mode, short_mode, short_size, pages, page_size;
 	unsigned long info_adr = NAND_INFO_BUF;
@@ -279,7 +279,7 @@ STATIC_PREFIX short nfio_page_read_hwctrl(unsigned src,unsigned mem, unsigned ch
 	return ret;
 }
 
-STATIC_PREFIX short nfio_page_read(unsigned src, unsigned mem, unsigned char *oob_buf, unsigned ext)
+short nfio_page_read(unsigned src, unsigned mem, unsigned char *oob_buf, unsigned ext)
 {
 	unsigned read_page, new_nand_type, pages_in_block;
 	int retry_cnt, ret = 0;
@@ -330,7 +330,7 @@ page_retry:
 *setting nand controller configuration;
 *read page0 and get nand info.
 ***************************************/
-STATIC_PREFIX int nf_init(unsigned ext, unsigned *data_size)
+int nf_init(unsigned ext, unsigned *data_size)
 {
 	int ecc_mode, short_mode, short_size, pages, page_size;
 	unsigned por_cfg = romboot_info->por_cfg;
@@ -452,7 +452,7 @@ STATIC_PREFIX int nf_init(unsigned ext, unsigned *data_size)
 
 }
 
-STATIC_PREFIX void nf_set_pux(unsigned ce)
+void nf_set_pux(unsigned ce)
 {
 	if(ce == CE0){
 		SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_2, (1 << 25));
@@ -467,7 +467,7 @@ STATIC_PREFIX void nf_set_pux(unsigned ce)
 	writel((ce | IDLE | 40), P_NAND_CMD);
 }
 
-STATIC_PREFIX unsigned int  select_chip(int num)
+unsigned int  select_chip(int num)
 {
 	unsigned int ce;
 	int  i ;
@@ -498,7 +498,7 @@ STATIC_PREFIX unsigned int  select_chip(int num)
 	return ce;
 }
 
-STATIC_PREFIX void send_plane0_cmd(unsigned page, unsigned ext,unsigned ce)
+void send_plane0_cmd(unsigned page, unsigned ext,unsigned ce)
 {
 	int  chip_num, plane_mode;
 	unsigned int nand_read_info, ran_mode;
@@ -644,7 +644,7 @@ STATIC_PREFIX void send_plane0_cmd(unsigned page, unsigned ext,unsigned ce)
 
 }
 
-STATIC_PREFIX void send_plane1_cmd(unsigned page, unsigned ext,unsigned ce)
+void send_plane1_cmd(unsigned page, unsigned ext,unsigned ce)
 {
 	int  chip_num, plane_mode;
 	unsigned int nand_read_info;
@@ -714,7 +714,7 @@ STATIC_PREFIX void send_plane1_cmd(unsigned page, unsigned ext,unsigned ce)
 
 }
 
-STATIC_PREFIX void send_read_cmd(unsigned src, unsigned ext,unsigned ce)
+void send_read_cmd(unsigned src, unsigned ext,unsigned ce)
 {
 	int  chip_num, plane_mode;
 	//unsigned int nand_read_info;
@@ -773,7 +773,7 @@ STATIC_PREFIX void send_read_cmd(unsigned src, unsigned ext,unsigned ce)
 	writel((ce | IDLE ), P_NAND_CMD);           //send dummy cmd idle
 
 }
-STATIC_PREFIX void send_reset_cmd(unsigned ext)
+void send_reset_cmd(unsigned ext)
 {
 	unsigned int i, chip_num,nand_read_info;
 	unsigned int ce;
@@ -806,7 +806,7 @@ STATIC_PREFIX void send_reset_cmd(unsigned ext)
 
 }
 
-STATIC_PREFIX unsigned nf_read_check(volatile unsigned long long *info_buf, unsigned char * oob_buf,unsigned ext, unsigned ce )
+unsigned nf_read_check(volatile unsigned long long *info_buf, unsigned char * oob_buf,unsigned ext, unsigned ce )
 {
 	int j, pages, k, ret=0;
 
@@ -864,7 +864,7 @@ STATIC_PREFIX unsigned nf_read_check(volatile unsigned long long *info_buf, unsi
 	return ret;
 }
 
-STATIC_PREFIX short nf_normal_read_page_hwctrl(unsigned page,unsigned  mem, unsigned char *oob_buf, unsigned ext, unsigned data_size, int chipnr)
+short nf_normal_read_page_hwctrl(unsigned page,unsigned  mem, unsigned char *oob_buf, unsigned ext, unsigned data_size, int chipnr)
 {
 	int i, k, chip_num, plane_mode,ecc_mode, short_mode, short_size;
 	unsigned long info_adr = NAND_INFO_BUF;
@@ -924,7 +924,7 @@ STATIC_PREFIX short nf_normal_read_page_hwctrl(unsigned page,unsigned  mem, unsi
 	return ret;
 }
 
-STATIC_PREFIX int nf_normal_read_page(unsigned page, unsigned  mem, unsigned char *oob_buf, unsigned ext, unsigned data_size, unsigned chipnr)
+int nf_normal_read_page(unsigned page, unsigned  mem, unsigned char *oob_buf, unsigned ext, unsigned data_size, unsigned chipnr)
 {
 	unsigned read_page, new_nand_type, pages_in_block;
 	unsigned chip_num, plane_mode, ram_mode;
@@ -947,7 +947,7 @@ STATIC_PREFIX int nf_normal_read_page(unsigned page, unsigned  mem, unsigned cha
 }
 
 //for uboot
-STATIC_PREFIX short nf_read(unsigned target, unsigned size)
+short nf_read(unsigned target, unsigned size)
 {
 	unsigned ext = romboot_info->ext;
 	unsigned int read_size, data_size;

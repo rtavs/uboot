@@ -3,13 +3,11 @@
 #include <asm/arch/romboot.h>
 
 
-#define STATIC_PREFIX
-
 #ifndef CONFIG_AML_UBOOT_MAGIC
 #define CONFIG_AML_UBOOT_MAGIC 0x12345678
 #endif
 
-STATIC_PREFIX short check_sum(unsigned * addr,unsigned short check_sum,unsigned size)
+short check_sum(unsigned * addr,unsigned short check_sum,unsigned size)
 {
     serial_put_dword(addr[15]);
     if(addr[15]!=CONFIG_AML_UBOOT_MAGIC)
@@ -73,11 +71,8 @@ SPL_STATIC_FUNC void fw_print_info(unsigned por_cfg,unsigned stage)
     return ;
 }
 
-#ifdef CONFIG_BOARD_8726M_ARM
-#define P_PREG_JTAG_GPIO_ADDR  (volatile unsigned long *)0xc110802c
-#endif
 
-STATIC_PREFIX int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
+int fw_load_intl(unsigned por_cfg,unsigned target,unsigned size)
 {
     int rc=0;
 	unsigned len;
@@ -129,13 +124,13 @@ m8_tpl_ucl_dec:
         rc=check_sum((unsigned*)target,magic_info->crc[1],size);
     return rc;
 }
-STATIC_PREFIX int fw_init_extl(unsigned por_cfg)
+int fw_init_extl(unsigned por_cfg)
 {
 	 int rc=sdio_init(por_cfg);
    return rc;
 }
 
-STATIC_PREFIX int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
+int fw_load_extl(unsigned por_cfg,unsigned target,unsigned size)
 {
     unsigned temp_addr;
 	unsigned len;
@@ -164,7 +159,7 @@ struct load_tbl_s{
     unsigned size;
 };
 extern struct load_tbl_s __load_table[2];
-STATIC_PREFIX void load_ext(unsigned por_cfg,unsigned bootid,unsigned target)
+void load_ext(unsigned por_cfg,unsigned bootid,unsigned target)
 {
     int i;
     unsigned temp_addr;

@@ -17,8 +17,6 @@
 
 #include "memtest.h"
 
-#define STATIC_PREFIX
-
 //#if (defined CONFIG_MEM_TEST)||(defined AML_DEBUG_ROM)
 
 
@@ -37,7 +35,6 @@
  *              A non-zero result is the first pattern that failed.
  *
  **********************************************************************/
-STATIC_PREFIX
 datum
 memTestDataBus(volatile datum * address)
 {
@@ -93,7 +90,6 @@ memTestDataBus(volatile datum * address)
  *              additional information about the problem.
  *
  **********************************************************************/
-STATIC_PREFIX
 datum *
 memTestAddressBus(volatile datum * baseAddress, unsigned long nBytes)
 {
@@ -180,7 +176,6 @@ memTestAddressBus(volatile datum * baseAddress, unsigned long nBytes)
  **********************************************************************/
 #ifdef CONFIG_ENABLE_MEM_DEVICE_TEST
 #define AML_DEBUG_ROM
-STATIC_PREFIX
 datum *
 memTestDevice(volatile datum * baseAddress, unsigned long nBytes)
 {

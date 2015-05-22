@@ -2,16 +2,14 @@
 #include <memtest.h>
 #include <config.h>
 #include <asm/arch/io.h>
-#ifndef STATIC_PREFIX
-#define STATIC_PREFIX
-#endif
+
 extern struct pll_clk_settings __plls;
 SPL_STATIC_FUNC void spi_pinmux_init(void)
 {
 
 }
 
-STATIC_PREFIX int SPI_page_program(unsigned * addr_source, unsigned spi_addr, int byte_length)
+int SPI_page_program(unsigned * addr_source, unsigned spi_addr, int byte_length)
 {
    //unsigned temp;
    unsigned temp_addr;
@@ -44,7 +42,7 @@ STATIC_PREFIX int SPI_page_program(unsigned * addr_source, unsigned spi_addr, in
   setbits_le32(P_SPI_FLASH_CTRL,1<<SPI_ENABLE_AHB);
   return 0;
 }
-STATIC_PREFIX int SPI_sector_erase(unsigned addr )
+int SPI_sector_erase(unsigned addr )
 {
    //unsigned temp;
    clrbits_le32(P_SPI_FLASH_CTRL,1<<SPI_ENABLE_AHB);
@@ -69,14 +67,14 @@ STATIC_PREFIX int SPI_sector_erase(unsigned addr )
 
   return 0;
 }
-STATIC_PREFIX void spi_init(void)
+void spi_init(void)
 {
     spi_pinmux_init();
     writel(__plls.spi_setting,P_SPI_FLASH_CTRL);
 
 }
 #if 0
-STATIC_PREFIX void spi_erase(void)
+void spi_erase(void)
 {
     spi_pinmux_init();
     writel(__plls.spi_setting,P_SPI_FLASH_CTRL);
@@ -116,7 +114,7 @@ static void spi_disable_write_protect(void)
         ret = readl(P_SPI_FLASH_STATUS)&0xff;
         }
 }
-STATIC_PREFIX void spi_program(unsigned dest,unsigned src,unsigned size)
+void spi_program(unsigned dest,unsigned src,unsigned size)
 {
 	unsigned addr=0;
 	spi_disable_write_protect();

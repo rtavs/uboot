@@ -149,7 +149,7 @@ static inline short sdio_send_cmd(unsigned cmd,unsigned arg,unsigned time,short 
     return 0;
 }
 
-STATIC_PREFIX int sdio_read(unsigned target,unsigned size,unsigned por_sel)
+int sdio_read(unsigned target,unsigned size,unsigned por_sel)
 {
    unsigned addr,cur_size,read_size;
 
@@ -339,7 +339,7 @@ DATA_READ:
 
 }
 
-STATIC_PREFIX short sdio_init(unsigned dev)
+short sdio_init(unsigned dev)
 {
     unsigned SD_boot_type, temp;  // bits [9:8]
     unsigned card_type = CARD_TYPE_SD;
