@@ -173,14 +173,11 @@
 	"bootm_low=0x00000000\0" \
 	"bootm_size=0x80000000\0" \
 	"mmcargs=setenv bootargs console=${console} " \
-	"boardname=m8_board\0" \
-	"chipname=8726m8\0" \
 	"get_dt=checkhw\0" \
 	"initrd_high=60000000\0" \
 	"hdmimode=1080p\0" \
 	"cvbsmode=576cvbs\0" \
 	"outputmode=1080p\0" \
-	"vdac_config=0x10\0" \
 	"initargs=root=/dev/system rootfstype=ext4 init=/init console=ttyS0,115200n8 no_console_suspend\0" \
 	"video_dev=tvout\0" \
 	"display_width=1920\0" \
