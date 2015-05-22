@@ -159,7 +159,6 @@
 #define CONFIG_CMD_AUTOSCRIPT
 
 #define CONFIG_CMD_REBOOT 1
-#define CONFIG_PREBOOT
 
 
 /* Environment information */
@@ -209,14 +208,6 @@
 	"normalsize=400000\0" \
 	"firstboot=1\0" \
 	"store=0\0"\
-    \
-    "preboot="\
-        "echo preboot ...; "\
-        "run storeargs;"\
-        "get_rebootmode; clear_rebootmode; echo reboot_mode=${reboot_mode}\0" \
-    \
-	"storeargs="\
-        "setenv bootargs ${initargs} vdaccfg=${vdac_config} logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} androidboot.firstboot=${firstboot} hdmitx=${hdmimode}\0"\
     \
     "bootsdargs="\
         "root=/dev/mmcblk0p1 rw rootfstype=vfat rootwait init=/init console=ttyS0,115200n8 no_console_suspend logo=osd1,loaded,${fb_addr},${outputmode},full hdmimode=${hdmimode} cvbsmode=${cvbsmode} hdmitx=${hdmimode}\0"\
