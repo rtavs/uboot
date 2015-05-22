@@ -16,7 +16,7 @@ CFLAGS	+=  -DCONFIG_AML_ROMBOOT_SPL  -MD -Wno-unused-function -mno-long-calls
 AFLAGS	+= -DCONFIG_AMLROM_SPL -DTEXT_BASE=$(TEXT_BASE) -MD
 
 
-SOBJS	 = rom_spl.o magic.o jetlab.o
+SOBJS	 = start.o magic.o jetlab.o
 
 COBJS	 = spl.o
 

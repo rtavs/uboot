@@ -10,7 +10,7 @@ SECTIONS
 	. = ALIGN(4);
 	.start      :
 	{
-	  *rom_spl*.o	(.text)
+	  *start*.o	(.text)
 
 	}
 	. =  AHB_SRAM_BASE+0x1b0;
