@@ -16,7 +16,7 @@ CFLAGS	+=  -DCONFIG_AML_ROMBOOT_SPL  -MD -Wno-unused-function -mno-long-calls
 AFLAGS	+= -DCONFIG_AMLROM_SPL -DTEXT_BASE=$(TEXT_BASE) -MD
 
 
-SOBJS	 = start.o magic.o jetlab.o
+SOBJS	 = start.o magic.o
 
 COBJS	 = spl.o
 
@@ -48,7 +48,7 @@ all: $(ALL)
 
 %.bin:	%.out
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-$(basename $(FIRMWARE)).out:$(OBJS) $(obj)spl.o $(target_LDS)
+$(basename $(FIRMWARE)).out:$(OBJS) $(obj)spl.o $(obj)eabi_compat.o $(target_LDS)
 
 %.out:
 	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
