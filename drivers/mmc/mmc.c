@@ -1176,11 +1176,6 @@ block_dev_desc_t *mmc_get_dev(int dev)
 #define SD_CARD_DEV     0
 #define EMMC_INAND_DEV  1
 
-#if defined (CONFIG_PARTITIONS_STORE)
-extern  int mmc_device_partitions (struct mmc *mmc);
-static int is_init_partition_flag = 0;
-#endif
-
 int mmc_init(struct mmc *mmc)
 {
 	int err;
@@ -1244,17 +1239,6 @@ int mmc_init(struct mmc *mmc)
 	} else {
         mmc->is_inited = true; // init OK
     }
-
-    if (aml_is_emmc_tsd(mmc)) { // eMMC OR TSD
-#if defined (CONFIG_PARTITIONS_STORE)
-       if (0 == is_init_partition_flag) {
-            mmc_device_partitions(mmc);
-            is_init_partition_flag = 1;
-            printf("eMMC/TSD partition table have been checked OK!\n");
-        }
-#endif
-    }
-
 
     return err;
 }

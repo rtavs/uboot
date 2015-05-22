@@ -64,14 +64,6 @@
 #include "../drivers/net/lan91c96.h"
 #endif
 
-#ifdef CONFIG_POST
-#include <post.h>
-#endif
-#ifdef CONFIG_LOGBUFFER
-#include <logbuff.h>
-#endif
-
-
 DECLARE_GLOBAL_DATA_PTR;
 
 ulong monitor_flash_len;
@@ -578,12 +570,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
     }
 #endif
 
-#if defined (CONFIG_PARTITIONS_STORE)
-        mmc = find_mmc_device(1);
-        if (mmc) {
-            mmc_init(mmc); // init eMMC/tSD
-        }
-#endif
 
 #ifdef CONFIG_HAS_DATAFLASH
 	AT91F_DataflashInit();
@@ -612,7 +598,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	stdio_init ();	/* get the devices list going. */
 
 	jumptable_init ();
-
 
 #if defined(CONFIG_API)
 	/* Initialize API */
@@ -666,7 +651,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 #if defined(CONFIG_NET_MULTI)
 	puts ("Net:   ");
 #endif
-
 	eth_initialize(gd->bd);
 #if defined(CONFIG_RESET_PHY_R)
 	debug ("Reset Ethernet PHY\n");
@@ -674,28 +658,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 #endif
 #endif
 
-#ifdef CONFIG_CMD_ADC_POWER_KEY
-	puts ("cold power up \n");
-	char *data_sus = getenv("suspend");
-	int sus_ret = strcmp(data_sus,"on");
-	if  (sus_ret == 0)
-		{
-			printf("pls touch key_pad\n");
-			/*add  install_halder_riq for keypad and remote*/
-			//run_command("adc 2",0);
-
-		}
-#endif
-
-#if CONFIG_AUTO_START_SD_BURNING
-    if(is_tpl_loaded_from_ext_sdmmc())
-    {
-        if(aml_check_is_ready_for_sdc_produce())
-        {
-            aml_v2_sdc_producing(0, bd);
-        }
-    }
-#endif// #if CONFIG_AUTO_START_SD_BURNING
 
 #ifdef CONFIG_VIDEO_AMLLCD
 	puts("LCD Initialize:   \n");
