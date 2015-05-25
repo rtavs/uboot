@@ -774,11 +774,6 @@ int genimg_has_config (bootm_headers_t *images)
  *     1, if ramdisk image is found but corrupted, or invalid
  *     rd_start and rd_end are set to 0 if no ramdisk exists
  */
-#ifndef CONFIG_ANDROID_IMG
-#ifdef CONFIG_AML_MESON_FIT
-	unsigned int ramdisk_addr = ~0;
-#endif
-#endif
 int boot_get_ramdisk (int argc, char * const argv[], bootm_headers_t *images,
 		uint8_t arch, ulong *rd_start, ulong *rd_end)
 {
@@ -864,14 +859,6 @@ int boot_get_ramdisk (int argc, char * const argv[], bootm_headers_t *images,
 		}
 #endif
 
-#ifndef CONFIG_ANDROID_IMG
-#if defined(CONFIG_AML_MESON_FIT)
-		puts("Get ramdisk...\n");
-		printf("images.rd_start=0x%x\n",rd_addr);
-		if(ramdisk_addr != ~0)
-			rd_addr = ramdisk_addr;
-#endif
-#endif
 		/* copy from dataflash if needed */
 		rd_addr = genimg_get_image (rd_addr);
 
@@ -1417,14 +1404,6 @@ int boot_get_fdt (int flag, int argc, char * const argv[], bootm_headers_t *imag
 		debug ("## Checking for 'FDT'/'FDT Image' at %08lx\n",
 				fdt_addr);
 
-#if defined(CONFIG_ANDROID_IMG) & defined(CONFIG_OF_LIBFDT)
-#if defined(CONFIG_AML_MESON_FIT)
-		puts("Get ramdisk...\n");
-		printf("images.rd_start=0x%x\n",rd_addr);
-		if(ramdisk_addr != ~0)
-			rd_addr = ramdisk_addr;
-#endif
-#endif
 		/* copy from dataflash if needed */
 		fdt_addr = genimg_get_image (fdt_addr);
 
@@ -1926,11 +1905,6 @@ void fit_print_contents (const void *fit)
  * returns:
  *     no returned results
  */
-#ifndef CONFIG_ANDROID_IMG
-#ifdef CONFIG_AML_MESON_FIT
-extern unsigned int ramdisk_addr;
-#endif
-#endif
 void fit_image_print (const void *fit, int image_noffset, const char *p)
 {
 	char *desc;
@@ -1964,15 +1938,6 @@ void fit_image_print (const void *fit, int image_noffset, const char *p)
 		printf ("unavailable\n");
 	else
 		printf ("0x%08lx\n", (ulong)data);
-#ifndef CONFIG_ANDROID_IMG
-#ifdef CONFIG_AML_MESON_FIT
-	if(!strcmp("RAMDisk Image",genimg_get_type_name (type)))//Get the ramdisk addr
-	{
-		ramdisk_addr = data;
-		return;
-	}
-#endif
-#endif//CONFIG_ANDROID_IMG
 #endif
 
 	printf ("%s  Data Size:    ", p);
@@ -3125,12 +3090,6 @@ void fit_conf_print (const void *fit, int noffset, const char *p)
 static int fit_check_ramdisk (const void *fit, int rd_noffset, uint8_t arch, int verify)
 {
 	fit_image_print (fit, rd_noffset, "   ");
-#ifndef CONFIG_ANDROID_IMG
-#ifdef CONFIG_AML_MESON_FIT
-	if (ramdisk_addr != ~0)//Getted addr, we just return.
-		return 0;
-#endif
-#endif
 
 	if (verify) {
 		puts ("   Verifying Hash Integrity ... ");
