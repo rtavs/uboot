@@ -93,6 +93,10 @@ int main(int argc,char * argv[])
 	            fp_spl=fp_in;
 	        }else{
 	            fp_spl=fopen(optarg,"rb");
+                if(!fp_spl) {
+                    printf("fopen spl error\n");
+                    goto exit_prog;
+                }
 	        }
 
 	        break;
@@ -108,6 +112,10 @@ int main(int argc,char * argv[])
 	            fp_in=fp_spl;
 	        }else{
 	            fp_in=fopen(optarg,"rb");
+                if (!fp_in) {
+                    printf("fopen uboot error\n");
+	                goto exit_prog;
+                }
 	        }
 
 
@@ -120,6 +128,10 @@ int main(int argc,char * argv[])
 	        }
 	        out_file=optarg;
 	        fp_out=fopen(optarg,"wb");
+            if (!fp_out){
+                printf("fopen uboot-with-spl error\n");
+                goto exit_prog;
+            }
 	        break;
 	    case 'c':
 	        if(cpu!=-1)

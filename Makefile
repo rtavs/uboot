@@ -328,8 +328,10 @@ endif
 # Always append ALL so that arch config.mk's can add custom ones
 
 ifeq ($(CONFIG_AML_MESON),y)
-ALL += $(obj)u-boot-with-spl.bin
-ALL += $(obj)firmware.bin
+MESON_SPL = firmware
+MESON_SPL_BIN ?= $(obj)firmware/firmware.bin
+UBOOT_MESON_BIN = $(obj)u-boot-with-spl.bin
+ALL += $(UBOOT_MESON_BIN)
 endif
 
 
@@ -348,15 +350,11 @@ $(obj)u-boot.bin:	$(obj)u-boot
 		$(BOARD_SIZE_CHECK)
 ifeq ($(CONFIG_AML_MESON),y)
 
-$(obj)u-boot-with-spl.bin:	$(obj)u-boot.bin  $(obj)firmware.bin
-	$(obj)tools/convert --soc $(SOC)  -s $(obj)firmware.bin -i $< -o $@
+$(MESON_SPL): $(TIMESTAMP_FILE) $(VERSION_FILE) $(obj)include/autoconf.mk
+		$(MAKE) -C firmware all
 
-
-firmware:$(obj)firmware.bin
-.PHONY :	$(obj)firmware.bin
-
-$(obj)firmware.bin: $(TIMESTAMP_FILE) $(VERSION_FILE) tools $(obj)include/autoconf.mk
-	$(MAKE) -C $(TOPDIR)/firmware all FIRMWARE=$@
+$(UBOOT_MESON_BIN):	$(MESON_SPL) $(obj)u-boot.bin
+	$(obj)tools/convert --soc $(SOC)  -s $(MESON_SPL_BIN) -i $(obj)u-boot.bin -o $@
 
 endif #end CONFIG_AML_MESON
 
@@ -412,7 +410,7 @@ endif
 $(OBJS):	depend
 		$(MAKE) -C $(CPUDIR) $(if $(REMOTE_BUILD),$@,$(notdir $@))
 
-$(LIBS):	depend $(SUBDIRS) $(obj)firmware.bin
+$(LIBS):	depend $(SUBDIRS)
 		$(MAKE) -C $(dir $(subst $(obj),,$@))
 
 $(LIBBOARD):	depend $(LIBS)

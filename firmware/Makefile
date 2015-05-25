@@ -2,11 +2,12 @@
 include $(TOPDIR)/config.mk
 
 $(warning $(PLATFORM_CPPFLAGS))
-$(warning $(FIRMWARE))
 
 PLATFORM_CPPFLAGS+=-DCONFIG_AMLROM_SPL
 
-LDFLAGS	= -Bstatic -T $(obj)spl.lds  $(PLATFORM_LDFLAGS)
+fwobj	:= $(OBJTREE)/firmware/
+
+LDFLAGS	= -Bstatic -T $(fwobj)spl.lds  $(PLATFORM_LDFLAGS)
 
 
 CFLAGS	:=$(CFLAGS:-marm=-mthumb)
@@ -20,45 +21,49 @@ SOBJS	 = start.o magic.o
 
 COBJS	 = spl.o
 
-OBJS	:= $(addprefix $(obj),$(SOBJS)  )
+OBJS	:= $(addprefix $(obj),$(SOBJS) $(COBJS))
 __OBJS	:= $(SOBJS) $(COBJS)
+LNDIR	:= $(fwobj)
 
-
-VPATH_LIST=	$(SRCTREE)
-
-VPATH_LIST:=$(VPATH_LIST:%=%/firmware)
-
-CFLAGS+=$(VPATH_LIST:%=-I%)
-
-vpath %.c $(VPATH_LIST)
-vpath %.S $(VPATH_LIST)
-vpath %.s $(VPATH_LIST)
+CFLAGS += -I$(SRCTREE)/firmware
 
 origin_LDS=$(abspath firmware.lds)
 target_LDS=$(abspath $(obj)spl.lds)
 
-
-$(warning VPATH_LIST=$(VPATH_LIST))
 $(warning origin_LDS=$(origin_LDS))
 $(warning target_LDS=$(target_LDS))
+$(warning CFLAGS=$(CFLAGS))
 
-ALL	= $(FIRMWARE) $(basename $(FIRMWARE)).out
 
-all: $(ALL)
 
-%.bin:	%.out
+
+ALL	= $(fwobj)firmware.out $(fwobj)firmware.bin
+
+all:	$(obj).depend $(ALL)
+
+$(fwobj)firmware.bin :	$(fwobj)firmware.out
 	$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-$(basename $(FIRMWARE)).out:$(OBJS) $(obj)spl.o $(obj)eabi_compat.o $(target_LDS)
 
-%.out:
-	$(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
-		-Map $(@:%=%.map) --cref \
-		-o $@
+$(fwobj)firmware.out: $(OBJS) $(obj)spl.o $(obj)eabi_compat.o $(target_LDS)
+	cd $(LNDIR) && $(LD) $(LDFLAGS) $(filter %.o,$^) $(PLATFORM_LIBGCC) \
+		-Map $(@:%=%.map) --cref -o $@
 
-$(target_LDS):$(origin_LDS)
+$(target_LDS):	$(origin_LDS)
 	$(CPP) $(CPPFLAGS)   $(LDPPFLAGS) -std=c99 -D__ASSEMBLY__ -P - <$^ >$@
 
-sinclude $(wildcard $(obj)*.d)
+
+#########################################################################
+
+$(obj)%.o:	$(obj)%.S
+	$(CC) $(AFLAGS) -c -o $@ $<
+
+$(obj)%.o:	$(obj)$.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# defines $(obj).depend target
+include $(SRCTREE)/rules.mk
+
+sinclude $(obj).depend
 
 
 
