@@ -112,7 +112,7 @@ STRIP	= $(CROSS_COMPILE)strip
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 RANLIB	= $(CROSS_COMPILE)RANLIB
-MKDIR	= mkdir
+
 #########################################################################
 
 # Load generated board configuration
@@ -124,10 +124,10 @@ sinclude $(OBJTREE)/include/config.mk
 # Check if arch/$ARCH/cpu/$CPU exists, otherwise assume arch/$ARCH/cpu contains
 # CPU-specific code.
 CPUDIR=arch/$(ARCH)/cpu/$(CPU)
-
 ifneq ($(SRCTREE)/$(CPUDIR),$(wildcard $(SRCTREE)/$(CPUDIR)))
 CPUDIR=arch/$(ARCH)/cpu
 endif
+
 sinclude $(TOPDIR)/arch/$(ARCH)/config.mk	# include architecture dependend rules
 sinclude $(TOPDIR)/$(CPUDIR)/config.mk		# include  CPU	specific rules
 
@@ -249,19 +249,14 @@ BCURDIR = $(subst $(SRCTREE)/,,$(CURDIR:$(obj)%=%))
 ALL_AFLAGS = $(AFLAGS) $(AFLAGS_$(BCURDIR)/$(@F)) $(AFLAGS_$(BCURDIR))
 ALL_CFLAGS = $(CFLAGS) $(CFLAGS_$(BCURDIR)/$(@F)) $(CFLAGS_$(BCURDIR))
 $(obj)%.s:	%.S
-	$(MKDIR) -p $(@D)
 	$(CPP) $(ALL_AFLAGS) -o $@ $<
 $(obj)%.o:	%.S
-	$(MKDIR) -p $(@D)
 	$(CC)  $(ALL_AFLAGS) -o $@ $< -c
 $(obj)%.o:	%.c
-	$(MKDIR) -p $(@D)
 	$(CC)  $(ALL_CFLAGS) -o $@ $< -c
 $(obj)%.i:	%.c
-	$(MKDIR) -p $(@D)
 	$(CPP) $(ALL_CFLAGS) -o $@ $< -c
 $(obj)%.s:	%.c
-	$(MKDIR) -p $(@D)
 	$(CC)  $(ALL_CFLAGS) -o $@ $< -c -S
 
 #########################################################################

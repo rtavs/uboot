@@ -25,6 +25,16 @@ include $(TOPDIR)/config.mk
 
 LIB	:= $(obj)libvideo.o
 
+TVOUT  = tvout
+OSD    = osd
+LCD_E  = lcd/lcd_external
+LCD_B  = lcd/bl_external
+
+$(shell mkdir -p $(obj)$(TVOUT))
+$(shell mkdir -p $(obj)$(OSD))
+$(shell mkdir -p $(obj)$(LCD_E))
+$(shell mkdir -p $(obj)$(LCD_B))
+
 COBJS-$(CONFIG_ATI_RADEON_FB) += ati_radeon_fb.o videomodes.o
 COBJS-$(CONFIG_ATMEL_LCD) += atmel_lcdfb.o
 COBJS-$(CONFIG_CFB_CONSOLE) += cfb_console.o
