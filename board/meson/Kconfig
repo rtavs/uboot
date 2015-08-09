@@ -1,0 +1,23 @@
+if ARCH_MESON
+
+choice
+	prompt "Meson SoC variant"
+	optional
+
+config MACH_M8B
+	bool "Meson8b (Amlogic)"
+	select CPU_V7
+	select SUPPORT_SPL
+
+endchoice
+
+config SYS_BOARD
+	default "meson"
+
+config SYS_SOC
+	default "meson"
+
+config SYS_CONFIG_NAME
+	default "m8b" if MACH_M8B
+
+endif

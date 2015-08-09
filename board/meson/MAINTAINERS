@@ -1,0 +1,6 @@
+WANDBOARD BOARD
+M:	Carlo Caione <carlo@caione.org>
+S:	Maintained
+F:	board/meson/
+F:	include/configs/ec100.h
+F:	configs/ec100_defconfig
