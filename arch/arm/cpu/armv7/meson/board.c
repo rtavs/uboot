@@ -4,7 +4,8 @@
 #include <image.h>
 #include <linux/compiler.h>
 #include <watchdog.h>
-#include <arch/asm/timer.h>
+#include <asm/io.h>
+#include <asm/arch/timer.h>
 
 #ifdef CONFIG_SPL_BUILD
 DECLARE_GLOBAL_DATA_PTR;
