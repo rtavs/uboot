@@ -1,6 +1,7 @@
+
+
 #include <common.h>
 #include <asm/io.h>
-//#include <asm/arch/regaddr.h>
 
 
 /* Watchdog Control REG */
@@ -35,47 +36,15 @@ struct meson_wdt {
 
 static struct meson_wdt *wdt = (struct meson_wdt *)WATCHDOG_BASE_ADDR;
 
-/**
- * wdt API:
- * void hw_watchdog_init(void); must
- * void hw_watchdog_reset(void); must
- * void hw_watchdog_enable(void); option
- * void hw_watchdog_set_timeout(unsigned int timeout); option
- **/
 
 
-void hw_watchdog_init(void)
+
+void reset_cpu(ulong addr)
 {
-    writel(0, &wdt->reset);
-    writel(0, &wdt->ctrl);
-}
+    puts("System is going to reboot ...\n");
 
-void hw_watchdog_reset(void)
-{
     writel(0, &wdt->reset);
-    writel(0, &wdt->ctrl);
-}
-
-void hw_watchdog_eable(int en)
-{
-    /* write the enalbe bit only will reset other bits;
-     * so read other bits before write the enable bit.
-     */
-    u32 val = readl(&wdt->ctrl);
-
-    if (en) {
-        val |= WDT_EN;
-    } else {
-        val &= ~WDT_EN;
-    }
-    writel(0, &wdt->reset);
-    writel(val, &wdt->ctrl);
-}
-
-// set tms timeout
-void hw_watchdog_set_timeout(unsigned int tms)
-{
-    writel(0, &wdt->reset);
-    u32 val = (int)(tms * 1000 / WDT_TIME_SLICE) | WDT_EN | WDT_CPU_RESET;
-    writel(val, &wdt->ctrl);
+    //0.1ms timeout
+    writel(10 | WDT_EN | WDT_CPU_RESET, &wdt->ctrl);
+    while(1);
 }

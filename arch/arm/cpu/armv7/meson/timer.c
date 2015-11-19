@@ -26,7 +26,6 @@
 #include <div64.h>
 #include <asm/io.h>
 
-#define BIT(x)                        (1 << (x))
 
 DECLARE_GLOBAL_DATA_PTR;
 

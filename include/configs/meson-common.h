@@ -25,16 +25,27 @@
 #define CHECK_SIZE			(8*1024)
 #define ROM_STACK_END			(GL_DATA_ADR)
 
-#define CONFIG_SPL_TEXT_BASE		RAM_START
+
+#define CONFIG_SPL_TEXT_BASE		0xd9000000      /* same as RAM_START */
 #define CONFIG_SPL_STACK		ROM_STACK_END
+
 #define CONFIG_SKIP_LOWLEVEL_INIT
 
-#define CONFIG_HW_WATCHDOG
-#define CONFIG_HW_WATCHDOG_TIMEOUT_MS	5000
+
 
 #define CONFIG_SPL_DISPLAY_PRINT
 
-////////////////////////////////////////////////////////////////
+#define CONFIG_SPL_FRAMEWORK
+#define CONFIG_SPL_LIBCOMMON_SUPPORT
+#define CONFIG_SPL_LIBGENERIC_SUPPORT
+
+#define CONFIG_SPL_SERIAL_SUPPORT
+/*#define CONFIG_SPL_I2C_SUPPORT */
+#define CONFIG_SPL_MMC_SUPPORT
+#define CONFIG_SPL_FAT_SUPPORT
+#define CONFIG_SPL_EXT_SUPPORT
+#define CONFIG_SPL_WATCHDOG_SUPPORT
+/**************************************************************/
 
 
 
@@ -69,6 +80,15 @@
 /* FLASH and environment organization */
 
 #define CONFIG_SYS_NO_FLASH
+
+
+
+#define CONFIG_HW_WATCHDOG
+#ifdef CONFIG_HW_WATCHDOG
+#define CONFIG_HW_WATCHDOG_TIMEOUT_MS	2000
+#define CONFIG_MESON_WATCHDOG
+#endif
+
 
 #if 1
 

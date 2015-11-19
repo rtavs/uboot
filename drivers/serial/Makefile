@@ -48,6 +48,8 @@ obj-$(CONFIG_OMAP_SERIAL) += serial_omap.o
 obj-$(CONFIG_X86_SERIAL) += serial_x86.o
 obj-$(CONFIG_STM32_SERIAL) += serial_stm32.o
 
+obj-$(CONFIG_MESON_SERIAL) += serial_meson.o
+
 ifndef CONFIG_SPL_BUILD
 obj-$(CONFIG_USB_TTY) += usbtty.o
 endif

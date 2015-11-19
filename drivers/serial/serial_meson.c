@@ -1,228 +1,215 @@
+
 #include <common.h>
+#include <div64.h>
 #include <asm/io.h>
-#include <asm/arch/regaddr.h>
-#include <asm/arch/clock.h>
-#include <asm/arch/uart.h>
 #include <serial.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
-static void serial_putc_port(unsigned port_base, const char c)
-{
-	if (c == '\n')
-		serial_putc_port(port_base, '\r');
 
-	while ((readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_TFIFO_FULL))
-		;
-
-	writel(c, P_UART_WFIFO(port_base));
-
-	while(!(readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_TFIFO_EMPTY))
-		;
-}
-
-static void serial_setbrg_port(unsigned port_base)
-{
-	unsigned long baud_para;
-	int clk81 = clk_get_rate(UART_CLK_SRC);
-
-	if(clk81 < 0)
-	    return;
-
-	baud_para = clk81 / (gd->baudrate * 4) - 1;
-	baud_para &= UART_CNTL_MASK_BAUD_RATE;
-
-	writel((readl(P_UART_CONTROL(port_base)) & ~UART_CNTL_MASK_BAUD_RATE) | baud_para, P_UART_CONTROL(port_base));
-}
-
-static void serial_set_stop_port(unsigned port_base, int stop_bits)
-{
-	unsigned long uart_config;
-
-	uart_config = readl(P_UART_CONTROL(port_base)) & ~UART_CNTL_MASK_STP_BITS;
-
-	switch(stop_bits)
-	{
-	    case 2:
-	        uart_config |= UART_CNTL_MASK_STP_2BIT;
-	        break;
-	    case 1:
-	    default:
-	        uart_config |= UART_CNTL_MASK_STP_1BIT;
-	        break;
-	}
-
-	writel(uart_config, P_UART_CONTROL(port_base));
-}
-
-static void serial_set_parity_port(unsigned port_base, int type)
-{
-	unsigned long uart_config;
-
-	uart_config = readl(P_UART_CONTROL(port_base)) & ~(UART_CNTL_MASK_PRTY_TYPE | UART_CNTL_MASK_PRTY_EN);
-	writel(uart_config, P_UART_CONTROL(port_base));
-}
-
-static void serial_set_dlen_port(unsigned port_base, int data_len)
-{
-	unsigned long uart_config;
-
-	uart_config = readl(P_UART_CONTROL(port_base)) & ~UART_CNTL_MASK_CHAR_LEN;
-
-	switch(data_len)
-	{
-	    case 5:
-	        uart_config |= UART_CNTL_MASK_CHAR_5BIT;
-	        break;
-	    case 6:
-	        uart_config |= UART_CNTL_MASK_CHAR_6BIT;
-	        break;
-	    case 7:
-	        uart_config |= UART_CNTL_MASK_CHAR_7BIT;
-	        break;
-	    case 8:
-	    default:
-	        uart_config |= UART_CNTL_MASK_CHAR_8BIT;
-	        break;
-	}
-
-	writel(uart_config, P_UART_CONTROL(port_base));
-}
-
-static void serial_reset_port(unsigned port_base)
-{
-	writel(readl(P_UART_CONTROL(port_base)) | UART_CNTL_MASK_RST_TX | UART_CNTL_MASK_RST_RX | UART_CNTL_MASK_CLR_ERR, P_UART_CONTROL(port_base));
-	writel(readl(P_UART_CONTROL(port_base)) & ~(UART_CNTL_MASK_RST_TX | UART_CNTL_MASK_RST_RX | UART_CNTL_MASK_CLR_ERR), P_UART_CONTROL(port_base));
-}
-
-static int serial_init_port(unsigned port_base)
-{
-	int ret;
-
-	writel(0, P_UART_CONTROL(port_base));
-	if (ret < 0)
-		return -1;
-
-	serial_setbrg_port(port_base);
-
-#ifndef CONFIG_SERIAL_STP_BITS
-#define CONFIG_SERIAL_STP_BITS 1
-#endif
-	serial_set_stop_port(port_base, CONFIG_SERIAL_STP_BITS);
-
-#ifndef CONFIG_SERIAL_PRTY_TYPE
-#define CONFIG_SERIAL_PRTY_TYPE 0
-#endif
-	serial_set_parity_port(port_base, CONFIG_SERIAL_PRTY_TYPE);
-
-#ifndef CONFIG_SERIAL_CHAR_LEN
-#define CONFIG_SERIAL_CHAR_LEN 8
-#endif
-	serial_set_dlen_port(port_base, CONFIG_SERIAL_CHAR_LEN);
-
-	writel(readl(P_UART_CONTROL(port_base)) | UART_CNTL_MASK_TX_EN | UART_CNTL_MASK_RX_EN, P_UART_CONTROL(port_base));
-	while (!(readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_TFIFO_EMPTY))
-		;
-
-	serial_reset_port(port_base);
-	serial_putc_port(port_base,'\n');
-
-	return 0;
-}
-
-static int serial_tstc_port(unsigned port_base)
-{
-	return (readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_RFIFO_CNT);
-}
-
-static int serial_getc_port(unsigned port_base)
-{
-	unsigned char ch;
-
-	while((readl(P_UART_STATUS(port_base)) & UART_STAT_MASK_RFIFO_CNT)==0)
-		;
-	ch = readl(P_UART_RFIFO(port_base)) & 0x00ff;
-
-	if (readl(P_UART_STATUS(port_base)) & (UART_STAT_MASK_PRTY_ERR | UART_STAT_MASK_FRAM_ERR)) {
-		writel(readl(P_UART_CONTROL(port_base)) |UART_CNTL_MASK_CLR_ERR, P_UART_CONTROL(port_base));
-		writel(readl(P_UART_CONTROL(port_base)) & (~UART_CNTL_MASK_CLR_ERR), P_UART_CONTROL(port_base));
-	}
-
-	return ((int) ch);
-}
-
-static void serial_puts_port(unsigned port_base, const char *s)
-{
-	while (*s) {
-		serial_putc_port(port_base, *s++);
-	}
-}
-
-#define DECL_MESON_UART(n, port)		\
-						\
-static int uart_##n##_init(void)		\
-{						\
-	serial_init_port(port); 		\
-	return 0;				\
-}						\
-						\
-static void uart_##n##_setbrg(void)		\
-{						\
-	serial_setbrg_port(port);		\
-}						\
-						\
-static int uart_##n##_getc(void)		\
-{						\
-	return serial_getc_port(port);		\
-}						\
-						\
-static int uart_##n##_tstc(void)		\
-{						\
-	return serial_tstc_port(port);		\
-}						\
-						\
-static void uart_##n##_putc(const char c)	\
-{						\
-	serial_putc_port(port, c);		\
-}						\
-						\
-static void uart_##n##_puts(const char *s)	\
-{						\
-	serial_puts_port(port, s);		\
-}						\
-						\
-struct serial_device serial_device_##n = {	\
-	.name   = "meson_uart"#n,		\
-	.start  = uart_##n##_init,		\
-	.setbrg = uart_##n##_setbrg,		\
-	.getc   = uart_##n##_getc,		\
-	.tstc   = uart_##n##_tstc,		\
-	.putc   = uart_##n##_putc,		\
-	.puts   = uart_##n##_puts,		\
+struct uart_meson {
+    u32 wfifo;      //
+    u32 rfifo;      //
+    u32 ctrl;       //
+    u32 stat;       //
+    u32 misc;       //
+    u32 reg5;       //
 };
 
-DECL_MESON_UART(0, UART_PORT_0)
-DECL_MESON_UART(1, UART_PORT_1)
-#ifdef UART_PORT_AO
-DECL_MESON_UART(ao, UART_PORT_AO)
-#endif
 
-__weak struct serial_device *default_serial_console(void)
+/* MESON_UART_CONTROL bits */
+#define UART_CTRL_TX_EN			BIT(12)
+#define UART_CTRL_RX_EN			BIT(13)
+#define UART_CTRL_2WIRE_EN		BIT(15)
+
+#define UART_CTRL_STOP_BIN_LEN_MASK	(0x03 << 16)
+#define UART_CTRL_STOP_BIN_1SB		(0x00 << 16)
+#define UART_CTRL_STOP_BIN_2SB		(0x01 << 16)
+
+#define UART_CTRL_PARITY_TYPE		BIT(18)
+#define UART_CTRL_PARITY_EN		BIT(19)
+
+#define UART_CTRL_TX_RST			BIT(22)
+#define UART_CTRL_RX_RST			BIT(23)
+#define UART_CTRL_CLR_ERR          BIT(24)
+#define UART_CTRL_RX_INT_EN		BIT(27)
+#define UART_CTRL_TX_INT_EN		BIT(28)
+#define UART_CTRL_DATA_LEN_MASK    (0x03 << 20)
+#define UART_CTRL_DATA_LEN_8BIT	(0x00 << 20)
+#define UART_CTRL_DATA_LEN_7BIT    (0x01 << 20)
+#define UART_CTRL_DATA_LEN_6BIT    (0x02 << 20)
+#define UART_CTRL_DATA_LEN_5BIT    (0x03 << 20)
+
+
+
+
+
+
+
+/* MESON_UART_STATUS bits */
+#define UART_STAT_PARITY_ERR		BIT(16)
+#define UART_STAT_FRAME_ERR		BIT(17)
+#define UART_STAT_TX_FIFO_WERR		BIT(18)
+#define UART_STAT_RX_EMPTY		    BIT(20)
+#define UART_STAT_TX_FULL		    BIT(21)
+#define UART_STAT_TX_EMPTY		    BIT(22)
+#define UART_STAT_ERR			    (UART_STAT_PARITY_ERR | \
+					                 UART_STAT_FRAME_ERR  | \
+					                 UART_STAT_TX_FIFO_WERR)
+
+
+#define UART_STAT_RFIFO_CNT    (0x7f<<0)
+#define UART_STAT_TFIFO_CNT    (0x7f<<8)
+
+
+/* MESON_UART_MISC bits */
+#define MESON_UART_XMIT_IRQ(c)		(((c) & 0xff) << 8)
+#define MESON_UART_RECV_IRQ(c)		((c) & 0xff)
+
+/* MESON_UART_REG5 bits */
+#define MESON_UART_BAUD_MASK		0x7fffff
+#define MESON_UART_BAUD_USE		    BIT(23)
+
+
+
+
+//
+static struct uart_meson *uart_ports[6] = {
+//	[0] = (struct uart_meson *)MESON_SERIAL_BASEADDR0,
+//	[1] = (struct uart_meson *)MESON_SERIAL_BASEADDR1,
+};
+
+
+static int meson_uart_dev_init(const int port)
 {
-#if CONFIG_CONS_INDEX == 0
-	return &serial_device_0;
-#elif CONFIG_CONS_INDEX == 1
-	return &serial_device_1;
-#elif CONFIG_CONS_INDEX == 2
-	return &serial_device_ao;
+
+    return 0;
+}
+
+static int meson_uart_dev_stop(const int port)
+{
+    return 0;
+}
+
+static void meson_uart_dev_setbrg(const int port)
+{
+#if 0
+	struct uart_meson *regs = uart_ports[port];
+
+	u32 baudrate = gd->baudrate;
+
+	u32 uclk = get_uart_clk(dev_index);
+
+	u32 val;
+
+	while (!(readl(&regs->stat) & UART_STAT_TX_EMPTY));
 #endif
 }
+
+static int meson_uart_dev_getc(const int port)
+{
+	struct uart_meson *regs = uart_ports[port];
+
+    // use UART_STAT_RX_EMPTY ?
+    //while((readl(&regs->stat) & UART_STAT_RX_EMPTY));
+
+    while((readl(&regs->stat) & UART_STAT_RFIFO_CNT) == 0);
+
+    if (readl(&regs->stat) & UART_STAT_ERR) {
+        // clear error, it doesn't clear to 0 automatically
+        writel(readl(&regs->ctrl) | UART_CTRL_CLR_ERR, &regs->ctrl);
+        writel(readl(&regs->ctrl) & (~UART_CTRL_CLR_ERR), &regs->ctrl);
+    }
+    return (int)(readl(&regs->rfifo) & 0xFF);
+}
+
+
+static int uart_meson_dev_tstc(const int port)
+{
+	struct uart_meson *regs = uart_ports[port];
+    return (readl(&regs->stat) & UART_STAT_RFIFO_CNT);
+}
+
+static void meson_uart_dev_putc(const char c, const int port)
+{
+	struct uart_meson *regs = uart_ports[port];
+
+    // wait TX FIFO not full
+    while (readl(&regs->stat) & UART_STAT_TX_FULL);
+    writel(c,&regs->wfifo);
+
+	if (c == '\n')
+		meson_uart_dev_putc(port,'\r');
+}
+
+static void meson_uart_dev_puts(const char *s, const int port)
+{
+    while (*s) {
+        meson_uart_dev_putc(port,*s++);
+    }
+}
+
+
+
+
+/* Multi serial device functions */
+#define DECLARE_MESON_SERIAL_FUNCTIONS(port) \
+static int uart##port##_init(void) { return meson_uart_dev_init(port); } \
+static void uart##port##_setbrg(void) { meson_uart_dev_stop(port); } \
+static int uart##port##_getc(void) { return meson_uart_dev_getc(port); } \
+static int uart##port##_tstc(void) { return uart_meson_dev_tstc(port); } \
+static void uart##port##_putc(const char c) { meson_uart_dev_putc(c, port); } \
+static void uart##port##_puts(const char *s) { meson_uart_dev_puts(s, port); }
+
+
+#define INIT_MESON_SERIAL_STRUCTURE(port, __name) {	\
+	.name	= __name,				\
+	.start	= uart##port##_init,		\
+	.stop	= NULL,					\
+	.setbrg	= uart##port##_setbrg,		\
+	.getc	= uart##port##_getc,		\
+	.tstc	= uart##port##_tstc,		\
+	.putc	= uart##port##_putc,		\
+	.puts	= uart##port##_puts,		\
+}
+
+
+DECLARE_MESON_SERIAL_FUNCTIONS(0);
+struct serial_device meson_serial0_device =
+	INIT_MESON_SERIAL_STRUCTURE(0, "meson_serial_0");
+
+DECLARE_MESON_SERIAL_FUNCTIONS(1);
+struct serial_device meson_serial1_device =
+	INIT_MESON_SERIAL_STRUCTURE(1, "meson_serial_1");
+
+DECLARE_MESON_SERIAL_FUNCTIONS(2);
+struct serial_device meson_serial2_device =
+	INIT_MESON_SERIAL_STRUCTURE(2, "meson_serial_2");
+
+DECLARE_MESON_SERIAL_FUNCTIONS(3);
+struct serial_device meson_serial3_device =
+	INIT_MESON_SERIAL_STRUCTURE(3, "meson_serial_3");
+
 
 void meson_serial_initialize(void)
 {
-	serial_register(&serial_device_0);
-	serial_register(&serial_device_1);
-#ifdef UART_PORT_AO
-	serial_register(&serial_device_ao);
+	serial_register(&meson_serial0_device);
+	serial_register(&meson_serial1_device);
+	serial_register(&meson_serial2_device);
+	serial_register(&meson_serial3_device);
+}
+
+__weak struct serial_device *default_serial_console(void)
+{
+#if defined(CONFIG_SERIAL0)
+	return &meson_serial0_device;
+#elif defined(CONFIG_SERIAL1)
+	return &meson_serial1_device;
+#elif defined(CONFIG_SERIAL2)
+	return &meson_serial2_device;
+#elif defined(CONFIG_SERIAL3)
+	return &meson_serial3_device;
+#else
+#error "CONFIG_SERIAL? missing."
 #endif
 }
