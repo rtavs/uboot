@@ -1,0 +1,19 @@
+if ARCH_MESON
+
+
+if CONFIG_TARGET_SHAKA
+
+config SYS_BOARD
+	default "meson"
+
+
+config SYS_CONFIG_NAME
+	default "shaka"
+
+config SYS_SOC
+	default "meson"
+
+endif
+
+
+endif

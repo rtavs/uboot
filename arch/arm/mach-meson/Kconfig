@@ -1,0 +1,39 @@
+if ARCH_MESON
+
+
+
+
+config TARGET_SHAKA
+	bool "shaka s805"
+    select CPU_V7
+    select MACH_M8B
+    select SUPPORT_SPL
+
+config TARGET_TIMEBOX
+	bool "timebox s812"
+    select MACH_M8M2
+
+
+
+
+
+config SYS_BOARD
+	default "shaka" if TARGET_SHAKA
+	default "timebox" if TARGET_TIMEBOX
+
+config SYS_VENDOR
+	default "fitdi"  if TARGET_SHAKA
+
+config SYS_SOC
+	default "meson" if TARGET_SHAKA
+	default "meson" if TARGET_TIMEBOX
+
+config SYS_CONFIG_NAME
+	default "m8b" if TARGET_SHAKA
+	default "m8" if TARGET_TIMEBOX
+
+
+source "board/meson/Kconfig"
+source "board/fitdi/shaka/Kconfig"
+
+endif
