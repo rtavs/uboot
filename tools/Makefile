@@ -147,6 +147,8 @@ HOSTCFLAGS_mxsboot.o := -pedantic
 
 hostprogs-$(CONFIG_SUNXI) += mksunxiboot
 
+hostprogs-$(CONFIG_MESON) += mkmesonboot
+
 hostprogs-$(CONFIG_NETCONSOLE) += ncb
 hostprogs-$(CONFIG_SHA1_CHECK_UB_IMG) += ubsha1
 

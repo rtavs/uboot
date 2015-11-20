@@ -11,6 +11,12 @@
 
 #include <linux/stringify.h>
 
+
+/*
+ * High Level Configuration Options
+ */
+#define CONFIG_MESON		/* meson family */
+
 /* Meson specific defines */
 
 #define RAM_START			0xd9000000
