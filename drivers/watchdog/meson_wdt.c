@@ -8,19 +8,22 @@
 #define REG_WDT_RESET      0xc1109904      // 0x2641
 
 
-
 /* Watchdog Control REG Bit */
 
 #define WDT_CPU_RESET_VAL       0xf // m8 -> 0xf; m6 - > 0x3
 #define WDT_CPU_RESET_OFFSET    24
 #define WDT_CPU_RESET           (WDT_CPU_RESET_VAL << WDT_CPU_RESET_OFFSET)              //
 #define WDT_IRQ                 BIT(23)     /* default 0; 1 -> instead reset the chip, the dog will generate an interrupt */
-#define WDT_EN                  BIT(22)     /* default 0; 1 -> ebable the dog reset */
+
+
+#define WDT_EN                  BIT(19)     /* BIT(19) for 805 default 0; 1 -> ebable the dog reset */
+//#define WDT_EN                  BIT(22)     /*  BIT(22) for 812/802 default 0; 1 -> ebable the dog reset */
 
 //#define WDT_TERMINAL_CNT        /* default 0x186a0, BIT(0)~BIT(21) */
 
 //max watchdog timer: 41.943s
-#define WDT_TIME_SLICE				10	//us
+//#define WDT_TIME_SLICE				10	//10 us for 812
+#define WDT_TIME_SLICE				128	// 128 us for 805
 
 
 
@@ -40,21 +43,20 @@ static struct meson_wdt *wdt = (struct meson_wdt *)WATCHDOG_BASE_ADDR;
  * void hw_watchdog_init(void); must
  * void hw_watchdog_reset(void); must
  * void hw_watchdog_enable(void); option
- * void hw_watchdog_set_timeout(unsigned int timeout); option
  **/
 
 
-void hw_watchdog_init(void)
+// set tms timeout
+void meson_wdt_set_timeout(unsigned int tms)
 {
     writel(0, &wdt->reset);
-    writel(0, &wdt->ctrl);
+    u32 val = (int)(tms * 1000 / WDT_TIME_SLICE);
+    val |=  WDT_EN | WDT_CPU_RESET;
+    writel(val, &wdt->ctrl);
+    return;
 }
 
-void hw_watchdog_reset(void)
-{
-    writel(0, &wdt->reset);
-    writel(0, &wdt->ctrl);
-}
+
 
 void hw_watchdog_eable(int en)
 {
@@ -72,10 +74,18 @@ void hw_watchdog_eable(int en)
     writel(val, &wdt->ctrl);
 }
 
-// set tms timeout
-void hw_watchdog_set_timeout(unsigned int tms)
+#if defined(CONFIG_HW_WATCHDOG)
+void hw_watchdog_init(void)
+{
+    meson_wdt_set_timeout(CONFIG_HW_WATCHDOG_TIMEOUT_MS);
+}
+
+void hw_watchdog_reset(void)
 {
     writel(0, &wdt->reset);
-    u32 val = (int)(tms * 1000 / WDT_TIME_SLICE) | WDT_EN | WDT_CPU_RESET;
+    u32 val = 10;
+    val |=  WDT_EN | WDT_CPU_RESET;
     writel(val, &wdt->ctrl);
+    while(1);
 }
+#endif

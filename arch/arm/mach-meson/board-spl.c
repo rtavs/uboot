@@ -35,7 +35,7 @@ u32 spl_boot_mode(void)
 
 void board_init_f(ulong dummy)
 {
-//	hw_watchdog_init();
+	hw_watchdog_init();
 	preloader_console_init();
 
 	/* Clear the BSS. */
