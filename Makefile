@@ -773,6 +773,9 @@ endif
 endif
 endif
 
+ALL-$(CONFIG_MESON) += u-boot-meson.bin
+
+
 # Add optional build target if defined in board/cpu/soc headers
 ifneq ($(CONFIG_BUILD_TARGET),)
 ALL-y += $(CONFIG_BUILD_TARGET:"%"=%)
@@ -1070,6 +1073,13 @@ u-boot-sunxi-with-spl.bin: spl/sunxi-spl.bin \
 			u-boot$(if $(CONFIG_OF_CONTROL),-dtb,).img FORCE
 	$(call if_changed,pad_cat)
 endif
+
+
+ifneq ($(CONFIG_MESON),)
+u-boot-meson.bin: spl/u-boot-spl.bin u-boot.bin FORCE
+	$(objtree)/tools/mkmesonboot $(objtree)/spl/u-boot-spl.bin $(objtree)/u-boot.bin $@
+endif
+
 
 ifneq ($(CONFIG_TEGRA),)
 OBJCOPYFLAGS_u-boot-nodtb-tegra.bin = -O binary --pad-to=$(CONFIG_SYS_TEXT_BASE)
