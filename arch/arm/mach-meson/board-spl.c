@@ -11,11 +11,29 @@
 DECLARE_GLOBAL_DATA_PTR;
 
 
+
+static void serial_putd(unsigned int data)
+{
+    int i = 0;
+    char szTxt[10];
+    szTxt[0] = 0x30;
+
+    while(data) {
+        szTxt[i++] = (data % 10) + 0x30;
+        data = data / 10;
+    }
+
+    for(--i;i >=0;--i)
+        serial_putc(szTxt[i]);
+}
+
+
 void spl_display_print(void)
 {
-//	unsigned int nTEBegin = TIMERE_GET();
-	serial_puts("\n SPL TE : ");
-
+    ulong begin = timer_get_us();
+    serial_puts("\n\nStarting SPL ...");
+    serial_putd(begin);
+    serial_puts("\n\n");
 }
 
 
