@@ -8,7 +8,7 @@
 #endif
 
 int clk_get_rate(unsigned clksrc);
-unsigned long clk_util_clk_msr(unsigned long clk_mux);
+unsigned long meson_get_clk_rate(unsigned long clk_mux);
 u32 get_cpu_clk(void);
 u32 get_clk_ddr(void);
 u32 get_clk81(void);

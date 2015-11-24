@@ -24,22 +24,15 @@
 
 
 /**************************************************************/
-
+/**************************************************************/
+/* Serial & console */
+#define CONFIG_MESON_SERIAL             1
+#define CONFIG_CONS_INDEX               2       /* UART_AO */
 
 /* baudrate */
 #define CONFIG_BAUDRATE			        115200
 #define CONFIG_SYS_BAUDRATE_TABLE       { 9600, 19200, 38400, 57600, 115200}
 
-
-/**************************************************************/
-/* Serial & console */
-#define CONFIG_MESON_SERIAL             1
-#define CONFIG_SERIAL_MULTI             1
-
-
-#ifndef CONFIG_CONS_INDEX
-#define CONFIG_SERIAL3                  1       /* UART_AO */
-#endif
 
 /**************************************************************/
 
