@@ -1,0 +1,15 @@
+if TARGET_MANSA_RK3288
+
+config SYS_BOARD
+	default "mansa"
+
+config SYS_VENDOR
+	default "kmatt"
+
+config SYS_CONFIG_NAME
+	default "mansa_rk3288"
+
+config BOARD_SPECIFIC_OPTIONS # dummy
+	def_bool y
+
+endif

@@ -41,6 +41,14 @@ config TARGET_MINIARM_RK3288
 	  8GB eMMC and 2GB of SDRAM. Expansion connectors provide access to
 	  I2C, SPI, UART, GPIOs.
 
+config TARGET_MANSA_RK3288
+	bool "mansa"
+	help
+	  Mansa is a RK3288-based development board with 2 USB ports, HDMI,
+	  micro-SD card, audio, Gigabit Ethernet. It also includes on-board
+	  8GB eMMC and 2GB of SDRAM. Expansion connectors provide access to
+	  I2C, SPI, UART, GPIOs.
+
 config TARGET_CHROMEBOOK_JERRY
 	bool "Google/Rockchip Veyron-Jerry Chromebook"
 	help
@@ -89,6 +97,8 @@ source "board/chipspark/popmetal_rk3288/Kconfig"
 source "board/firefly/firefly-rk3288/Kconfig"
 
 source "board/google/chromebook_jerry/Kconfig"
+
+source "board/kmatt/mansa/Kconfig"
 
 source "board/radxa/rock2/Kconfig"
 

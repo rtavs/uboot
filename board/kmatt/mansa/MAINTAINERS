@@ -1,0 +1,6 @@
+mansa
+M:	Kaspter Ju <kaspter@kmatt.net>
+S:	Maintained
+F:	board/kmatt/mansa
+F:	include/configs/mansa_rk3288.h
+F:	configs/mansa-rk3288_defconfig

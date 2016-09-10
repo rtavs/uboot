@@ -1,0 +1,26 @@
+
+Mansa:
+
+mansa is a RK3288-based development board manufactured by kmatt.net with
+the following specifications:
+
+ - Rockchip RK3288 ARM Cortex-A17 quad-core SoC @ 1.8GHz
+ - ACT8846 PMIC
+ - ARM Mali T764 GPU
+ - 2GB DDR3 SDRAM
+ - Gigabit Ethernet
+ - HDMI 2.0 4K/60Hz display
+ - 10' LVDS display
+ - 1 x USB 3.0 Host, 1 x USB OTG
+ - 8GB eMMC, microSD
+ - Infrared receiver
+ - LED
+
+
+status:
+
+1. enable ROCKCHIP_SPL_BACK_TO_BROM    -- DONE
+2. enable 'sdram capacity auto detect' -- DONE
+3. enable SPL_OF_PLATDATA for SPL size -- DONE
+4. enable display                      -- WIP
+5. add sdcard burn                     -- WIP

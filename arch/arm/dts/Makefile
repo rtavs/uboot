@@ -34,6 +34,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3288-evb.dtb \
 	rk3288-fennec.dtb \
 	rk3288-miniarm.dtb \
+	rk3288-mansa.dtb \
 	rk3288-popmetal.dtb \
 	rk3036-sdk.dtb \
 	rk3399-evb.dtb
