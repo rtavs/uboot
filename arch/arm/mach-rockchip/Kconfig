@@ -36,11 +36,14 @@ config ROCKCHIP_RK3399
 
 config ROCKCHIP_SPL_BACK_TO_BROM
 	bool "SPL returns to bootrom"
-	default y if ROCKCHIP_RK3036
+	default y if ROCKCHIP_RK3036 || ROCKCHIP_RK3288
 	help
 	  Rockchip SoCs have ability to load SPL & U-Boot binary. If enabled,
           SPL will return to the boot rom, which will then load the U-Boot
           binary to keep going on.
+
+config SPL_MMC_SUPPORT
+	default y if !ROCKCHIP_SPL_BACK_TO_BROM
 
 source "arch/arm/mach-rockchip/rk3036/Kconfig"
 source "arch/arm/mach-rockchip/rk3288/Kconfig"
