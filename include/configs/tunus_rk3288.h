@@ -16,4 +16,8 @@
 
 #define CONFIG_SYS_MMC_ENV_DEV 0
 
+#define CONFIG_MISC_INIT_R
+#define CONFIG_SERIAL_TAG
+#define CONFIG_ENV_OVERWRITE
+
 #endif
