@@ -1,0 +1,6 @@
+TENAS-RK3128
+M:	Kaspter Ju <kaspter@kmatt.net>
+S:	Maintained
+F:	board/rtavs/tenas-rk3128
+F:	include/configs/tenas-rk3288.h
+F:	configs/tenas-rk3128_defconfig

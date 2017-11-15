@@ -1,0 +1,15 @@
+if TARGET_TENAS_RK3128
+
+config SYS_BOARD
+	default "tenas_rk3128"
+
+config SYS_VENDOR
+	default "rtavs"
+
+config SYS_CONFIG_NAME
+	default "tenas_rk3128"
+
+config BOARD_SPECIFIC_OPTIONS # dummy
+	def_bool y
+
+endif
