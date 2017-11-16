@@ -57,6 +57,15 @@ config TARGET_FIREFLY_RK3288
 	  also includes on-board eMMC and 1GB of SDRAM. Expansion connectors
 	  provide access to display pins, I2C, SPI, UART and GPIOs.
 
+config TARGET_MENUS_RK3288
+	bool "Menus-RK3288"
+	select BOARD_LATE_INIT
+	help
+	  Menus-RK3288 is a RK3288-based development board with 4 USB 2.0
+	  ports, HDMI, micro-SD card, 16 GB eMMC and Gigabit Ethernet. It
+	  has 2 GiB SDRAM. Expansion connectors provide access to I2C,
+	  SPI, UART, GPIOs and fan control.
+
 config TARGET_MIQI_RK3288
 	bool "MiQi-RK3288"
 	select BOARD_LATE_INIT
@@ -164,6 +173,7 @@ source "board/rockchip/fennec_rk3288/Kconfig"
 
 source "board/rockchip/tinker_rk3288/Kconfig"
 
+source "board/rtavs/menus_rk3288/Kconfig"
 source "board/rtavs/tunus_rk3288/Kconfig"
 
 endif

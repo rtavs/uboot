@@ -36,6 +36,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3288-evb.dtb \
 	rk3288-fennec.dtb \
 	rk3288-firefly.dtb \
+	rk3288-menus.dtb \
 	rk3288-miqi.dtb \
 	rk3288-phycore-rdk.dtb \
 	rk3288-popmetal.dtb \

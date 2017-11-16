@@ -1,0 +1,6 @@
+MENUS-RK3288
+M:	Kaspter Ju <kaspter@kmatt.net>
+S:	Maintained
+F:	board/rtavs/menus-rk3288
+F:	include/configs/tunus-rk3288.h
+F:	configs/menus-rk3288_defconfig
